@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS categoria;
+DROP TABLE IF EXISTS anuncio;
 
 CREATE TABLE usuario (
     id bigint GENERATED ALWAYS AS IDENTITY,
@@ -15,6 +17,24 @@ CREATE TABLE usuario (
     CONSTRAINT ck_usuario_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- formato de email com expressão regular
     CONSTRAINT ck_usuario_senha_length CHECK (length(senha) >= 6), -- comprimento mínimo
     CONSTRAINT ck_usuario_role_valid CHECK (role IN ('admin', 'user')) -- tipos de usuário
+);
+
+CREATE TABLE categoria (
+    id int GENERATED ALWAYS AS IDENTITY,
+    nome text NOT NULL,
+
+    CONSTRAINT pk_categoria PRIMARY KEY (id)
+);
+
+CREATE TABLE anuncio (
+    id int GENERATED ALWAYS AS IDENTITY,
+    id_categoria INT REFERENCES categoria(id),
+    id_usuario INT REFERENCES usuario(id),
+    nome text NOT NULL,
+    descricao text NOT NULL,
+    preco int NOT NULL,
+
+    CONSTRAINT pk_anuncio PRIMARY KEY (id)
 );
 
 INSERT INTO usuario (login, email, senha, role) VALUES

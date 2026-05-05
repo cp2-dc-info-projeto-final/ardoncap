@@ -83,6 +83,7 @@
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </Button>
+          <a href="/register" style="text-decoration: underline;">Não tem uma conta ainda? Cadastre-se agora!</a>
       </form>
     </Card>
   </div>

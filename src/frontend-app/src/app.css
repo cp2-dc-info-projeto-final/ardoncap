@@ -38,7 +38,7 @@
   }
 }
 
-/* Desativa animação dos placeholders do Flowbite-Svelte */
+/* Desativa animação dos placeholders do  */
 .animate-pulse, .animate-shimmer {
   animation: none !important;
 }
