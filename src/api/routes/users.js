@@ -67,7 +67,7 @@ router.get('/:id', verifyToken, isAdmin, async function(req, res) {
   }
 });
 
-/* POST - Criar novo usuário */
+/* POST - Criar novo usuário - ADMIN */
 router.post('/', verifyToken, isAdmin, async function(req, res) {
   try {
     const { login, email, senha, role = 'user' } = req.body;
@@ -117,6 +117,56 @@ router.post('/', verifyToken, isAdmin, async function(req, res) {
   }
 });
 
+/* POST - Criar novo usuário - Usuário */
+router.post('/register', verifyToken, async function(req, res) {
+  try {
+    const { login, email, senha} = req.body;
+    const role = 'user';
+    
+    // Validação básica
+    if (!login || !email || !senha ) {
+      const errors = [];
+      if (!login) errors.push({ field: 'login', message: 'Login é obrigatório', code: 'REQUIRED' });
+      if (!email) errors.push({ field: 'email', message: 'Email é obrigatório', code: 'REQUIRED' });
+      if (!senha) errors.push({ field: 'senha', message: 'Senha é obrigatória', code: 'REQUIRED' });
+
+      return sendError(res, 400, 'Login, email e senha são obrigatórios', errors);
+    }
+    
+    // Verificar se o login já existe
+    const existingUser = await pool.query('SELECT id FROM usuario WHERE login = $1', [login]);
+    if (existingUser.rows.length > 0) {
+      return sendError(res, 409, 'Login já está em uso', [
+        { field: 'login', message: 'Login já está em uso', code: 'CONFLICT' }
+      ]);
+    }
+
+    // Verificar se o email já existe
+    const existingEmail = await pool.query('SELECT id FROM usuario WHERE email = $1', [email]);
+    if (existingEmail.rows.length > 0) {
+      return sendError(res, 409, 'Email já está em uso', [
+        { field: 'email', message: 'Email já está em uso', code: 'CONFLICT' }
+      ]);
+    }
+
+    // Hash da senha
+    const hashedPassword = await bcrypt.hash(senha, 12);
+
+    const result = await pool.query(
+      'INSERT INTO usuario (login, email, senha, role) VALUES ($1, $2, $3, $4) RETURNING id, login, email, role',
+      [login, email, hashedPassword, role]
+    );
+
+    return sendSuccess(res, 201, 'Usuário criado com sucesso', result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    // Verificar se é erro de constraint
+    if (error.code === '23514') {
+      return sendError(res, 400, 'Dados inválidos. Verifique os campos e tente novamente.');
+    }
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
 
 /* POST - Autenticar usuário */
 router.post('/login', async function(req, res) {
