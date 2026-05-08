@@ -1,7 +1,7 @@
 # Caso de Uso 1: Buscar Produtos
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador seleciona a opção "Buscar".
@@ -25,12 +25,12 @@ Comprador
 - O sistema encontra o produto sem estoque disponível.
 - O sistema informa indisponibilidade do produto.
 
-
+<br>
 
 # Caso de Uso 2: Visualizar Produto
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador seleciona um produto.
@@ -52,12 +52,12 @@ Comprador
 - O sistema exibe os detalhes do produto.
 - O sistema informa que o produto está indisponível para compra.
 
-
+<br>
 
 # Caso de Uso 3: Visualizar Categorias
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador acessa a opção de categorias.
@@ -70,11 +70,12 @@ Comprador
 - O comprador seleciona uma categoria.
 - O sistema informa que não há produtos cadastrados na categoria.
 
+<br>
 
 # Caso de Uso 4: Gerenciar Carrinho
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador acessa o carrinho de compras.
@@ -97,12 +98,12 @@ Comprador
 - O sistema identifica quantidade inválida.
 - O sistema solicita uma quantidade válida.
 
-
+<br>
 
 # Caso de Uso 5: Finalizar Compra
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador inicia a finalização da compra.
@@ -121,9 +122,9 @@ Comprador
 - O sistema solicita correção das informações.
 
 ## Fluxo Alternativo C: Produto fora de estoque
--O comprador confirma a compra.
--O sistema identifica indisponibilidade de estoque.
--O sistema informa que o produto está fora de estoque.
+- O comprador confirma a compra.
+- O sistema identifica indisponibilidade de estoque.
+- O sistema informa que o produto está fora de estoque.
 
 ## Fluxo Alternativo D: Pagamento recusado
 - O comprador confirma a compra.
@@ -131,12 +132,12 @@ Comprador
 - O pagamento é recusado.
 - O sistema informa falha no pagamento.
 
-
+<br>
 
 # Caso de Uso 6: Acompanhar Pedido
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador acessa seus pedidos.
@@ -148,12 +149,12 @@ Comprador
 - O sistema não encontra o pedido solicitado.
 - O sistema exibe mensagem de aviso.
 
-
+<br>
 
 # Caso de Uso 7: Avaliar Produto
 
 ## Ator:
-Comprador
+- Comprador
 
 ## Fluxo Principal:
 - O comprador acessa seus pedidos concluídos.
@@ -171,7 +172,7 @@ Comprador
 - O sistema identifica uma avaliação existente.
 - O sistema informa que a avaliação já foi realizada.
 
-
+<br>
 
 # Caso de Uso 8: Gerenciar Produtos
 
@@ -203,12 +204,12 @@ Vendedor
 - O sistema não consegue salvar as alterações.
 - O sistema informa que há dados inválidos. 
 
-
+<br>
 
 # Caso de Uso 9: Gerenciar Pedidos
 
 ## Ator:
-Vendedor
+- Vendedor
 
 ## Fluxo Principal:
 - O vendedor acessa a área de pedidos.
@@ -226,12 +227,12 @@ Vendedor
 - O sistema identifica ação não autorizada.
 - O sistema informa que a ação não é permitida.
 
-
+<br>
 
 # Caso de Uso 10: Administrar Produtos
 
 ## Ator:
-Administrador
+- Administrador
 
 ## Fluxo Principal:
 - O administrador acessa a área de produtos.
@@ -259,12 +260,12 @@ Administrador
 - O sistema identifica duplicidade de cadastro.
 - O sistema informa que o produto já está cadastrado.
 
-
+<br>
 
 # Caso de Uso 11: Administrar Usuários
 
 ## Ator:
-Administrador
+- Administrador
 
 ## Fluxo Principal:
 - O administrador acessa a área de usuários.
@@ -292,12 +293,12 @@ Administrador
 - O sistema identifica duplicidade de cadastro.
 - O sistema informa que o usuário já está cadastrado.
 
-
+<br>
 
 # Caso de Uso 12: Administrar Categorias
 
 ## Ator:
-Administrador
+- Administrador
 
 ## Fluxo Principal:
 - O administrador acessa a área de categorias.
@@ -321,6 +322,6 @@ Administrador
 - O sistema solicita correção dos dados.
 
 ## Fluxo Alternativo D: Categoria já cadastrada
-O administrador tenta cadastrar uma categoria já existente.
-O sistema identifica duplicidade de cadastro.
-O sistema informa que a categoria já está cadastrada.
+- O administrador tenta cadastrar uma categoria já existente.
+- O sistema identifica duplicidade de cadastro.
+- O sistema informa que a categoria já está cadastrada.
