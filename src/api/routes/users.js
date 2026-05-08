@@ -118,7 +118,7 @@ router.post('/', verifyToken, isAdmin, async function(req, res) {
 });
 
 /* POST - Criar novo usuário - Usuário */
-router.post('/register', verifyToken, async function(req, res) {
+router.post('/register', async function(req, res) {
   try {
     const { login, email, senha} = req.body;
     const role = 'user';
