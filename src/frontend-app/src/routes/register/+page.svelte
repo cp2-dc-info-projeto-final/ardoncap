@@ -1,6 +1,6 @@
 <script lang="ts">
     // Formulário de usuário
-    import { Card, Button, Label, Input, Heading, Select } from 'flowbite-svelte'; // UI
+    import { Card, Button, Label, Input, Heading} from 'flowbite-svelte'; // UI
     import { onMount } from 'svelte'; // ciclo de vida
     import api from '$lib/api'; // API backend
     import type { ApiFieldError, ApiResponse } from '$lib/api';
@@ -11,12 +11,6 @@
     export let id: number | null = null; // id do usuário
   
     let user: UserFormData = { id: 0, login: '', email: '', senha: '', role: 'user' }; // dados do form
-    
-    // Opções de roles
-    const roleOptions = [
-      { value: 'user', name: 'Usuário' },
-      { value: 'admin', name: 'Administrador' }
-    ];
     let loading = false;
     let error = '';
     let fieldErrors: ApiFieldError[] = [];
@@ -48,11 +42,11 @@
         const userData = { ...user };
         // Remove senha vazia na edição para não sobrescrever indevidamente
         if (id !== null && !userData.senha) {
-          delete userData.senha;
+          dee userData.senha;
         }
         
         if (id === null) {
-          const res = await api.post('/users', userData);
+          const res = await api.post('/register', userData);
           const body = res.data as ApiResponse<User>;
           if (!body.success) {
             error = body.message;
