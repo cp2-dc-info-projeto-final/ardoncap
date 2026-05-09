@@ -76,7 +76,7 @@
   <Navbar class="fixed start-0 top-0 z-20 w-full bg-black px-2 py-2.5 sm:px-4">
     <NavBrand href="/">
       <img src="/images/icon.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
-      <Heading class="self-center text-xl font-semibold whitespace-nowrap text-primary-500 dark:text-primary-400">ARDONCAP</Heading>
+      <Heading class="self-center text-xl font-semibold whitespace-nowrap text-white">ARDONCAP</Heading>
     </NavBrand>
     <NavHamburger />
     <NavUl>
@@ -87,11 +87,11 @@
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
           {#if user.role === 'admin'} <!-- só exibe menu usuários para admin-->
-            <NavLi href="/users" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Usuários</NavLi>
+            <NavLi href="/users" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Usuários</NavLi>
           {/if}
           <NavLi>
             <div class="flex items-center">
-              <span class="text-primary-500 dark:text-primary-400 px-4 py-2">Olá, {user.login}</span>
+              <span class="text-white px-4 py-2">Olá, {user.login}</span>
               <!-- svelte-ignore component_name_lowercase -->
               <button 
                 class="ml-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm flex items-center gap-1"
@@ -103,7 +103,7 @@
             </div>
           </NavLi>
         {:else if loadingUser}
-          <NavLi class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400">Carregando...</NavLi>
+          <NavLi class="text-lg font-bold px-4 py-2 text-white">Carregando...</NavLi>
         {:else}
           <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
         {/if}
