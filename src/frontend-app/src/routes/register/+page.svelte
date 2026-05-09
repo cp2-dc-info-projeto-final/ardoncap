@@ -42,7 +42,7 @@
         const userData = { ...user };
         // Remove senha vazia na edição para não sobrescrever indevidamente
         if (id !== null && !userData.senha) {
-          dee userData.senha;
+          delete userData.senha;
         }
         
         if (id === null) {
