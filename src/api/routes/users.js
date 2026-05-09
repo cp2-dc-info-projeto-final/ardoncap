@@ -314,5 +314,57 @@ router.delete('/:id', verifyToken, isAdmin, async function(req, res) {
     return sendError(res, 500, 'Erro interno do servidor');
   }
 });
-
 module.exports = router;
+
+router.post('/register', async function(req, res) {
+  try{
+    const{login, email,senha} = req.body;
+
+    if (!login || ! email || ! senha ){
+      return sendError(res, 400,'prencha todos os campus !' );
+    }
+
+    const existingUser = await pool.query(
+      'SELECT id FROM usuario WHERE login = $1',
+      [login]
+    );
+
+    if (existingUser.rows.length > 0){
+      return sendError(res, 409, 'login ja existe');
+    }
+
+    const existingEmail = await pool.query(
+      'SELECT id FROM usuario WHERE  email = $1 ',
+      [email]
+    );
+
+    if (existingEmail.rows.length > 0){
+      return sendError(res, 409, 'email ja existe');
+    }  
+
+    const hashedPassword = await bcrypt.hash(senha, 12 );
+
+    const result = await pool.query(
+      `INSERT INTO usuario 
+      (login, email, senha, role)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, login, email, role`,
+      [login, email, hashedPassword, 'user']
+    );
+
+    return sendSuccess(
+          res,
+          201,
+          'Usuário cadastrado com sucesso',
+          result.rows[0]
+        );
+
+      } catch (error) {
+        console.error(error);
+        return sendError(res, 500, 'Erro interno do servidor');
+      }
+
+
+  }
+
+);
