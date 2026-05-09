@@ -73,16 +73,16 @@
 </script>
 
 <div class="relative px-8">
-  <Navbar class="fixed start-0 top-0 z-20 w-full bg-gray-800 px-2 py-2.5 sm:px-4">
+  <Navbar class="fixed start-0 top-0 z-20 w-full bg-black px-2 py-2.5 sm:px-4">
     <NavBrand href="/">
       <img src="/images/icon.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
       <Heading class="self-center text-xl font-semibold whitespace-nowrap text-primary-500 dark:text-primary-400">ARDONCAP</Heading>
     </NavBrand>
     <NavHamburger />
     <NavUl>
-      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Início</NavLi>
-      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
-      <NavLi href="/about" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Sobre</NavLi>
+      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Início</NavLi>
+      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
+      <NavLi href="/about" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Sobre</NavLi>
       
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
@@ -94,7 +94,7 @@
               <span class="text-primary-500 dark:text-primary-400 px-4 py-2">Olá, {user.login}</span>
               <!-- svelte-ignore component_name_lowercase -->
               <button 
-                class="ml-2 px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm flex items-center gap-1"
+                class="ml-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm flex items-center gap-1"
                 on:click={handleLogout}
               >
                 <ArrowRightToBracketOutline class="w-4 h-4" />
@@ -105,12 +105,12 @@
         {:else if loadingUser}
           <NavLi class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400">Carregando...</NavLi>
         {:else}
-          <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
+          <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
         {/if}
       {:else}
         <!-- se não tem token, exibe botão de login-->
-        <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
-        <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">ANUNCIE JÁ!</NavLi>
+        <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
+        <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">ANUNCIE JÁ!</NavLi>
       {/if}
     </NavUl>
   </Navbar>
