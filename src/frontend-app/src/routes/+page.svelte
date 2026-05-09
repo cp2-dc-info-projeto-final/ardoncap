@@ -6,12 +6,32 @@
 
 <Menu />
 
-<div class="text-center p-8 pt-32">
-	<Heading tag="h2" class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">Home</Heading>
-	<P class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-4 text-justify">
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque. Mauris consequat, sapien et dictum cursus, urna erat laoreet enim, nec gravida urna erat at sapien. Etiam nec dolor vitae odio hendrerit venenatis. Proin nec turpis nec sem tempus dictum. Vivamus tincidunt, nisi nec facilisis cursus, enim erat dictum neque, at dignissim enim urna at velit. Integer non turpis id mi tristique cursus. Nullam in sem vitae massa dictum dictum.
-	</P>
-	<Skeleton class="mt-16 mb-8" />
-	<ImagePlaceholder class="my-8" />
-	<TextPlaceholder class="my-8" />
-</div>
+<style>
+  :global(html, body) {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+  }
+</style>
+
+
+<section class="w-full h-screen text-white bg-black bg-[url('/images/FUNDO.jpeg')] bg-no-repeat bg-cover bg-center px-[8%] flex flex-col">
+    
+    <div class="pt-[12%]">
+        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-['Instrument_Serif'] leading-[1.1] m-0">
+            CONSUMA MELHOR, <br />
+            COMPRE CONSCIENTE
+        </h1>
+        
+        <h2 class="font-['Special_Elite'] tracking-[0.1em] mt-6 font-light text-lg">
+            Produtos bons merecem uma segunda vida.
+        </h2>
+    </div>
+
+</section>
+
+<section class="min-h-screen bg-black text-white px-[8%] py-20">
+    <h3 class="text-4xl font-['Instrument_Serif'] mb-10">Categorias</h3>
+</section>

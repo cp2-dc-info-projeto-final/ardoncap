@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Heading} from "flowbite-svelte";
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Heading, button} from "flowbite-svelte";
   import { onMount } from "svelte";
   import { logout, getCurrentUser, getToken, type User } from "$lib/auth";
   import { goto } from "$app/navigation";
@@ -81,6 +81,7 @@
     <NavHamburger />
     <NavUl>
       <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Início</NavLi>
+      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
       <NavLi href="/about" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Sobre</NavLi>
       
       {#if hasToken}
@@ -91,6 +92,7 @@
           <NavLi>
             <div class="flex items-center">
               <span class="text-primary-500 dark:text-primary-400 px-4 py-2">Olá, {user.login}</span>
+              <!-- svelte-ignore component_name_lowercase -->
               <button 
                 class="ml-2 px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded text-sm flex items-center gap-1"
                 on:click={handleLogout}
@@ -108,6 +110,7 @@
       {:else}
         <!-- se não tem token, exibe botão de login-->
         <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
+        <NavLi href="/" class="text-lg font-bold px-4 py-2 text-primary-500 dark:text-primary-400 hover:text-yellow-300 hover:bg-gray-700 focus:text-yellow-400 focus:bg-gray-700 transition-colors rounded-lg">ANUNCIE JÁ!</NavLi>
       {/if}
     </NavUl>
   </Navbar>
