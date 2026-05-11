@@ -41,9 +41,9 @@
 </svelte:head>
 
 <div class="w-full max-w-3xl px-4 md:px-8">
-  <div class="h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+  <div class="h-screen flex flex-col items-center justify-center bg-black p-4">
     <div class="w-full max-w-sm">
-      <h2 class="text-center text-3xl font-extrabold text-gray-900 mb-6">
+      <h2 class="text-center text-3xl font-extrabold text-white mb-6">
         Login
       </h2>
       

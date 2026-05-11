@@ -81,7 +81,7 @@
     <NavHamburger />
     <NavUl>
       <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Início</NavLi>
-      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
+      <NavLi href="/#categorias" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
       <NavLi href="/about" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Sobre</NavLi>
       
       {#if hasToken}
