@@ -73,16 +73,16 @@
 </script>
 
 <div class="relative px-8">
-  <Navbar class="fixed start-0 top-0 z-20 w-full bg-black px-2 py-2.5 sm:px-4">
+  <Navbar class="fixed start-0 top-0 z-20 w-full px-2 py-2.5 sm:px-4">
     <NavBrand href="/">
       <img src="/images/icon.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
       <Heading class="self-center text-xl font-semibold whitespace-nowrap text-white">ARDONCAP</Heading>
     </NavBrand>
     <NavHamburger />
     <NavUl>
-      <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Início</NavLi>
-      <NavLi href="/#categorias" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Categorias</NavLi>
-      <NavLi href="/about" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Sobre</NavLi>
+      <NavLi href="/" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600  transition-colors rounded-lg drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Início</NavLi>
+      <NavLi href="/#categorias" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Categorias</NavLi>
+      <NavLi href="/about" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600  focus:text-red-600  transition-colors rounded-lg">Sobre</NavLi>
       
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
@@ -109,8 +109,8 @@
         {/if}
       {:else}
         <!-- se não tem token, exibe botão de login-->
-        <NavLi href="/login" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
-        <NavLi href="/" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">ANUNCIE JÁ!</NavLi>
+        <NavLi href="/login" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Login</NavLi>
+        <NavLi href="/" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600  focus:text-red-600  transition-colors rounded-lg">ANUNCIE JÁ!</NavLi>
       {/if}
     </NavUl>
   </Navbar>
