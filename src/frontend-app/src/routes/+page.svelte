@@ -21,7 +21,7 @@
     
     <div class="pt-[12%]">
         <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-['Instrument_Serif'] leading-[1.1] m-0">
-            CONSUMA MELHOR, <br />
+            CONSUMA MELHOR, <br/>
             COMPRE CONSCIENTE
         </h1>
         
