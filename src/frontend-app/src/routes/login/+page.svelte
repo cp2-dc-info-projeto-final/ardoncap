@@ -43,26 +43,28 @@
 <div class="w-full max-w-3xl px-4 md:px-8">
   <div class="h-screen flex flex-col items-center justify-center bg-black p-4">
     <div class="w-full max-w-sm">
-      <h2 class="text-center text-3xl font-extrabold text-white mb-6">
-        Login
-      </h2>
       
       <Card class="p-6 w-full">
         <form on:submit|preventDefault={handleLogin} class="space-y-6">
             <div>
+              <h2 class="text-center text-3xl font-extrabold text-black mb-6">
+                Login
+              </h2>
               <Label for="login" class="mb-2">Login</Label>
               <Input
+                class= "focus:border-red-600"
                 id="login"
                 type="text"
                 bind:value={login}
                 placeholder="Digite seu login"
                 required
-              />
+                />
             </div>
 
             <div>
               <Label for="password" class="mb-2">Senha</Label>
               <Input
+                class= "focus:border-red-600"
                 id="password"
                 type="password"
                 bind:value={password}
@@ -79,12 +81,12 @@
 
             <Button 
               type="submit"
-              class="w-full" 
+              class="w-full bg-red-600 hover:bg-red-800" 
               disabled={loading}
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
-            <a href="/register" style="text-decoration: underline;">Não tem uma conta ainda? Cadastre-se agora!</a>
+            <a href="/register" class="text-black hover:text-red-800 underline">Não tem uma conta ainda? Cadastre-se agora!</a>
         </form>
       </Card>
     </div>

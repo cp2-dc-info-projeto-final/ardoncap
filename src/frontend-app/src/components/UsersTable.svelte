@@ -80,7 +80,7 @@
 </script>
 
 {#if loading}
-  <div class="my-8 text-center text-gray-500">Carregando usuários...</div>
+  <div class="my-8 text-center text-black">Carregando usuários...</div>
 {:else if error}
   <div class="my-8 text-center text-red-500">{error}</div>
 {:else}
@@ -118,11 +118,11 @@
               <!-- Botão remover -->
               <button
                 title="Remover"
-                class="p-2 rounded border border-red-100 hover:border-red-300 transition bg-transparent"
+                class="p-2 rounded border border-red-600 hover:border-red-300 transition bg-transparent"
                 on:click={() => openConfirm(user.id)}
                 disabled={deletingId === user.id || loading}
               >
-                <TrashBinOutline class="w-5 h-5 text-red-400" />
+                <TrashBinOutline class="w-5 h-5 text-red-600" />
               </button>
             </TableBodyCell>
           </TableBodyRow>

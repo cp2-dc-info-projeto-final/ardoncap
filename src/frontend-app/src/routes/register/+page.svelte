@@ -92,7 +92,7 @@
       <!-- Campo login -->
       <div>
         <Label for="login">Login</Label>
-        <Input id="login" bind:value={user.login} placeholder="Digite o login" required class="mt-1" />
+        <Input id="login" bind:value={user.login} placeholder="Digite o login" required class="mt-1 focus:border-red-600" />
         {#if errorOf('login')}
           <div class="mt-1 text-sm text-red-500">{errorOf('login')}</div>
         {/if}
@@ -100,7 +100,7 @@
       <!-- Campo email -->
       <div>
         <Label for="email">Email</Label>
-        <Input id="email" type="email" bind:value={user.email} placeholder="Digite o e-mail" required class="mt-1" />
+        <Input id="email" type="email" bind:value={user.email} placeholder="Digite o e-mail" required class="mt-1 focus:border-red-600" />
         {#if errorOf('email')}
           <div class="mt-1 text-sm text-red-500">{errorOf('email')}</div>
         {/if}
@@ -115,7 +115,7 @@
           placeholder={id === null ? 'Digite a senha (mínimo 6 caracteres)' : 'Nova senha (opcional)'} 
           required={id === null}
           minlength={6}
-          class="mt-1" 
+          class="mt-1 focus:border-red-600" 
         />
         {#if errorOf('senha')}
           <div class="mt-1 text-sm text-red-500">{errorOf('senha')}</div>
@@ -124,13 +124,13 @@
       <!-- Botões de ação -->
       <div class="flex gap-4 justify-end mt-4">
         <!-- Botão cancelar/voltar -->
-        <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
+        <Button color="red" type="button" onclick={handleCancel} disabled={loading}>
           <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
           {id === null ? 'Voltar' : 'Cancelar'}
         </Button>
         <!-- Botão salvar -->
-        <Button type="submit" color="primary" disabled={loading}>
-          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+        <Button type="submit" color="red" disabled={loading}>
+          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom " />
           {id === null ? 'Cadastrar' : 'Salvar'}
         </Button>
       </div>
