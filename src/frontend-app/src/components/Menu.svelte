@@ -87,14 +87,14 @@
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
           {#if user.role === 'admin'} <!-- só exibe menu usuários para admin-->
-            <NavLi href="/users" class="text-lg font-bold px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Usuários</NavLi>
+            <NavLi href="/users" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Usuários</NavLi>
           {/if}
           <NavLi>
             <div class="flex items-center">
               <span class="text-white px-4 py-2">Olá, {user.login}</span>
               <!-- svelte-ignore component_name_lowercase -->
               <button 
-                class="ml-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm flex items-center gap-1"
+                class="ml-2 px-3 py-1 bg-red-600 hover:bg-red-800 text-white rounded text-sm flex items-center gap-1"
                 on:click={handleLogout}
               >
                 <ArrowRightToBracketOutline class="w-4 h-4" />
