@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS usuario;
 DROP TABLE IF EXISTS categoria;
-DROP TABLE IF EXISTS anuncio;
+DROP TABLE IF EXISTS produto;
 DROP TABLE IF EXISTS endereco;
 DROP TABLE IF EXISTS item_carrinho;
 DROP TABLE IF EXISTS carrinho;
@@ -32,15 +32,15 @@ CREATE TABLE categoria (
     CONSTRAINT pk_categoria PRIMARY KEY (id)
 );
 
-CREATE TABLE anuncio (
+CREATE TABLE produto (
     id bigint GENERATED ALWAYS AS IDENTITY,
     nome text NOT NULL,
     descricao text NOT NULL,
     preco int NOT NULL,
-    id_categoria INT REFERENCES categoria(id),
-    id_usuario INT REFERENCES usuario(id),
+    id_categoria INT NOT NULL REFERENCES categoria(id),
+    id_usuario INT NOT NULL REFERENCES usuario(id),
 
-    CONSTRAINT pk_anuncio PRIMARY KEY (id)
+    CONSTRAINT pk_produto PRIMARY KEY (id)
 );
 
 CREATE TABLE endereco (
@@ -51,15 +51,52 @@ CREATE TABLE endereco (
     cidade text NOT NULL,
     estado text NOT NULL,
     complemento text NULL,
-    id_usuario REFERENCES usuario(id),
+    id_usuario REFERENCES usuario(id) NOT NULL,
 
     CONSTRAINT pk_endereco PRIMARY KEY (id)
 );
 
+CREATE TABLE item_pedido (
+    id bigint GENERATED ALWAYS AS IDENTITY,
+    quantidade int NOT NULL,
+    preco_unitario int NOT NULL,
+    subtotal int NOT NULL,
+    id_pedido int NOT NULL REFERENCES pedido(id),
+    id_produto int NOT NULL REFERENCES produto(id),
+
+    CONSTRAINT pk_item_pedido PRIMARY KEY (id)
+);
+
+CREATE TABLE pedido (
+    id bigint GENERATED ALWAYS AS IDENTITY,
+    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status text NOT NULL,
+    valor int NOT NULL,
+    id_usuario NOT NULL REFERENCES usuario(id),
+    id_endereco NOT NULL REFERENCES endereco(id),
+
+    CONSTRAINT pk_pedido PRIMARY KEY (id)
+);
+
+INSERT INTO usuario (login, email, senha, role) VALUES
+
 CREATE TABLE item_carrinho (
     id bigint GENERATED ALWAYS AS IDENTITY,
-    CONSTRAINT pk_endereco PRIMARY KEY (id)
-)
+    quantidade int NOT NULL,
+    preco_unitario int NOT NULL,
+    id_carrinho int NOT NULL REFERENCES carrinho(id),
+    id_produto int NOT NULL REFERENCES produto(id),
+
+    CONSTRAINT pk_item_carrinho PRIMARY KEY (id)
+);
+
+CREATE TABLE carrinho (
+    id bigint GENERATED ALWAYS AS IDENTITY,
+    id_usuario NOT NULL REFERENCES usuario(id),
+
+    CONSTRAINT pk_carrinho PRIMARY KEY (id)
+);
+
 INSERT INTO usuario (login, email, senha, role) VALUES
 -- senha efelantinho
 ('hermenegildo', 'hermenegildo@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'admin'),
