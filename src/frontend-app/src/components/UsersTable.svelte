@@ -87,7 +87,7 @@
   <!-- Tabela para telas médias/grandes -->
   <div class="hidden xl:block">
     <!-- Tabela de usuários -->
-    <Table class="w-full max-w-5xl mx-auto my-8 shadow-lg border border-gray-200 rounded-lg">
+    <Table class="w-full max-w-5xl mx-auto my-8 shadow-lg border border-gray-200">
       <TableHead>
         <TableHeadCell class="w-16">ID</TableHeadCell>
         <TableHeadCell class="w-32">Login</TableHeadCell>
@@ -135,7 +135,7 @@
     <div class="flex flex-col items-center gap-4 my-8 max-w-3xl mx-auto md:grid md:grid-cols-2">
       {#each users as user}
         <!-- Card de usuário -->
-        <Card class="max-w-sm w-full p-0 overflow-hidden shadow-lg border border-gray-200">
+        <Card class="max-w-sm w-full p-0 overflow-hidden shadow-lg border-gray-200">
           <div class="px-4 pt-4 pb-2 bg-gray-100 text-left flex items-center justify-between">
             <div>
               <div class="text-lg font-semibold text-gray-800 text-left">{user.login}</div>

@@ -28,7 +28,7 @@
         <CloseOutline class="w-5 h-5 text-gray-500" /> {cancelText}
       </Button>
       <!-- Botão confirmar -->
-      <Button color="primary" type="button" onclick={onConfirm}>
+      <Button color="red" type="button" onclick={onConfirm}>  
         <CheckOutline class="w-5 h-5 text-white" /> {confirmText}
       </Button>
     </div>

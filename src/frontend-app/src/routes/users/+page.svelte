@@ -39,6 +39,9 @@
         Adicionar
       </button>
     </div>
-    <UsersTable />
+    <div>
+      <input type="text" class="rounded-lg" placeholder="Pesquisar... " >
+    </div>
+    <UsersTable/>
   </div>
 {/if}
