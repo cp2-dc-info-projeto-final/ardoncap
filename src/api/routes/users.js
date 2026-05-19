@@ -24,7 +24,15 @@ function sendError(res, status, message, errors = []) {
 // requer usuário autenticado como admin
 router.get('/', verifyToken, isAdmin, async function(req, res) {
   try {
+    const { filtro } = req.query;
+
     const result = await pool.query('SELECT id, login, email, role FROM usuario ORDER BY id');
+    const {search} = req.query;
+    let result;
+    if (search) {
+      result = await.pool.query 
+    }
+
     return sendSuccess(res, 200, null, result.rows);
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);

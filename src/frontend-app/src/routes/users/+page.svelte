@@ -8,6 +8,7 @@
 
   let checkingAccess = true;
   let canView = false;
+  let search = '';
 
   /**
    * se não existir usuário redireciona para a página de login
@@ -40,8 +41,10 @@
       </button>
     </div>
     <div>
-      <input type="text" class="rounded-lg" placeholder="Pesquisar... " >
+      <input type="text"
+      bind:value={search}
+      class="rounded-lg" placeholder="Pesquisar por login...">
     </div>
-    <UsersTable/>
+    <UsersTable search={search}/>
   </div>
 {/if}

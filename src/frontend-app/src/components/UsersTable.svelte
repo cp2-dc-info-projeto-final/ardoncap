@@ -1,4 +1,6 @@
 <script lang="ts">
+  export let search = '';
+  
   // Tabela de usuários
   import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge } from 'flowbite-svelte'; // UI
   import ConfirmModal from './ConfirmModal.svelte'; // modal de confirmação
@@ -8,8 +10,16 @@
   import type { ApiResponse } from '$lib/api';
   import { onMount } from 'svelte'; // ciclo de vida
   import type { User } from '$lib/models/User';
+	import { USER } from '$env/static/private';
 
-  let users: User[] = []; // lista de usuários
+  let users: User[] = [];   // lista de usuários
+
+  $: filteredUsers = users.filter((user) => {
+    const term = search.toLowerCase();
+    return (
+      user.login.toLowerCase().includes(term)
+    );
+  });
   let loading = true;
   let error = '';
   let deletingId: number | null = null; // id em deleção
@@ -96,7 +106,7 @@
         <TableHeadCell class="w-24"></TableHeadCell> <!-- coluna para editar/remover -->
       </TableHead>
       <TableBody>
-        {#each users as user}
+        {#each filteredUsers as user}
           <TableBodyRow>
             <TableBodyCell>{user.id}</TableBodyCell>
             <TableBodyCell>{user.login}</TableBodyCell>
