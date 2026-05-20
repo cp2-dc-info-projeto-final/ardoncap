@@ -14,12 +14,32 @@
 
   let users: User[] = [];   // lista de usuários
 
-  $: filteredUsers = users.filter((user) => {
-    const term = search.toLowerCase();
-    return (
-      user.login.toLowerCase().includes(term)
-    );
-  });
+  $: loadUsers(search);
+  async function loadUsers(searchTerm: string) {
+    loading = true;
+    try {
+      const res = await api.get('/users', {
+        params: {
+          search: searchTerm
+        }
+      });
+  
+      const body = res.data as ApiResponse<User[]>;
+      if (body.success) {
+        users = body.data ?? [];
+      } else {
+        error = body.message;
+      }
+    } catch (e: any) {
+      console.error('Erro ao carregar usuários:', e);
+  
+      const body = e.response?.data as ApiResponse<User[]> | undefined;
+      error = body?.message || 'Erro ao carregar usuários';
+    } finally {
+      loading = false;
+    }
+  }
+
   let loading = true;
   let error = '';
   let deletingId: number | null = null; // id em deleção
@@ -106,7 +126,7 @@
         <TableHeadCell class="w-24"></TableHeadCell> <!-- coluna para editar/remover -->
       </TableHead>
       <TableBody>
-        {#each filteredUsers as user}
+        {#each users as user}
           <TableBodyRow>
             <TableBodyCell>{user.id}</TableBodyCell>
             <TableBodyCell>{user.login}</TableBodyCell>
