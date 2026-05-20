@@ -21,7 +21,7 @@
 <section class="w-full h-screen text-white bg-black bg-[url('/images/FUNDO.jpeg')] bg-no-repeat bg-cover bg-center px-[7%] flex flex-col">
     
     <div class="pt-[12%]">
-        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-['InstrumentSerif'] leading-[1.1] tracking-[2%] m-0 font-bold">
+        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-['Special_Elite'] leading-[1.1] tracking-[2%] m-0 font-bold">
             <br>
             CONSUMA MELHOR, <br/>
             COMPRE CONSCIENTE
