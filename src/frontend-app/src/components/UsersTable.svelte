@@ -10,7 +10,7 @@
   import type { ApiResponse } from '$lib/api';
   import { onMount } from 'svelte'; // ciclo de vida
   import type { User } from '$lib/models/User';
-	import { USER } from '$env/static/private';
+	import type { USER } from '$env/static/private';
 
   let users: User[] = [];   // lista de usuários
 

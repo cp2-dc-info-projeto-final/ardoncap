@@ -29,7 +29,7 @@ router.get('/', verifyToken, isAdmin, async function(req, res) {
 
     if (search) {
       result = await pool.query(
-        `SELECT id, login, email, roleFROM usuarioWHERE LOWER(login) LIKE LOWER($1) ORDER BY id`, [`%${search}%`]);
+        `SELECT id, login, email, role FROM usuario WHERE login ILIKE $1 ORDER BY id`, [`%${search}%`]);
     } else {
       result = await pool.query(
         'SELECT id, login, email, role FROM usuario ORDER BY id');
