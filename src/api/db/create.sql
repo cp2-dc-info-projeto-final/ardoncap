@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS usuario;
-DROP TABLE IF EXISTS categoria;
-DROP TABLE IF EXISTS produto;
-DROP TABLE IF EXISTS endereco;
-DROP TABLE IF EXISTS item_carrinho;
-DROP TABLE IF EXISTS carrinho;
-DROP TABLE IF EXISTS item_pedido;
-DROP TABLE IF EXISTS pedido;
-DROP TABLE IF EXISTS avaliacao;
+DROP TABLE IF EXISTS avaliacao CASCADE;
+DROP TABLE IF EXISTS item_pedido CASCADE;
+DROP TABLE IF EXISTS pedido CASCADE;
+DROP TABLE IF EXISTS item_carrinho CASCADE;
+DROP TABLE IF EXISTS carrinho CASCADE;
+DROP TABLE IF EXISTS endereco CASCADE;
+DROP TABLE IF EXISTS produto CASCADE;
+DROP TABLE IF EXISTS categoria CASCADE;
+DROP TABLE IF EXISTS usuario CASCADE;
 
 CREATE TABLE usuario (
     id bigint GENERATED ALWAYS AS IDENTITY,
@@ -38,7 +38,7 @@ CREATE TABLE produto (
     descricao text NOT NULL,
     preco int NOT NULL,
     id_categoria INT NOT NULL REFERENCES categoria(id),
-    id_usuario INT NOT NULL REFERENCES usuario(id),
+    id_usuario bigint NOT NULL REFERENCES usuario(id),
 
     CONSTRAINT pk_produto PRIMARY KEY (id)
 );
@@ -51,20 +51,26 @@ CREATE TABLE endereco (
     cidade text NOT NULL,
     estado text NOT NULL,
     complemento text NULL,
-    id_usuario REFERENCES usuario(id) NOT NULL,
+    id_usuario bigint REFERENCES usuario(id) NOT NULL,
 
     CONSTRAINT pk_endereco PRIMARY KEY (id)
 );
 
-CREATE TABLE item_pedido (
+CREATE TABLE carrinho (
+    id bigint GENERATED ALWAYS AS IDENTITY,
+    id_usuario int NOT NULL REFERENCES usuario(id),
+
+    CONSTRAINT pk_carrinho PRIMARY KEY (id)
+);
+
+CREATE TABLE item_carrinho (
     id bigint GENERATED ALWAYS AS IDENTITY,
     quantidade int NOT NULL,
     preco_unitario int NOT NULL,
-    subtotal int NOT NULL,
-    id_pedido int NOT NULL REFERENCES pedido(id),
-    id_produto int NOT NULL REFERENCES produto(id),
+    id_carrinho bigint NOT NULL REFERENCES carrinho(id),
+    id_produto bigint NOT NULL REFERENCES produto(id),
 
-    CONSTRAINT pk_item_pedido PRIMARY KEY (id)
+    CONSTRAINT pk_item_carrinho PRIMARY KEY (id)
 );
 
 CREATE TABLE pedido (
@@ -72,32 +78,37 @@ CREATE TABLE pedido (
     data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status text NOT NULL,
     valor int NOT NULL,
-    id_usuario NOT NULL REFERENCES usuario(id),
-    id_endereco NOT NULL REFERENCES endereco(id),
+    id_usuario bigint NOT NULL REFERENCES usuario(id),
+    id_endereco bigint NOT NULL REFERENCES endereco(id),
 
     CONSTRAINT pk_pedido PRIMARY KEY (id)
 );
 
-INSERT INTO usuario (login, email, senha, role) VALUES
-
-CREATE TABLE item_carrinho (
+CREATE TABLE item_pedido (
     id bigint GENERATED ALWAYS AS IDENTITY,
     quantidade int NOT NULL,
     preco_unitario int NOT NULL,
-    id_carrinho int NOT NULL REFERENCES carrinho(id),
-    id_produto int NOT NULL REFERENCES produto(id),
+    subtotal int NOT NULL,
+    id_pedido bigint NOT NULL REFERENCES pedido(id),
+    id_produto bigint NOT NULL REFERENCES produto(id),
 
-    CONSTRAINT pk_item_carrinho PRIMARY KEY (id)
+    CONSTRAINT pk_item_pedido PRIMARY KEY (id)
 );
 
-CREATE TABLE carrinho (
+CREATE TABLE avaliacao (
     id bigint GENERATED ALWAYS AS IDENTITY,
-    id_usuario NOT NULL REFERENCES usuario(id),
+    nota int NOT NULL,
+    comentario text NULL,
+    data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_usuario bigint NOT NULL REFERENCES usuario(id),
+    id_produto bigint NOT NULL REFERENCES produto(id),
 
-    CONSTRAINT pk_carrinho PRIMARY KEY (id)
-);
+    CONSTRAINT pk_avaliacao PRIMARY KEY (id),
+    CONSTRAINT ck_avaliacao_nota CHECK (nota >= 1 AND nota <= 5)
+);   
 
 INSERT INTO usuario (login, email, senha, role) VALUES
+
 -- senha efelantinho
 ('hermenegildo', 'hermenegildo@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'admin'),
 ('zoroastra', 'zoroastra@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'user');
