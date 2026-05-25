@@ -20,7 +20,7 @@ function sendError(res, status, message, errors = []) {
   });
 }
 
-/* GET - Buscar todos os usuários */
+/* GET - Buscar todos os usuários com filtro opcional */
 // requer usuário autenticado como admin
 router.get('/', verifyToken, isAdmin, async function(req, res) {
   try {
