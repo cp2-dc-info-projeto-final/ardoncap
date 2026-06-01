@@ -16,6 +16,12 @@
   let error = '';
   let fieldErrors: ApiFieldError[] = [];
 
+  // CORREÇÃO 1: Adicionada a função que faltava para verificar erros nos campos
+  function errorOf(fieldName: string): string {
+    const fieldError = fieldErrors.find(e => e.field === fieldName);
+    return fieldError ? fieldError.message : '';
+  }
+
   // Carrega categoria se for edição
   onMount(async () => {
     if (id !== null) {
@@ -43,7 +49,7 @@
 
     // Validação do nome
     if (!categoria.nome || categoria.nome.length < 5) {
-      fieldErrors = [{ field: 'nome', message: 'A categoria ter pelo menos 5 caracteres.' }];
+      fieldErrors = [{ field: 'nome', message: 'A categoria deve ter pelo menos 5 caracteres.' }];
       error = 'A categoria deve ter pelo menos 5 caracteres.';
       return;
     }
@@ -58,7 +64,7 @@
         const body = res.data as ApiResponse<Categoria>;
         if (!body.success) {
           error = body.message;
-          fieldErrors = body.errors;
+          fieldErrors = body.errors || [];
           return;
         }
       } else {
@@ -66,7 +72,7 @@
         const body = res.data as ApiResponse<Categoria>;
         if (!body.success) {
           error = body.message;
-          fieldErrors = body.errors;
+          fieldErrors = body.errors || [];
           return;
         }
       }
@@ -83,7 +89,6 @@
   function handleCancel() {
     goto('/categorias');
   }
-
 </script>
 
 <!-- Card do formulário -->
@@ -109,8 +114,8 @@
   
       <!-- Botões de ação -->
       <div class="flex gap-4 justify-end mt-4">
-        <!-- Botão cancelar/voltar -->
-        <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
+        <!-- CORREÇÃO 2: Alterado onclick para on:click -->
+        <Button color="light" type="button" on:click={handleCancel} disabled={loading}>
           <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
           {id === null ? 'Voltar' : 'Cancelar'}
         </Button>
@@ -121,4 +126,4 @@
         </Button>
       </div>
     </form>
-  </Card>
+</Card>
