@@ -76,7 +76,7 @@
           return;
         }
       }
-      goto('/categorias');
+      goto('/categoria');
     } catch (e: any) {
       const body = e.response?.data as ApiResponse<Categoria> | undefined;
       error = body?.message || 'Erro ao salvar categoria.';
@@ -87,7 +87,7 @@
   }
 
   function handleCancel() {
-    goto('/categorias');
+    goto('/categoria');
   }
 </script>
 
@@ -115,7 +115,7 @@
       <!-- Botões de ação -->
       <div class="flex gap-4 justify-end mt-4">
         <!-- CORREÇÃO 2: Alterado onclick para on:click -->
-        <Button color="light" type="button" on:click={handleCancel} disabled={loading}>
+        <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
           <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
           {id === null ? 'Voltar' : 'Cancelar'}
         </Button>

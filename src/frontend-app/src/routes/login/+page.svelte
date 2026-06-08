@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-  <title>Login - Projeto Modelo 2025</title>
+  <title>Login - Ardoncap</title>
 </svelte:head>
 
 <div class="w-full max-w-3xl px-4 md:px-8">
