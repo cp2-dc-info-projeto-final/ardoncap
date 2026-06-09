@@ -76,7 +76,7 @@
           return;
         }
       }
-      goto('/categoria');
+      goto('/categorias');
     } catch (e: any) {
       const body = e.response?.data as ApiResponse<Categoria> | undefined;
       error = body?.message || 'Erro ao salvar categoria.';
@@ -87,7 +87,7 @@
   }
 
   function handleCancel() {
-    goto('/categoria');
+    goto('/categorias');
   }
 </script>
 
@@ -120,7 +120,7 @@
           {id === null ? 'Voltar' : 'Cancelar'}
         </Button>
         <!-- Botão salvar -->
-        <Button type="submit" color="primary" disabled={loading}>
+        <Button type="submit" color="red" disabled={loading}>
           <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
           {id === null ? 'Cadastrar' : 'Salvar'}
         </Button>

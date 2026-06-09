@@ -10,12 +10,11 @@
     import type { ApiResponse } from '$lib/api';
     import { onMount } from 'svelte'; // ciclo de vida
     import type { Categoria } from '$lib/models/Categoria';
-    import type { USER } from '$env/static/private';
   
     let categorias: Categoria[] = [];   // lista de usuários
   
     $: loadCategorias(search);
-    async function loadUsers(searchTerm: string) {
+    async function loadCategorias(searchTerm: string) {
       loading = true;
       try {
         const res = await api.get('/categorias', {
@@ -24,17 +23,17 @@
           }
         });
     
-        const body = res.data as ApiResponse<User[]>;
+        const body = res.data as ApiResponse<Categoria[]>;
         if (body.success) {
-          users = body.data ?? [];
+          categorias = body.data ?? [];
         } else {
           error = body.message;
         }
       } catch (e: any) {
-        console.error('Erro ao carregar usuários:', e);
+        console.error('Erro ao carregar categorias:', e);
     
-        const body = e.response?.data as ApiResponse<User[]> | undefined;
-        error = body?.message || 'Erro ao carregar usuários';
+        const body = e.response?.data as ApiResponse<Categoria[]> | undefined;
+        error = body?.message || 'Erro ao carregar categorias';
       } finally {
         loading = false;
       }
@@ -74,13 +73,13 @@
       deletingId = id;
       error = '';
       try {
-        const res = await api.delete(`/users/${id}`);
+        const res = await api.delete(`/categorias/${id}`);
         const body = res.data as ApiResponse<null>;
         if (!body.success) {
           error = body.message;
           return;
         }
-        users = users.filter(user => user.id !== id);
+        categorias = categorias.filter(categoria => categoria.id !== id);
       } catch (e: any) {
         console.error('Erro ao deletar usuário:', e);
         const body = e.response?.data as ApiResponse<null> | undefined;
@@ -92,16 +91,16 @@
   
     onMount(async () => {
       try {
-        const res = await api.get('/users');
-        const body = res.data as ApiResponse<User[]>;
+        const res = await api.get('/categorias');
+        const body = res.data as ApiResponse<Categoria[]>;
         if (body.success) {
-          users = body.data ?? [];
+          categorias = body.data ?? [];
         } else {
           error = body.message;
         }
       } catch (e: any) {
         console.error('Erro ao carregar usuários:', e);
-        const body = e.response?.data as ApiResponse<User[]> | undefined;
+        const body = e.response?.data as ApiResponse<Categoria[]> | undefined;
         error = body?.message || 'Erro ao carregar usuários';
       } finally {
         loading = false;
