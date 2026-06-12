@@ -31,7 +31,7 @@
 
 # Caso de Uso 2: Visualizar Produto
 
-!(doc/CasosDeUso/fluxograma/VisualizarProduto.drawio.png)
+![](fluxograma/VisualizarProduto.drawio.png)
 
 ## Ator:
 - Comprador
