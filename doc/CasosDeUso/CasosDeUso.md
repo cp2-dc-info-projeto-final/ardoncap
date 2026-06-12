@@ -60,7 +60,7 @@
 
 # Caso de Uso 3: Visualizar Categorias
 
-![](fluxograma/BuscaporCategoria.drawio.png)
+![](fluxograma/BuscaPorCategoria.drawio.png)
 
 ## Ator:
 - Comprador
@@ -146,7 +146,7 @@
 
 # Caso de Uso 6: Acompanhar Pedido
 
-!(doc/CasosDeUso/fluxograma/AvaliarPedido.drawio.png)
+![](fluxograma/AvaliarPedido.drawio.png)
 
 ## Ator:
 - Comprador
@@ -165,7 +165,7 @@
 
 # Caso de Uso 7: Avaliar Pedido
 
-!(doc/CasosDeUso/fluxograma/AvaliarPedido.drawio.png)
+![](fluxograma/AvaliarPedido.drawio.png)
 
 ## Ator:
 - Comprador
@@ -190,7 +190,7 @@
 
 # Caso de Uso 8: Gerenciar Produtos
 
-!(doc/CasosDeUso/fluxograma/GerenciarProdutos.drawio.png)
+![](fluxograma/GerenciarProdutos.drawio.png)
 
 ## Ator:
 Vendedor
@@ -224,7 +224,7 @@ Vendedor
 
 # Caso de Uso 9: Gerenciar Pedidos
 
-!(doc/CasosDeUso/fluxograma/GerenciarPedidos.drawio.png)
+![](fluxograma/GerenciarPedidos.drawio.png)
 
 ## Ator:
 - Vendedor
@@ -249,7 +249,7 @@ Vendedor
 
 # Caso de Uso 10: Administrar Produtos
 
-!(doc/CasosDeUso/fluxograma/AdministrarProdutos.drawio.png)
+![](fluxograma/AdministrarProdutos.drawio.png)
 
 ## Ator:
 - Administrador
@@ -284,7 +284,7 @@ Vendedor
 
 # Caso de Uso 11: Administrar Usuários
 
-!(doc/CasosDeUso/fluxograma/AdministrarUsuario.drawio.png)
+![](fluxograma/AdministrarUsuario.drawio.png)
 
 ## Ator:
 - Administrador
@@ -319,7 +319,7 @@ Vendedor
 
 # Caso de Uso 12: Administrar Categorias
 
-!(doc/CasosDeUso/fluxograma/AdministrarCategorias.drawio.png)
+![](fluxograma/AdministrarCategorias.drawio.png)
 
 ## Ator:
 - Administrador
