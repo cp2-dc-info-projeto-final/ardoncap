@@ -80,7 +80,7 @@
 
 # Caso de Uso 4: Gerenciar Carrinho
 
-!(doc/CasosDeUso/fluxograma/Carrinho.drawio.png)
+![](fluxograma/Carrinho.drawio.png)
 
 ## Ator:
 - Comprador
@@ -110,7 +110,7 @@
 
 # Caso de Uso 5: Finalizar Compra
 
-!(doc/CasosDeUso/fluxograma/FinalizarCompra.drawio.png)
+![](fluxograma/FinalizarCompra.drawio.png)
 
 ## Ator:
 - Comprador
