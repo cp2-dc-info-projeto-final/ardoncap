@@ -1,6 +1,6 @@
 # Caso de Uso 1: Buscar Produtos
 
-!(doc/CasosDeUso/fluxograma/BuscarProduto.drawio.png)
+![](doc/CasosDeUso/fluxograma/BuscarProduto.drawio.png)
 
 ## Ator:
 - Comprador
