@@ -60,7 +60,7 @@
 
 # Caso de Uso 3: Visualizar Categorias
 
-!(fluxograma/BuscaporCategoria.drawio.png)
+![](fluxograma/BuscaporCategoria.drawio.png)
 
 ## Ator:
 - Comprador
