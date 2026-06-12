@@ -97,7 +97,7 @@
           categorias = body.data ?? [];
         } else {
           error = body.message;
-        }
+        } 
       } catch (e: any) {
         console.error('Erro ao carregar usuários:', e);
         const body = e.response?.data as ApiResponse<Categoria[]> | undefined;

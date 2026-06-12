@@ -1,5 +1,7 @@
 # Caso de Uso 1: Buscar Produtos
 
+!(doc/CasosDeUso/fluxograma/BuscarProduto.drawio.png)
+
 ## Ator:
 - Comprador
 
@@ -29,6 +31,8 @@
 
 # Caso de Uso 2: Visualizar Produto
 
+!(doc/CasosDeUso/fluxograma/VisualizarProduto.drawio.png)
+
 ## Ator:
 - Comprador
 
@@ -56,11 +60,13 @@
 
 # Caso de Uso 3: Visualizar Categorias
 
+!(/fluxograma/BuscaporCategoria.drawio.png)
+
 ## Ator:
 - Comprador
 
 ## Fluxo Principal:
-- O comprador acessa a opção de categorias.
+- O sistema disponibiliza a opção de categorias.
 - O sistema exibe as categorias disponíveis.
 - O comprador seleciona uma das categorias.
 - O sistema mostra os produtos da categoria escolhida.
@@ -73,6 +79,8 @@
 <br>
 
 # Caso de Uso 4: Gerenciar Carrinho
+
+!(doc/CasosDeUso/fluxograma/Carrinho.drawio.png)
 
 ## Ator:
 - Comprador
@@ -101,6 +109,8 @@
 <br>
 
 # Caso de Uso 5: Finalizar Compra
+
+!(doc/CasosDeUso/fluxograma/FinalizarCompra.drawio.png)
 
 ## Ator:
 - Comprador
@@ -136,6 +146,8 @@
 
 # Caso de Uso 6: Acompanhar Pedido
 
+!(doc/CasosDeUso/fluxograma/AvaliarPedido.drawio.png)
+
 ## Ator:
 - Comprador
 
@@ -151,7 +163,9 @@
 
 <br>
 
-# Caso de Uso 7: Avaliar Produto
+# Caso de Uso 7: Avaliar Pedido
+
+!(doc/CasosDeUso/fluxograma/AvaliarPedido.drawio.png)
 
 ## Ator:
 - Comprador
@@ -175,6 +189,8 @@
 <br>
 
 # Caso de Uso 8: Gerenciar Produtos
+
+!(doc/CasosDeUso/fluxograma/GerenciarProdutos.drawio.png)
 
 ## Ator:
 Vendedor
@@ -208,6 +224,8 @@ Vendedor
 
 # Caso de Uso 9: Gerenciar Pedidos
 
+!(doc/CasosDeUso/fluxograma/GerenciarPedidos.drawio.png)
+
 ## Ator:
 - Vendedor
 
@@ -230,6 +248,8 @@ Vendedor
 <br>
 
 # Caso de Uso 10: Administrar Produtos
+
+!(doc/CasosDeUso/fluxograma/AdministrarProdutos.drawio.png)
 
 ## Ator:
 - Administrador
@@ -264,6 +284,8 @@ Vendedor
 
 # Caso de Uso 11: Administrar Usuários
 
+!(doc/CasosDeUso/fluxograma/AdministrarUsuario.drawio.png)
+
 ## Ator:
 - Administrador
 
@@ -296,6 +318,8 @@ Vendedor
 <br>
 
 # Caso de Uso 12: Administrar Categorias
+
+!(doc/CasosDeUso/fluxograma/AdministrarCategorias.drawio.png)
 
 ## Ator:
 - Administrador
