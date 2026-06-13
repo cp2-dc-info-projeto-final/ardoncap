@@ -36,6 +36,7 @@ CREATE TABLE produto (
     id bigint GENERATED ALWAYS AS IDENTITY,
     nome text NOT NULL,
     descricao text NOT NULL,
+    quantiade_disponivel int NOT NULL,
     preco int NOT NULL,
     id_categoria INT NOT NULL REFERENCES categoria(id),
     id_usuario bigint NOT NULL REFERENCES usuario(id),
