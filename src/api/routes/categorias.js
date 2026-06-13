@@ -5,6 +5,21 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { verifyToken, isAdmin } = require('../middlewares/auth');
 
+function sendSuccess(res, status, message, data) {
+  const payload = { success: true };
+  if (message) payload.message = message;
+  if (typeof data !== 'undefined') payload.data = data;
+  return res.status(status).json(payload);
+}
+
+function sendError(res, status, message, errors = []) {
+  return res.status(status).json({
+    success: false,
+    message,
+    errors
+  });
+}
+
 /* CADASTRAR CATEGORIAS */
 router.post('/', verifyToken, isAdmin, async function(req, res) {
     try {
@@ -85,24 +100,22 @@ router.get('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
 
+    if (id === 'undefined' || !id) {
+      return sendError(res, 400, 'ID inválido fornecido');
+    }
+
     const result = await pool.query('SELECT * FROM categoria WHERE id = $1', [id]);
     
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Categoria não encontrada',
-        errors: [{ field: 'id', message: 'Categoria não existe', code: 'NOT_FOUND' }]
-      });
+      return sendError(res, 404, 'Categoria não encontrada', [
+        { field: 'id', message: 'Categoria não existe', code: 'NOT_FOUND' }
+      ]);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: 'Categoria encontrada',
-      data: result.rows[0]
-    });
+    return sendSuccess(res, 200, 'Categoria encontrada', result.rows[0]);
   } catch (error) {
     console.error('Erro ao buscar categoria:', error);
-    return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+    return sendError(res, 500, 'Erro interno do servidor');
   }
 });
 
@@ -158,3 +171,27 @@ router.put('/:id', verifyToken, isAdmin, async function(req, res) {
 });
 
 module.exports = router;
+
+/* EXCLUIR CATEGORIA POR ID */
+router.delete('/:id', verifyToken, isAdmin, async function(req, res) {
+  try {
+    const { id } = req.params;
+    
+    const categoryExists = await pool.query('SELECT id FROM categoria WHERE id = $1', [id]);
+    if (categoryExists.rows.length === 0) {
+      return sendError(res, 404, 'Categoria não encontrada');
+    }
+    
+    await pool.query('DELETE FROM categoria WHERE id = $1', [id]);
+    
+    return sendSuccess(res, 200, 'Categoria deletada com sucesso');
+  } catch (error) {
+    console.error('Erro ao deletar categoria:', error);
+
+    if (error.code === '23503') {
+      return sendError(res, 400, 'Não é possível excluir esta categoria porque ela possui produtos vinculados.');
+    }
+
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});

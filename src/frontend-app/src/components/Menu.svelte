@@ -87,8 +87,7 @@
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
           {#if user.role === 'admin'} <!-- só exibe menu usuários para admin-->
-            <NavLi href="/users" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Usuários</NavLi>
-            <NavLi href="/categorias" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Categorias</NavLi>
+            <NavLi href="/painel" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Painel</NavLi>
           {/if}
           <NavLi>
             <div class="flex items-center">

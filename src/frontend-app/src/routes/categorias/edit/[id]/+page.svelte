@@ -1,6 +1,6 @@
 <script lang="ts">
     // Importa o componente de formulário de usuário
-    import CategoriaForm from '../../../components/CategoriaForm.svelte';
+    import CategoriaForm from '../../../../components/CategoriaForm.svelte';
     import { page } from '$app/stores';
     import { get } from 'svelte/store';
   
