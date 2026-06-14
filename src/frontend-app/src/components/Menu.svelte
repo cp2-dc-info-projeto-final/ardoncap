@@ -75,23 +75,23 @@
 <div class="relative px-8">
   <Navbar class="fixed start-0 top-0 z-20 w-full px-2 py-2.5 sm:px-4">
     <NavBrand href="/">
-      <img src="/images/icon.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
-      <Heading class="self-center text-xl font-poppins whitespace-nowrap text-white">ARDONCAP</Heading>
+      <img src="/images/AlfredArdoncap.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
+      <Heading class="self-center text-xl font-light font-poppins whitespace-nowrap text-white">ARDONCAP</Heading>
     </NavBrand>
     <NavHamburger />
     <NavUl>
-      <NavLi href="/" nonActiveClass="text-lg font-poppins px-4 py-2 text-white hover:text-red-600 focus:text-red-600  transition-colors rounded-lg drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Início</NavLi>
-      <NavLi href="/#categorias" nonActiveClass="text-lg font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Categorias</NavLi>
-      <NavLi href="/about" nonActiveClass="text-lg font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600  transition-colors rounded-lg">Sobre</NavLi>
+      <NavLi href="/" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-red-600 focus:text-red-600  transition-colors rounded-lg drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Início</NavLi>
+      <NavLi href="/#categorias" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Categorias</NavLi>
+      <NavLi href="/about" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600  transition-colors rounded-lg">Sobre</NavLi>
       
       {#if hasToken}
         {#if user} <!-- se existir usuário é porque conseguiu logar-->
           {#if user.role === 'admin'} <!-- só exibe menu usuários para admin-->
-            <NavLi href="/painel" nonActiveClass="text-lg font-bold px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Painel</NavLi>
+            <NavLi href="/painel" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Painel</NavLi>
           {/if}
           <NavLi>
             <div class="flex items-center">
-              <span class="text-white px-4 py-2">Olá, {user.login}</span>
+              <span class="text-white font-light font-poppins px-4 py-2">Olá, {user.login}</span>
               <!-- svelte-ignore component_name_lowercase -->
               <button 
                 class="ml-2 px-3 py-1 bg-red-600 hover:bg-red-800 text-white rounded text-sm flex items-center gap-1"
@@ -105,12 +105,11 @@
         {:else if loadingUser}
           <NavLi class="text-lg font-bold px-4 py-2 text-white">Carregando...</NavLi>
         {:else}
-          <NavLi href="/login" class="text-lg font-poppins px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
+          <NavLi href="/login" class="text-lg font-light font-poppins px-4 py-2 text-white hover:text-gray-300 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 transition-colors rounded-lg">Login</NavLi>
         {/if}
       {:else}
         <!-- se não tem token, exibe botão de login-->
-        <NavLi href="/login" nonActiveClass="text-lg font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Login</NavLi>
-        <NavLi href="/" nonActiveClass="text-lg font-poppins px-4 py-2 bg-white text-black hover:bg-gray-300 transition-colors rounded-lg font-bold">ANUNCIE JÁ!</NavLi>
+        <NavLi href="/login" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-red-600  focus:text-red-600 transition-colors rounded-lg">Login</NavLi>
       {/if}
     </NavUl>
   </Navbar>

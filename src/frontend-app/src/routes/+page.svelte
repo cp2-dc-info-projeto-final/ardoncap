@@ -18,7 +18,7 @@
 </style>
 
 
-<section class="w-full h-screen text-white bg-black bg-[url('/images/FUNDO.jpeg')] bg-no-repeat bg-cover bg-center px-[7%] flex flex-col">
+<section class="w-full h-screen text-white bg-black bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center px-[7%] flex flex-col">
     
     <div class="pt-[12%]">
         <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-instrument leading-[1.1] m-0">
