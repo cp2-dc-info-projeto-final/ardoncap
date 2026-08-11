@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Heading } from 'flowbite-svelte';
   import CategoriaTable from '../../components/CategoriaTable.svelte';
-  import { UserAddOutline  } from 'flowbite-svelte-icons';
+  import { CirclePlusOutline  } from 'flowbite-svelte-icons';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { getCurrentUser } from '$lib/auth';
@@ -34,9 +34,9 @@
 {:else if canView}
   <div class="text-center p-8 pt-32">
     <div class="flex items-center justify-between max-w-3xl mx-auto mb-6">
-      <Heading tag="h2" class="text-4xl font-extrabold tracking-tight text-red-600 dark:text-white">Categorias</Heading> 
-      <button class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-800 text-white rounded-lg font-semibold shadow transition" on:click={() => goto('/categorias/new')}>
-        <UserAddOutline class="w-5 h-5" />
+      <Heading tag="h2" class="text-4xl font-instrument tracking-tight text-white">CATEGORIAS</Heading> 
+      <button class="flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-800 text-white rounded-lg font-poppins shadow transition" on:click={() => goto('/categorias/new')}>
+        <CirclePlusOutline class="w-5 h-5" />
         Adicionar
       </button>
     </div>
