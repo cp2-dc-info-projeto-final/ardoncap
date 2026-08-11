@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Heading } from 'flowbite-svelte';
   import Menu from '../components/Menu.svelte';
+  import CategoriaTable from '../components/LinksCategoria.svelte';
   import {  P, ImagePlaceholder, Skeleton, TextPlaceholder } from "flowbite-svelte";
+	import LinksCategoria from '../components/LinksCategoria.svelte';
 </script>
 
 <Menu />
@@ -34,12 +36,11 @@
 
 </section>
 
-<section class="min-h-screen bg-black text-white px-[8%] py-20 mt-5" id="categorias">
+<section class="bg-black text-white py-20 mt-5" id="categorias">
+  <h3 class="text-3xl font-special text-center">I. Categorias</h3>
   <br><br>
-  <h3 class="text-3xl font-special text-start">I. Categorias</h3>
+  <LinksCategoria/>
 </section>
-
-<section class="min-h-screen bg-black text-white px-[8%] py-20 mt-5">
-  <br><br>
-  <h3 class="text-3xl font-special text-start">II. Produtos</h3>
+<section class="bg-black text-white py-20">
+  <h3 class="text-3xl font-special text-center">II. Produtos</h3>
 </section>
