@@ -118,15 +118,15 @@
       <!-- Tabela de usuários -->
       <Table class="w-full max-w-5xl mx-auto my-8 shadow-lg border border-gray-200">
         <TableHead>
-          <TableHeadCell class="w-16">ID</TableHeadCell>
-          <TableHeadCell class="w-32">Nome</TableHeadCell>
+          <TableHeadCell class="text-black w-16">ID</TableHeadCell>
+          <TableHeadCell class=" text-black w-32">Nome</TableHeadCell>
           <TableHeadCell class="min-w-0"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
           {#each categorias as categoria}
             <TableBodyRow>
-              <TableBodyCell>{categoria.id}</TableBodyCell>
-              <TableBodyCell>{categoria.nome}</TableBodyCell>
+              <TableBodyCell class="text-black">{categoria.id}</TableBodyCell>
+              <TableBodyCell class="text-black">{categoria.nome}</TableBodyCell>
               <TableBodyCell>
                 <!-- Botão editar -->
                 <button
