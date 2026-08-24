@@ -1,5 +1,5 @@
 export interface Produto {
-    id: number;
+    id: bigint;
     nome: string;
     descricao: string;
     quantidade_disponivel: number;
@@ -10,7 +10,7 @@ export interface Produto {
 }
   
 export interface ProdutoFormData {
-    id?: number;
+    id?: bigint;
     nome: string;
     descricao: string;
     quantidade_disponivel: number;

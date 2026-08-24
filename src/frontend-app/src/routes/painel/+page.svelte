@@ -10,4 +10,7 @@
   <a href="/categorias" class="text-2xl flex items-center gap-2 px-6 py-5 bg-white hover:bg-gray-300 text-black rounded-lg font-special shadow transition duration-200">
     CATEGORIAS
   </a>
+  <a href="/produtos" class="text-2xl flex items-center gap-2 px-6 py-5 bg-white hover:bg-gray-300 text-black rounded-lg font-special shadow transition duration-200">
+    PRODUTOS
+  </a>
 </div>
