@@ -1,12 +1,12 @@
 export interface User {
-  id: number;
+  id: bigint;
   login: string;
   email: string;
   role: string;
 }
 
 export interface UserFormData {
-  id: number;
+  id: bigint;
   login: string;
   email: string;
   senha?: string;

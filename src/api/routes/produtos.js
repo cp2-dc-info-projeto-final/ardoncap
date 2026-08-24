@@ -19,7 +19,7 @@ function sendError(res, status, message, errors = []) {
 }
 
 /* CADASTRAR PRODUTOS */
-router.post('/', verifyToken, isAdmin, async function(req, res) {
+router.post('/', verifyToken, async function(req, res) {
   try {
     const { nome } = req.body;
     const { descricao } = req.body;
