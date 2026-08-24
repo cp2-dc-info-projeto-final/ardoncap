@@ -44,33 +44,35 @@
   <div class="h-screen flex flex-col items-center justify-center bg-black p-4">
     <div class="w-full max-w-sm">
       
-      <Card class="p-6 w-full">
+      <Card class="p-6 w-full bg-black border-0">
         <form on:submit|preventDefault={handleLogin} class="space-y-6">
-            <div>
-              <h2 class="text-center text-3xl font-extrabold text-black mb-6">
-                Login
+              <h2 class="text-center text-4xl font-instrument text-white mb-6">
+                LOGIN
               </h2>
-              <Label for="login" class="mb-2">Login</Label>
-              <Input
-                class= "focus:border-red-600"
-                id="login"
-                type="text"
-                bind:value={login}
-                placeholder="Digite seu login"
-                required
-                />
-            </div>
+              <div class="mt-20 mb-14">
+                <div>
+                <Label for="login" class="mb-1 text-white font-special">LOGIN:</Label>
+                <Input
+                  class= "focus:border-gray-200 font-poppins text-xs mt-0 mb-2 rounded-2xl"
+                  id="login"
+                  type="text"
+                  bind:value={login}
+                  placeholder="Digite seu login"
+                  required
+                  />
+              </div>
 
-            <div>
-              <Label for="password" class="mb-2">Senha</Label>
-              <Input
-                class= "focus:border-red-600"
-                id="password"
-                type="password"
-                bind:value={password}
-                placeholder="Digite sua senha"
-                required
-              />
+              <div>
+                <Label for="password" class="mb-1 text-white font-special">SENHA:</Label>
+                <Input
+                  class= "focus:border-gray-200 font-poppins text-xs mt-0 mb-2 rounded-2xl"
+                  id="password"
+                  type="password"
+                  bind:value={password}
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
             </div>
 
             {#if error}
@@ -78,15 +80,17 @@
                 {error}
               </Alert>
             {/if}
-
-            <Button 
+            <div class="flex justify-center">
+              <Button 
               type="submit"
-              class="w-full bg-red-600 hover:bg-red-800" 
-              disabled={loading}
-            >
-              {loading ? 'Entrando...' : 'Entrar'}
-            </Button>
-            <a href="/register" class="text-black hover:text-red-800 underline">Não tem uma conta ainda? Cadastre-se agora!</a>
+              class="w-3xs bg-white text-[1.1rem] hover:bg-gray-300 text-black font-special rounded-none" 
+              disabled={loading}>
+              {loading ? 'Entrando...' : 'ENTRAR'}
+              </Button>
+            </div>
+            <div class="flex justify-center">
+              <a href="/register" class="text-white hover:text-gray-300 hover:underline font-special">Não tem uma conta? Cadastre-se agora</a>
+            </div>
         </form>
       </Card>
     </div>
