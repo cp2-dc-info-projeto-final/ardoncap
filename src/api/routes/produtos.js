@@ -115,7 +115,7 @@ router.get('/', verifyToken, async function(req, res) {
  
     if (search && id_categoria) {
       result = await pool.query(
-        `SELECT p*, c.nome as categoria_nome 
+        `SELECT p.*, c.nome as categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
         WHERE p.nome ILIKE $1 AND p.id_categoria = $2 
@@ -124,16 +124,16 @@ router.get('/', verifyToken, async function(req, res) {
       );
     } else if (search) {
       result = await pool.query(
-        `SELECT p*, c.nome as categoria_nome 
+        `SELECT p.*, c.nome as categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
-        WHERE p.nome ILIKE = $1
+        WHERE p.nome ILIKE $1
         ORDER BY p.id `,
         [`%${search}%`]
       );
     } else if (id_categoria) {
       result = await pool.query(
-        `SELECT p*, c.nome as categoria_nome 
+        `SELECT p.*, c.nome as categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
         WHERE p.id_categoria = $1
@@ -141,11 +141,11 @@ router.get('/', verifyToken, async function(req, res) {
         [id_categoria]
       );
     } else {
-      result = await pool.query('SELECT * FROM produto ORDER BY id'
-        `SELECT p*, c.nome as categoria_nome 
+      result = await pool.query(
+        `SELECT p.*, c.nome as categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
-        ORDER BY p.id `,
+        ORDER BY p.id`
       );
     }
  
@@ -174,10 +174,10 @@ router.get('/:id', verifyToken, async function(req, res) {
     }
 
     const result = await pool.query(
-      `SELECT p*, c.nome AS categoria_nome 
+      `SELECT p.*, c.nome AS categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
-        WHERE p.id = $1,`
+        WHERE p.id = $1`
         [id]
         );
 

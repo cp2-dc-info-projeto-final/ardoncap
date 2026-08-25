@@ -1,42 +1,44 @@
 <script lang="ts">
-  // Formulário de usuário
-  import { Card, Button, Label, Input, Heading, Select } from 'flowbite-svelte'; // UI
+  // Formulário de categoria
+  import { Card, Button, Label, Input, Heading } from 'flowbite-svelte'; // UI
   import { onMount } from 'svelte'; // ciclo de vida
   import api from '$lib/api'; // API backend
   import type { ApiFieldError, ApiResponse } from '$lib/api';
   import { goto } from '$app/navigation'; // navegação
   import { ArrowLeftOutline, FloppyDiskAltOutline } from 'flowbite-svelte-icons'; // ícones
   import type { Produto, ProdutoFormData } from '$lib/models/Produto';
+  import type { Categoria } from '$lib/models/Categoria';
 
-  export let id: number | null = null; // id do usuário
+  export let id: number | null = null; 
 
-  let user: ProdutoFormData = { id: 0, nome: '', descricao: '', quantidade_disponivel: 1, preco: 0, id_categoria: 0 }; // dados do form
+  let produto: ProdutoFormData = { id: 0, nome: '', descricao: '', quantidade_disponivel: 1, preco: 0, categoria_nome: ''}
+  let categorias: { value: number, name: string }[] = []; // dados do form
   
-  // Opções de roles
-  const roleOptions = [api.get(`/categorias`)]; //get categorias
   let loading = false;
   let error = '';
   let fieldErrors: ApiFieldError[] = [];
 
-  function errorOf(field: string): string | null {
-    return fieldErrors.find((item) => item.field === field)?.message ?? null;
+  // CORREÇÃO 1: Adicionada a função que faltava para verificar erros nos campos
+  function errorOf(fieldName: string): string {
+    const fieldError = fieldErrors.find(e => e.field === fieldName);
+    return fieldError ? fieldError.message : '';
   }
 
-  // Carrega usuário se for edição
+  // Carrega categoria se for edição
   onMount(async () => {
     if (id !== null) {
       loading = true;
       try {
-        const res = await api.get(`/produtos/${id}`);
-        const body = res.data as ApiResponse<User>;
+        const res = await api.get(`/categorias/${id}`);
+        const body = res.data as ApiResponse<Categoria>;
         if (body.success && body.data) {
-          user = { ...body.data, senha: '' }; // não carrega senha na edição
+          categoria = { ...body.data };
         } else {
           error = body.message;
         }
       } catch (e: any) {
-        const body = e.response?.data as ApiResponse<User> | undefined;
-        error = body?.message || 'Erro ao carregar usuário.';
+        const body = e.response?.data as ApiResponse<Categoria> | undefined;
+        error = body?.message || 'Erro ao carregar categoria.';
       } finally {
         loading = false;
       }
@@ -47,49 +49,39 @@
   async function handleSubmit() {
     fieldErrors = [];
 
-    // Validação de senha
-    if (id === null && (!user.senha || user.senha.length < 6)) {
-      fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
-      error = 'Senha deve ter pelo menos 6 caracteres.';
-      return;
-    }
-    
-    if (id !== null && user.senha && user.senha.length < 6) {
-      fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
-      error = 'Senha deve ter pelo menos 6 caracteres.';
+    // Validação do nome
+    if (!categoria.nome || categoria.nome.length < 5) {
+      fieldErrors = [{ field: 'nome', message: 'A categoria deve ter pelo menos 5 caracteres.' }];
+      error = 'A categoria deve ter pelo menos 5 caracteres.';
       return;
     }
 
     loading = true;
     error = '';
     try {
-      const userData = { ...user };
-      // Remove senha vazia na edição para não sobrescrever indevidamente
-      if (id !== null && !userData.senha) {
-        delete userData.senha;
-      }
+      const categoriaData = { ...categoria };
       
       if (id === null) {
-        const res = await api.post('/users', userData);
-        const body = res.data as ApiResponse<User>;
+        const res = await api.post('/categorias', categoriaData);
+        const body = res.data as ApiResponse<Categoria>;
         if (!body.success) {
           error = body.message;
-          fieldErrors = body.errors;
+          fieldErrors = body.errors || [];
           return;
         }
       } else {
-        const res = await api.put(`/users/${id}`, userData);
-        const body = res.data as ApiResponse<User>;
+        const res = await api.put(`/categorias/${id}`, categoriaData);
+        const body = res.data as ApiResponse<Categoria>;
         if (!body.success) {
           error = body.message;
-          fieldErrors = body.errors;
+          fieldErrors = body.errors || [];
           return;
         }
       }
-      goto('/users');
+      goto('/categorias');
     } catch (e: any) {
-      const body = e.response?.data as ApiResponse<User> | undefined;
-      error = body?.message || 'Erro ao salvar usuário.';
+      const body = e.response?.data as ApiResponse<Categoria> | undefined;
+      error = body?.message || 'Erro ao salvar categoria.';
       fieldErrors = body?.errors || [];
     } finally {
       loading = false;
@@ -97,74 +89,43 @@
   }
 
   function handleCancel() {
-    goto('/users');
+    goto('/categorias');
   }
 </script>
 
 <!-- Card do formulário -->
 <Card class="max-w-md mx-auto mt-10 p-0 overflow-hidden shadow-lg border border-gray-200 rounded-lg">
-  <!-- Formulário principal -->
-  <form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
-    <!-- Título -->
-    <Heading tag="h3" class="mb-2 text-center">
-      {id === null ? 'Cadastrar Usuário' : 'Editar Usuário'}
-    </Heading>
-    <!-- Mensagem de erro -->
-    {#if error}
-      <div class="text-red-500 text-center">{error}</div>
-    {/if}
-    <!-- Campo login -->
-    <div>
-      <Label for="login">Login</Label>
-      <Input id="login" bind:value={user.login} placeholder="Digite o login" required class="mt-1" />
-      {#if errorOf('login')}
-        <div class="mt-1 text-sm text-red-500">{errorOf('login')}</div>
+    <!-- Formulário principal -->
+    <form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
+      <!-- Título -->
+      <Heading tag="h3" class="mb-2 text-center">
+        {id === null ? 'Cadastrar Categoria' : 'Editar Categoria'}
+      </Heading>
+      <!-- Mensagem de erro -->
+      {#if error}
+        <div class="text-red-500 text-center">{error}</div>
       {/if}
-    </div>
-    <!-- Campo email -->
-    <div>
-      <Label for="email">Email</Label>
-      <Input id="email" type="email" bind:value={user.email} placeholder="Digite o e-mail" required class="mt-1" />
-      {#if errorOf('email')}
-        <div class="mt-1 text-sm text-red-500">{errorOf('email')}</div>
-      {/if}
-    </div>
-    <!-- Campo senha -->
-    <div>
-      <Label for="senha">Senha {id !== null ? '(deixe vazio para manter atual)' : ''}</Label>
-      <Input 
-        id="senha" 
-        type="password" 
-        bind:value={user.senha} 
-        placeholder={id === null ? 'Digite a senha (mínimo 6 caracteres)' : 'Nova senha (opcional)'} 
-        required={id === null}
-        minlength={6}
-        class="mt-1" 
-      />
-      {#if errorOf('senha')}
-        <div class="mt-1 text-sm text-red-500">{errorOf('senha')}</div>
-      {/if}
-    </div>
-    <!-- Campo role -->
-    <div>
-      <Label for="role">Perfil</Label>
-      <Select id="role" bind:value={user.role} items={roleOptions} class="mt-1" />
-      {#if errorOf('role')}
-        <div class="mt-1 text-sm text-red-500">{errorOf('role')}</div>
-      {/if}
-    </div>
-    <!-- Botões de ação -->
-    <div class="flex gap-4 justify-end mt-4">
-      <!-- Botão cancelar/voltar -->
-      <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
-        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
-        {id === null ? 'Voltar' : 'Cancelar'}
-      </Button>
-      <!-- Botão salvar -->
-      <Button type="submit" color="primary" disabled={loading}>
-        <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
-        {id === null ? 'Cadastrar' : 'Salvar'}
-      </Button>
-    </div>
-  </form>
+      <!-- Campo nome -->
+      <div>
+        <Label for="nome">Nome da Categoria</Label>
+        <Input id="nome" bind:value={categoria.nome} placeholder="Digite o nome da categoria" required class="mt-1" />
+        {#if errorOf('nome')}
+          <div class="mt-1 text-sm text-red-500">{errorOf('nome')}</div>
+        {/if}
+      </div>
+  
+      <!-- Botões de ação -->
+      <div class="flex gap-4 justify-end mt-4">
+        <!-- CORREÇÃO 2: Alterado onclick para on:click -->
+        <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
+          <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+          {id === null ? 'Voltar' : 'Cancelar'}
+        </Button>
+        <!-- Botão salvar -->
+        <Button type="submit" color="red" disabled={loading}>
+          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+          {id === null ? 'Cadastrar' : 'Salvar'}
+        </Button>
+      </div>
+    </form>
 </Card>

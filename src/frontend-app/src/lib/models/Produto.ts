@@ -16,4 +16,6 @@ export interface ProdutoFormData {
     quantidade_disponivel: number;
     preco: number;
     id_categoria: number;
+    categoria_nome: string; //usar um inner join
+    id_usuario: bigint;
 }
