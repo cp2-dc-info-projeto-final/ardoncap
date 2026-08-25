@@ -114,36 +114,36 @@
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
     <!-- Tabela para telas médias/grandes -->
-    <div class="hidden xl:block">
+    <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
       <!-- Tabela de usuários -->
-      <Table class="w-full max-w-5xl mx-auto my-8 shadow-lg border border-gray-200">
+      <Table class="w-full border-separate border-spacing-0">
         <TableHead>
-          <TableHeadCell class="text-black w-16">ID</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">Nome</TableHeadCell>
-          <TableHeadCell class="min-w-0"></TableHeadCell> <!-- coluna para editar/remover -->
+          <TableHeadCell class="text-black w-16 bg-gray-300">ID</TableHeadCell>
+          <TableHeadCell class="text-black w-32 bg-gray-300">Nome</TableHeadCell> 
+          <TableHeadCell class="w-40 bg-gray-300 text-right"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
           {#each categorias as categoria}
             <TableBodyRow>
               <TableBodyCell class="text-black">{categoria.id}</TableBodyCell>
               <TableBodyCell class="text-black">{categoria.nome}</TableBodyCell>
-              <TableBodyCell>
+              <TableBodyCell class="w-40 text-right">
                 <!-- Botão editar -->
                 <button
-                  class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   title="Editar"
                   on:click={() => goto(`/categorias/edit/${categoria.id}`)}
                 >
-                  <UserEditOutline class="w-5 h-5 text-primary-500" />
+                  <UserEditOutline class="w-5 h-5 text-black" />
                 </button>
                 <!-- Botão remover -->
                 <button
                   title="Remover"
-                  class="p-2 rounded border border-red-600 hover:border-red-300 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent "
                   on:click={() => openConfirm(categoria.id)}
                   disabled={deletingId === categoria.id || loading}
                 >
-                  <TrashBinOutline class="w-5 h-5 text-red-600" />
+                  <TrashBinOutline class="w-5 h-5 text-black" />
                 </button>
               </TableBodyCell>
             </TableBodyRow>
@@ -165,20 +165,20 @@
               <div class="flex gap-2">
                 <!-- Botão editar -->
                 <button
-                  class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   title="Editar"
                   on:click={() => goto(`/categorias/edit/${categoria.id}`)}
                 >
-                  <UserEditOutline class="w-5 h-5 text-primary-500" />
+                  <UserEditOutline class="w-5 h-5 text-black" />
                 </button>
                 <!-- Botão remover -->
                 <button
                   title="Remover"
-                  class="p-2 rounded border border-red-100 hover:border-red-300 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   on:click={() => openConfirm(categoria.id)}
                   disabled={deletingId === categoria.id || loading}
                 >
-                  <TrashBinOutline class="w-5 h-5 text-red-400" />
+                  <TrashBinOutline class="w-5 h-5 text-black" />
                 </button>
               </div>
             </div>
