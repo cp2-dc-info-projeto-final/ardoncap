@@ -9,31 +9,31 @@
     import api from '$lib/api'; // API backend
     import type { ApiResponse } from '$lib/api';
     import { onMount } from 'svelte'; // ciclo de vida
-    import type { Categoria } from '$lib/models/Categoria';
+    import type { Produto } from '$lib/models/Produto';
   
-    let categorias: Categoria[] = [];   // lista de usuários
+    let produtos: Produto[] = [];   // get de produtos
   
-    $: loadCategorias(search);
-    async function loadCategorias(searchTerm: string) {
+    $: loadProdutos(search);
+    async function loadProdutos(searchTerm: string) {
       loading = true;
       try {
-        const res = await api.get('/categorias', {
+        const res = await api.get('/produtos', {
           params: {
             search: searchTerm
           }
         });
     
-        const body = res.data as ApiResponse<Categoria[]>;
+        const body = res.data as ApiResponse<Produto[]>;
         if (body.success) {
-          categorias = body.data ?? [];
+          produtos = body.data ?? [];
         } else {
           error = body.message;
         }
       } catch (e: any) {
-        console.error('Erro ao carregar categorias:', e);
+        console.error('Erro ao carregar produtos:', e);
     
-        const body = e.response?.data as ApiResponse<Categoria[]> | undefined;
-        error = body?.message || 'Erro ao carregar categorias';
+        const body = e.response?.data as ApiResponse<Produto[]> | undefined;
+        error = body?.message || 'Erro ao carregar produtos';
       } finally {
         loading = false;
       }
@@ -73,17 +73,17 @@
       deletingId = id;
       error = '';
       try {
-        const res = await api.delete(`/categorias/${id}`);
+        const res = await api.delete(`/produtos/${id}`);
         const body = res.data as ApiResponse<null>;
         if (!body.success) {
           error = body.message;
           return;
         }
-        categorias = categorias.filter(categoria => categoria.id !== id);
+        produtos = produtos.filter(produto => produto.id !== id);
       } catch (e: any) {
-        console.error('Erro ao deletar categoria:', e);
+        console.error('Erro ao deletar produto:', e);
         const body = e.response?.data as ApiResponse<null> | undefined;
-        error = body?.message || 'Erro ao remover categoria.';
+        error = body?.message || 'Erro ao remover produto.';
       } finally {
         deletingId = null;
       }
@@ -91,17 +91,17 @@
   
     onMount(async () => {
       try {
-        const res = await api.get('/categorias');
-        const body = res.data as ApiResponse<Categoria[]>;
+        const res = await api.get('/produtos');
+        const body = res.data as ApiResponse<Produto[]>;
         if (body.success) {
-          categorias = body.data ?? [];
+          produtos = body.data ?? [];
         } else {
           error = body.message;
         } 
       } catch (e: any) {
         console.error('Erro ao carregar usuários:', e);
-        const body = e.response?.data as ApiResponse<Categoria[]> | undefined;
-        error = body?.message || 'Erro ao carregar categorias';
+        const body = e.response?.data as ApiResponse<Produto[]> | undefined;
+        error = body?.message || 'Erro ao carregar Produtos';
       } finally {
         loading = false;
       }
@@ -109,7 +109,7 @@
   </script>
   
   {#if loading}
-    <div class="my-8 text-center text-black">Carregando categorias...</div>
+    <div class="my-8 text-center text-black">Carregando produtos...</div>
   {:else if error}
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
@@ -120,19 +120,26 @@
         <TableHead>
           <TableHeadCell class="text-black w-16">ID</TableHeadCell>
           <TableHeadCell class=" text-black w-32">Nome</TableHeadCell>
+          <TableHeadCell class=" text-black w-32">Categoria</TableHeadCell>
+          <TableHeadCell class=" text-black w-32">Preço</TableHeadCell>
+          <TableHeadCell class=" text-black w-32">Qtd</TableHeadCell>
+          <TableHeadCell class=" text-black w-32">User</TableHeadCell>
           <TableHeadCell class="min-w-0"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
-          {#each categorias as categoria}
+          {#each produtos as produto}
             <TableBodyRow>
-              <TableBodyCell class="text-black">{categoria.id}</TableBodyCell>
-              <TableBodyCell class="text-black">{categoria.nome}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.id}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.nome}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.categoria_nome}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.preco}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.quantidade_disponivel}</TableBodyCell>
               <TableBodyCell>
                 <!-- Botão editar -->
                 <button
                   class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
                   title="Editar"
-                  on:click={() => goto(`/categorias/edit/${categoria.id}`)}
+                  on:click={() => goto(`/produtos/edit/${produto.id}`)}
                 >
                   <UserEditOutline class="w-5 h-5 text-primary-500" />
                 </button>
@@ -140,8 +147,8 @@
                 <button
                   title="Remover"
                   class="p-2 rounded border border-red-600 hover:border-red-300 transition bg-transparent"
-                  on:click={() => openConfirm(categoria.id)}
-                  disabled={deletingId === categoria.id || loading}
+                  on:click={() => openConfirm(produto.id)}
+                  disabled={deletingId === produto.id || loading}
                 >
                   <TrashBinOutline class="w-5 h-5 text-red-600" />
                 </button>
@@ -154,20 +161,23 @@
     <!-- Cards para telas pequenas -->
     <div class="block xl:hidden">
       <div class="flex flex-col items-center gap-4 my-8 max-w-3xl mx-auto md:grid md:grid-cols-2">
-        {#each categorias as categoria}
+        {#each produtos as produto}
           <!-- Card de usuário -->
           <Card class="max-w-sm w-full p-0 overflow-hidden shadow-lg border-gray-200">
             <div class="px-4 pt-4 pb-2 bg-gray-100 text-left flex items-center justify-between">
               <div>
-                <div class="text-lg font-semibold text-gray-800 text-left">{categoria.nome}</div>
-                <div class="text-xs text-gray-400 text-left">ID: {categoria.id}</div>
+                <div class="text-lg font-semibold text-gray-800 text-left">{produto.nome}</div>
+                <div class="text-xs text-gray-400 text-left">ID: {produto.id}</div>
+                <div class="text-xs text-gray-400 text-left">Categoria: {produto.categoria_nome}</div>
+                <div class="text-xs text-gray-400 text-left">Preço: {produto.preco}</div>
+                <div class="text-xs text-gray-400 text-left">Qtd.: {produto.quantidade_disponivel}</div>
               </div>
               <div class="flex gap-2">
                 <!-- Botão editar -->
                 <button
                   class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
                   title="Editar"
-                  on:click={() => goto(`/categorias/edit/${categoria.id}`)}
+                  on:click={() => goto(`/produtos/edit/${produto.id}`)}
                 >
                   <UserEditOutline class="w-5 h-5 text-primary-500" />
                 </button>
@@ -175,8 +185,8 @@
                 <button
                   title="Remover"
                   class="p-2 rounded border border-red-100 hover:border-red-300 transition bg-transparent"
-                  on:click={() => openConfirm(categoria.id)}
-                  disabled={deletingId === categoria.id || loading}
+                  on:click={() => openConfirm(produto.id)}
+                  disabled={deletingId === produto.id || loading}
                 >
                   <TrashBinOutline class="w-5 h-5 text-red-400" />
                 </button>
@@ -191,7 +201,7 @@
   <!-- Modal de confirmação -->
   <ConfirmModal
     open={confirmOpen}
-    message="Tem certeza que deseja remover esta categoria?"
+    message="Tem certeza que deseja remover esta produto?"
     confirmText="Remover"
     cancelText="Cancelar"
     onConfirm={handleConfirm}
