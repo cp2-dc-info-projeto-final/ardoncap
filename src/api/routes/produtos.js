@@ -177,7 +177,7 @@ router.get('/:id', verifyToken, async function(req, res) {
       `SELECT p.*, c.nome AS categoria_nome 
         FROM produto p 
         INNER JOIN categoria c ON p.id_categoria = c.id
-        WHERE p.id = $1`
+        WHERE p.id = $1`,
         [id]
         );
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    // Importa o componente de formulário de usuário
+    // Importa o componente de formulário de categoria
     import CategoriaForm from '../../../../components/CategoriaForm.svelte';
     import { page } from '$app/stores';
     import { get } from 'svelte/store';
@@ -8,5 +8,5 @@
     const { id } = get(page).params;
   </script>
   
-  <!-- Utiliza o componente UserForm passando id -->
+  <!-- Utiliza o componente CategoriaForm passando id -->
   <CategoriaForm id={Number(id)} />

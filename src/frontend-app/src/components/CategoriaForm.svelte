@@ -16,7 +16,6 @@
   let error = '';
   let fieldErrors: ApiFieldError[] = [];
 
-  // CORREÇÃO 1: Adicionada a função que faltava para verificar erros nos campos
   function errorOf(fieldName: string): string {
     const fieldError = fieldErrors.find(e => e.field === fieldName);
     return fieldError ? fieldError.message : '';
@@ -114,7 +113,6 @@
   
       <!-- Botões de ação -->
       <div class="flex gap-4 justify-end mt-4">
-        <!-- CORREÇÃO 2: Alterado onclick para on:click -->
         <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
           <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
           {id === null ? 'Voltar' : 'Cancelar'}

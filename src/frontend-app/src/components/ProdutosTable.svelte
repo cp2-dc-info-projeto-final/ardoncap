@@ -134,6 +134,7 @@
               <TableBodyCell class="text-black">{produto.categoria_nome}</TableBodyCell>
               <TableBodyCell class="text-black">{produto.preco}</TableBodyCell>
               <TableBodyCell class="text-black">{produto.quantidade_disponivel}</TableBodyCell>
+              <TableBodyCell class="text-black">{produto.id_usuario}</TableBodyCell>
               <TableBodyCell>
                 <!-- Botão editar -->
                 <button
@@ -171,6 +172,7 @@
                 <div class="text-xs text-gray-400 text-left">Categoria: {produto.categoria_nome}</div>
                 <div class="text-xs text-gray-400 text-left">Preço: {produto.preco}</div>
                 <div class="text-xs text-gray-400 text-left">Qtd.: {produto.quantidade_disponivel}</div>
+                <div class="text-xs text-gray-400 text-left">User: {produto.id_usuario}</div>
               </div>
               <div class="flex gap-2">
                 <!-- Botão editar -->

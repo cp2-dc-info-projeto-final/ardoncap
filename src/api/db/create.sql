@@ -37,7 +37,7 @@ CREATE TABLE produto (
     nome text NOT NULL,
     descricao text NOT NULL,
     quantidade_disponivel int NOT NULL,
-    preco int NOT NULL,
+    preco numeric(10,2),
     id_categoria INT NOT NULL REFERENCES categoria(id),
     id_usuario bigint NOT NULL REFERENCES usuario(id),
 
@@ -112,4 +112,5 @@ INSERT INTO usuario (login, email, senha, role) VALUES
 
 -- senha efelantinho
 ('hermenegildo', 'hermenegildo@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'admin'),
-('zoroastra', 'zoroastra@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'user');
+('Ardoncap', 'ardoncap@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'admin'),
+('ArdoncapUser', 'ardoncapuser@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'user');
