@@ -5,7 +5,7 @@ export interface Produto {
     quantidade_disponivel: number;
     preco: number;
     id_categoria: number;
-    id_usuario: number;
+    id_usuario: bigint;
     categoria_nome: string;
   }
   
