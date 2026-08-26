@@ -6,9 +6,9 @@ export interface Produto {
     preco: number;
     id_categoria: number;
     id_usuario: bigint;
-    categoria_nome: string; //usar um inner join
+    categoria_nome: string;
 }
-  
+
 export interface ProdutoFormData {
     id?: bigint;
     nome: string;
@@ -16,6 +16,4 @@ export interface ProdutoFormData {
     quantidade_disponivel: number;
     preco: number;
     id_categoria: number;
-    categoria_nome: string; //usar um inner join
-    id_usuario: bigint;
 }
