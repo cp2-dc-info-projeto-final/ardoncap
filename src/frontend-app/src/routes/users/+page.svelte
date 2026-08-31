@@ -35,21 +35,31 @@
   <div class="text-center p-8 pt-32">
     <div class="flex items-center justify-between max-w-3xl mx-auto mb-6">
       <Heading tag="h2" class="block w-full text-center text-5xl font-instrument font-light tracking-tight text-white">USUÁRIOS</Heading>
-      </div>
-
-    <div>
-      <input type="text"
-      bind:value={search}
-      placeholder="Pesquisar por login..."
-      class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-2xl font-poppins text-xs outline-none focus:border-gray-400 bg-white"/>
+ 
       
     </div>
+    <div class="flex gap-4 justify-center mt-4">
+      <div class="relative w-full max-w-xs mt-0 mb-2">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-black">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </div>
+      
+        <input 
+          type="text"
+          bind:value={search}
+          placeholder="Buscar usuários. . ." 
+          class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-2xl font-poppins text-xs outline-none focus:border-gray-400 bg-white" 
+        />
+      </div>      
 
-    <button class="flex items-center gap-2 px-4 py-2 bg-black-600 hover:bg-gray-800 text-white rounded-lg font-poppins shadow transition" on:click={() => goto('/users/new')}>
-      <CirclePlusOutline class="w-5 h-5" />
-      ADICIONAR
-    </button>
 
+      <button class="flex items-center gap-2 px-4 py-2 bg-black-600 hover:bg-gray-800 text-white rounded-lg font-poppins shadow transition" on:click={() => goto('/users/new')}>
+        ADICIONAR 
+        <CirclePlusOutline class="w-5 h-5" />
+      </button>
+    </div>
     <UsersTable search={search}/>
   </div>
 {/if}

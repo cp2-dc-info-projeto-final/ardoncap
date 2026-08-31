@@ -114,17 +114,17 @@
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
     <!-- Tabela para telas médias/grandes -->
-    <div class="hidden xl:block">
-      <!-- Tabela de usuários -->
-      <Table class="w-full max-w-5xl mx-auto my-8 shadow-lg border border-gray-200">
+    <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
+      <!-- Tabela de produtos -->
+      <Table class="w-full border-separate border-spacing-0">
         <TableHead>
-          <TableHeadCell class="text-black w-16">ID</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">Nome</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">Categoria</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">Preço</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">Qtd</TableHeadCell>
-          <TableHeadCell class=" text-black w-32">User</TableHeadCell>
-          <TableHeadCell class="min-w-0"></TableHeadCell> <!-- coluna para editar/remover -->
+          <TableHeadCell class="text-black w-16  bg-gray-300">ID</TableHeadCell>
+          <TableHeadCell class=" text-black w-32  bg-gray-300">Nome</TableHeadCell>
+          <TableHeadCell class=" text-black w-32  bg-gray-300">Categoria</TableHeadCell>
+          <TableHeadCell class=" text-black w-32  bg-gray-300">Preço</TableHeadCell>
+          <TableHeadCell class=" text-black w-32  bg-gray-300">Qtd</TableHeadCell>
+          <TableHeadCell class=" text-black w-32  bg-gray-300">User</TableHeadCell>
+          <TableHeadCell class="min-w-0  bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
           {#each produtos as produto}
@@ -138,20 +138,20 @@
               <TableBodyCell>
                 <!-- Botão editar -->
                 <button
-                  class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   title="Editar"
                   on:click={() => goto(`/produtos/edit/${produto.id}`)}
                 >
-                  <UserEditOutline class="w-5 h-5 text-primary-500" />
+                  <UserEditOutline class="w-5 h-5 text-black" />
                 </button>
                 <!-- Botão remover -->
                 <button
                   title="Remover"
-                  class="p-2 rounded border border-red-600 hover:border-red-300 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   on:click={() => openConfirm(produto.id)}
                   disabled={deletingId === produto.id || loading}
                 >
-                  <TrashBinOutline class="w-5 h-5 text-red-600" />
+                  <TrashBinOutline class="w-5 h-5 text-black" />
                 </button>
               </TableBodyCell>
             </TableBodyRow>
@@ -177,20 +177,20 @@
               <div class="flex gap-2">
                 <!-- Botão editar -->
                 <button
-                  class="p-2 rounded border border-primary-200 hover:border-primary-400 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   title="Editar"
                   on:click={() => goto(`/produtos/edit/${produto.id}`)}
                 >
-                  <UserEditOutline class="w-5 h-5 text-primary-500" />
+                  <UserEditOutline class="w-5 h-5 text-black" />
                 </button>
                 <!-- Botão remover -->
                 <button
                   title="Remover"
-                  class="p-2 rounded border border-red-100 hover:border-red-300 transition bg-transparent"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
                   on:click={() => openConfirm(produto.id)}
                   disabled={deletingId === produto.id || loading}
                 >
-                  <TrashBinOutline class="w-5 h-5 text-red-400" />
+                  <TrashBinOutline class="w-5 h-5 text-black" />
                 </button>
               </div>
             </div>

@@ -115,7 +115,7 @@
   {:else}
     <!-- Tabela para telas médias/grandes -->
     <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
-      <!-- Tabela de usuários -->
+      <!-- Tabela de categorias -->
       <Table class="w-full border-separate border-spacing-0">
         <TableHead>
           <TableHeadCell class="text-black w-16 bg-gray-300">ID</TableHeadCell>

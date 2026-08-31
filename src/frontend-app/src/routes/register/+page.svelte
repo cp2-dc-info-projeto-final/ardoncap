@@ -146,7 +146,7 @@
           <!-- Botões de ação -->
           <div class="flex gap-4 justify-end mt-4">
            <!-- Botão salvar -->
-           <Button class= "w-3xs bg-white text-[1.1rem] hover:bg-gray-300 text-black font-special rounded-none" disabled={loading}> 
+           <Button type="submit" class= "w-3xs bg-white text-[1.1rem] hover:bg-gray-300 text-black font-special rounded-none" disabled={loading}> 
             {id === null ? 'CADASTRAR' : 'Salvar'}
           </Button>
             <!-- Botão cancelar/voltar -->
