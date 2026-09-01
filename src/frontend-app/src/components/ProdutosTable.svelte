@@ -1,7 +1,7 @@
 <script lang="ts">
     export let search = '';
     
-    // Tabela de usuários
+    // Tabela de produto
     import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge } from 'flowbite-svelte'; // UI
     import ConfirmModal from './ConfirmModal.svelte'; // modal de confirmação
     import { UserEditOutline, TrashBinOutline } from 'flowbite-svelte-icons'; // ícones

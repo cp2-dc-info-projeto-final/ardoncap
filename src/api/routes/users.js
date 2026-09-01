@@ -59,6 +59,23 @@ router.get('/me', verifyToken, async function(req, res) {
   }
 });
 
+/* GET parametrizado - Buscar usuário por ID - Público*/
+router.get('/public/:id', verifyToken, async function(req, res) {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT id, login, email FROM usuario WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
+      return sendError(res, 404, 'Usuário não encontrado');
+    }
+
+    return sendSuccess(res, 200, null, result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
+
 /* GET parametrizado - Buscar usuário por ID */
 router.get('/:id', verifyToken, isAdmin, async function(req, res) {
   try {
@@ -240,7 +257,74 @@ router.post('/login', async function(req, res) {
 });
 
 
-/* PUT - Atualizar usuário */
+/* PUT - Atualizar usuário - PÚBLICO */
+router.put('/editar/:id', verifyToken, async function(req, res) {
+  try {
+    const { id } = req.params;
+    const { login, email, senha } = req.body;
+    
+    // Validação básica
+    if (!login || !email) {
+      const errors = [];
+      if (!login) errors.push({ field: 'login', message: 'Login é obrigatório', code: 'REQUIRED' });
+      if (!email) errors.push({ field: 'email', message: 'Email é obrigatório', code: 'REQUIRED' });
+
+      return sendError(res, 400, 'Login e email são obrigatórios', errors);
+    }
+    
+    // Verificar se o usuário existe
+    const userExists = await pool.query('SELECT id FROM usuario WHERE id = $1', [id]);
+    if (userExists.rows.length === 0) {
+      return sendError(res, 404, 'Usuário não encontrado');
+    }
+
+    //Verificar se é o próprio perfil
+    if (req.user.id !== id) {
+      return sendError(res, 403, 'Você só pode editar seu próprio perfil');
+    }
+    
+    // Verificar se o login já está em uso por outro usuário
+    const existingUser = await pool.query('SELECT id FROM usuario WHERE login = $1 AND id != $2', [login, id]);
+    if (existingUser.rows.length > 0) {
+      return sendError(res, 409, 'Login já está em uso por outro usuário', [
+        { field: 'login', message: 'Login já está em uso por outro usuário', code: 'CONFLICT' }
+      ]);
+    }
+
+    // Verificar se o email já está em uso por outro usuário
+    const existingEmail = await pool.query('SELECT id FROM usuario WHERE email = $1 AND id != $2', [email, id]);
+    if (existingEmail.rows.length > 0) {
+      return sendError(res, 409, 'Email já está em uso por outro usuário', [
+        { field: 'email', message: 'Email já está em uso por outro usuário', code: 'CONFLICT' }
+      ]);
+    }
+    
+    let query, params;
+    
+    if (senha && senha.trim() !== '') {
+      // Atualizar com nova senha
+      const hashedPassword = await bcrypt.hash(senha, 12);
+      query = 'UPDATE usuario SET login = $1, email = $2, senha = $3 WHERE id = $4 RETURNING id, login, email';
+      params = [login, email, hashedPassword, id];
+    } else {
+      // Atualizar sem alterar senha
+      query = 'UPDATE usuario SET login = $1, email = $2 WHERE id = $3 RETURNING id, login, email';
+      params = [login, email, id];
+    }
+    
+    const result = await pool.query(query, params);
+    
+    return sendSuccess(res, 200, 'Usuário atualizado com sucesso', result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    // Verificar se é erro de constraint
+    if (error.code === '23514') {
+      return sendError(res, 400, 'Dados inválidos. Verifique os campos e tente novamente.');
+    }
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
+
 router.put('/:id', verifyToken, isAdmin, async function(req, res) {
   try {
     const { id } = req.params;

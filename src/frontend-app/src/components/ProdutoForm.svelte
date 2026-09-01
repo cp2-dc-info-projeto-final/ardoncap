@@ -131,9 +131,9 @@
       const produtoData = {
         nome: produto.nome,
         descricao: produto.descricao,
-        quantidade_disponivel: produto.quantidade_disponivel,
-        preco: produto.preco,
-        id_categoria: produto.id_categoria
+        quantidade_disponivel: Number(produto.quantidade_disponivel),
+        preco: Number(produto.preco),
+        id_categoria: Number(produto.id_categoria)
       };
 
       let res;

@@ -93,7 +93,7 @@
           {/if}
           <NavLi>
             <div class="flex items-center">
-              <span class="text-white font-light font-poppins px-4 py-2 max-md:text-black">Olá, {user.login}</span>
+              <a href="/profile"><span class="text-white font-light font-poppins px-4 py-2 max-md:text-black">Olá, {user.login}</span></a>
               <!-- svelte-ignore component_name_lowercase -->
               <button class="ml-2 px-3 py-1 bg-red-600 hover:bg-red-800 text-white rounded text-sm flex items-center gap-1" on:click={handleLogout}>
                 <ArrowRightToBracketOutline class="w-4 h-4" /> Sair
