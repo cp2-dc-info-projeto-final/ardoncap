@@ -14,6 +14,7 @@
 	let loading = false;
 	let error = '';
 	let fieldErrors: ApiFieldError[] = [];
+	let confirmarSenha = "";
 
 	function errorOf(field: string): string | null {
 		return fieldErrors.find((item) => item.field === field)?.message ?? null;
@@ -53,6 +54,18 @@
 		if (id !== null && user.senha && user.senha.length < 6) {
 			fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
 			error = 'Senha deve ter pelo menos 6 caracteres.';
+			return;
+		}
+
+		if (id === null && user.senha !== confirmarSenha) {
+			fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
+			error = 'As senhas não coincidem.';
+			return;
+		}
+
+		if (id !== null && user.senha && user.senha !== confirmarSenha) {
+			fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
+			error = 'As senhas não coincidem.';
 			return;
 		}
 
@@ -160,6 +173,25 @@
 							placeholder={id === null
 								? 'Digite a senha (mínimo 6 caracteres)'
 								: 'Nova senha (opcional)'}
+							required={id === null}
+							minlength={6}
+						/>
+						{#if errorOf('senha')}
+							<div class="mt-1 text-sm text-red-500">{errorOf('senha')}</div>
+						{/if}
+					</div>
+					<div>
+						<Label for="confirmarSenha" class="font-special mb-0 text-white"
+							>CONFIRMAR SENHA:</Label
+						>
+						<Input
+							class="font-poppins mt-0 mb-2 rounded-2xl text-xs focus:border-gray-200"
+							id="confirmarSenha"
+							type="password"
+							bind:value={confirmarSenha}
+							placeholder={id === null
+								? 'Confirmar senha'
+								: 'Confirmar nova senha'}
 							required={id === null}
 							minlength={6}
 						/>

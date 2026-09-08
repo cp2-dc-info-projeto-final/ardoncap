@@ -29,11 +29,7 @@
 {:else if authUser}
     <Menu />
     <div class="mt-27">
-        <button class="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg font-poppins shadow transition" on:click={() => goto(`/profile/edit/${authUser.id}`)}>
-            Editar 
-            <CirclePlusOutline class="w-5 h-5" />
-        </button>
         <!-- Passa o id convertido para número -->
-        <Profile id={Number(routeId)} />
+        <Profile id={authUser.id} />
     </div>
 {/if}

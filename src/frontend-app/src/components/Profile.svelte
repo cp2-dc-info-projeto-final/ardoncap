@@ -3,6 +3,10 @@
     import api from '$lib/api';
     import type { ApiFieldError, ApiResponse } from '$lib/api';
     import type { User, UserFormData } from '$lib/models/User';
+	import { Navbar, NavLi, NavUl } from 'flowbite-svelte';
+    import { EditOutline } from 'flowbite-svelte-icons';
+    import { goto } from '$app/navigation';
+
 
     export let id: number | null = null; // id recebido do componente pai
 
@@ -43,10 +47,19 @@
             {:else if error}
                 <p class="text-red-500">{error}</p>
             {:else if user}
-                <div>
-                    <p><strong>Login:</strong> {user.login}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
+            <div class="hidden xl:flex items-center justify-between gap-4 w-full max-w-5xl mx-auto my-8 rounded-xl bg-white px-4 py-2">
+                <div class="flex flex-col min-w-0 flex-1 px-4 py-2">
+                  <span class="truncate text-lg font-light font-special text-black">
+                    {user.login}
+                  </span>
+                  <span class="truncate text-lg font-light font-special text-gray-400">
+                    {user.email}
+                  </span>
                 </div>
+                <button class="shrink-0 flex items-center gap-2 px-4 py-2 text-black rounded-lg font-poppins hover:text-gray-400" on:click={() => goto(`/profile/edit/${user.id}`)}>
+                  <EditOutline class="shrink-0 h-7 w-7" />
+                </button>
+              </div>
             {:else}
                 <p>Nenhum usuário encontrado.</p>
             {/if}
