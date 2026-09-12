@@ -72,8 +72,8 @@
   }
 </script>
 
-<div class="relative px-8">
-  <Navbar class="fixed start-0 top-0 z-20 w-full px-2 py-2.5 sm:px-4">
+<div class="relative w-full">
+  <Navbar class="absolute start-0 top-0 z-20 w-full px-2 py-2.5 sm:px-4">
     <NavBrand href="/">
       <img src="/images/AlfredArdoncap.svg" class="me-3 h-6 sm:h-9" alt="Logo aleatória" />
       <Heading class="self-center text-xl font-light font-poppins whitespace-nowrap text-white">ARDONCAP</Heading>

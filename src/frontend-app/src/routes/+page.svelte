@@ -6,8 +6,6 @@
 	import LinksCategoria from '../components/LinksCategoria.svelte';
 </script>
 
-<Menu />
-
 <style>
   :global(html, body) {
     margin: 0;

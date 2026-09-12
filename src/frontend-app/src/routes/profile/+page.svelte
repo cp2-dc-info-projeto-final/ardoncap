@@ -27,7 +27,6 @@
 {#if loading}
     <div class="text-center p-8 pt-32 text-white">Carregando...</div>
 {:else if authUser}
-    <Menu />
     <div class="mt-27">
         <!-- Passa o id convertido para número -->
         <Profile id={authUser.id} />

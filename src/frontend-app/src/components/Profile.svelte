@@ -3,7 +3,6 @@
     import api from '$lib/api';
     import type { ApiFieldError, ApiResponse } from '$lib/api';
     import type { User, UserFormData } from '$lib/models/User';
-	import { Navbar, NavLi, NavUl } from 'flowbite-svelte';
     import { EditOutline } from 'flowbite-svelte-icons';
     import { goto } from '$app/navigation';
 
