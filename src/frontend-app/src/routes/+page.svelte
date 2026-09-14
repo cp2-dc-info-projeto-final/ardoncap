@@ -17,7 +17,6 @@
   }
 </style>
 
-
 <section class="w-full h-screen text-white bg-black bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center px-[7%] flex flex-col">
     
     <div class="pt-[12%]">
