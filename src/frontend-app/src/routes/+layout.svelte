@@ -4,7 +4,11 @@
 	let { children } = $props();
 </script>
 
-<main class="flex flex-col items-center justify-center min-h-screen w-full">
-  <Menu />
-    {@render children()}
+<main>
+	<div class="flex items-start gap-4">
+		<Menu />
+	</div>
+	<div class="flex flex-col items-center justify-center min-h-screen w-full">
+		{@render children()}
+	</div>
 </main>

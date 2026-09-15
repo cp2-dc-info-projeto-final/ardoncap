@@ -81,7 +81,7 @@
     <NavHamburger class="text-white hover:bg-black focus:ring-black"/>
     <NavUl>
       <!-- MODIFICADO: max-md:text-black força a cor preta apenas em telas de celular/tablet -->
-      <NavLi href="/" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white hover:text-gray-800 transition-colors rounded-lg">Início</NavLi>
+      <NavLi href="/" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-800 transition-colors rounded-lg">Início</NavLi>
       <NavLi href="/#categorias" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-600 focus:text-gray-600 transition-colors rounded-lg">Categorias</NavLi>
       <NavLi href="/about" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-600 focus:text-gray-600 transition-colors rounded-lg">Sobre</NavLi>
       {#if hasToken}
@@ -107,7 +107,7 @@
         {/if}
       {:else}
         <!-- se não tem token, exibe botão de login-->
-        <NavLi href="/login" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-red-600 focus:text-red-600 transition-colors rounded-lg">Login</NavLi>
+        <NavLi href="/login" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-600 focus:text-gray-400 transition-colors rounded-lg">Login</NavLi>
       {/if}
     </NavUl>
   </Navbar>

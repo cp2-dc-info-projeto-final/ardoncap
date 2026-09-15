@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Card, Button, Input, Label, Alert } from "flowbite-svelte";
+  import { Card, Button, Input, Label, Alert, Img } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import { login as authLogin } from "$lib/auth";
   
@@ -40,8 +40,8 @@
   <title>Login - Ardoncap</title>
 </svelte:head>
 
-<div class="w-full max-w-3xl px-4 md:px-8">
-  <div class="h-screen flex flex-col items-center justify-center bg-black p-4">
+<div class="w-full min-h-screen pt-16 grid grid-cols-1 md:grid-cols-2 bg-black text-white">
+  <div class="h-screen flex flex-col items-center justify-center bg-black p-4 md:p-12">
     <div class="w-full max-w-sm">
       
       <Card class="p-6 w-full bg-black border-0">
@@ -95,4 +95,15 @@
       </Card>
     </div>
   </div>
+    <!-- LADO DIREITO: Colado cirurgicamente no formulário -->
+  <div class="hidden md:flex w-full items-center justify-start p-6 md:py-12 md:pl-0">
+    <div class="w-full max-w-sm aspect-[3/4] overflow-hidden rounded-2xl">
+      <img 
+        src="../images/Login.jpeg" 
+        alt="Login visual" 
+        class="w-full h-full object-cover object-center"
+      />
+    </div>
+  </div>
+  
 </div>
