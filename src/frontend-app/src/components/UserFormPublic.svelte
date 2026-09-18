@@ -118,7 +118,7 @@
 	<div class="flex h-screen flex-col items-center justify-center bg-black p-4">
 		<div class="w-full max-w-sm">
 			<!-- Card do formulário -->
-			<Card class="w-full border-0 bg-black p-6">
+			<Card class="pl-0 w-full bg-black border-0">
 				<!-- Formulário principal -->
 				<form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
 					<!-- Título -->
@@ -204,14 +204,14 @@
 						<!-- Botão salvar -->
 						<Button
 							type="submit"
-							class="font-special w-3xs rounded-none bg-white text-[1.1rem] text-black hover:bg-gray-300"
+							class="font-special w-3xs !flex !justify-center !items-center rounded-xl bg-white text-[1.1rem] text-black hover:bg-gray-300"
 							disabled={loading}
 						>
 							{id === null ? 'CADASTRAR' : 'Salvar'}
 						</Button>
 						<!-- Botão cancelar/voltar -->
 						<Button
-							class="font-special w-3xs rounded-none bg-white text-[1.1rem] text-black hover:bg-gray-300"
+							class="font-special w-3xs !flex !justify-center !items-center rounded-xl bg-white text-[1.1rem] text-black hover:bg-gray-300"
 							onclick={handleCancel}
 							disabled={loading}
 						>

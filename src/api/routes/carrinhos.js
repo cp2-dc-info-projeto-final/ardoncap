@@ -142,10 +142,10 @@ router.post('/', verifyToken, async function(req, res) {
     }
   });
 
-/* LISTAR E FILTRAR PRODUTOS */
-router.get('/', verifyToken, async function(req, res) {
+/* LISTAR E FILTRAR ITENS DO CARRINHO */
+router.get('/itens', verifyToken, async function(req, res) {
   try {
-    const { search, id_carrinho } = req.query;
+    const { id_carrinho } = req.query;
     let result;
  
     if (id_carrinho) {
@@ -163,7 +163,7 @@ router.get('/', verifyToken, async function(req, res) {
         ORDER BY id`
       );
     }
- 
+    
     return res.status(200).json({
       success: true,
       message: null,
@@ -175,6 +175,37 @@ router.get('/', verifyToken, async function(req, res) {
       success: false,
       message: 'Erro interno do servidor',
       errors: []
+    });
+  }
+});
+
+/* EXCLUIR ITEM DO CARRRINHO POR ID */
+router.delete('/:id', verifyToken, async function(req, res) {
+  try {
+    const { id } = req.params;
+
+    const itemcarrinhoExiste = await pool.query(
+      'SELECT id FROM item_carrinho WHERE id = $1', [id]);
+    if (itemcarrinhoExiste.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado',
+        errors: [{ field: 'id', message: 'Item não existe', code: 'NOT_FOUND' }]
+      });
+    }
+
+    await pool.query('DELETE FROM produto WHERE id = $1', [id]);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Item deletado com sucesso'
+    });
+  } catch (error) {
+    console.error('Erro ao deletar item:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor',
     });
   }
 });

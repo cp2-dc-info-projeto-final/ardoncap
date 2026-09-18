@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { Card, Button, Input, Label, Alert, Img } from "flowbite-svelte";
+  import { Card, Button, Input, Label, Alert, Img, Heading } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import { login as authLogin } from "$lib/auth";
-  
+  export let id: number | null = null; // id do usuário
+
   let login = '';
   let password = '';
   let loading = false;
   let error = '';
+  
 
   async function handleLogin() {
     if (!login || !password) {
@@ -40,15 +42,19 @@
   <title>Login - Ardoncap</title>
 </svelte:head>
 
-<div class="w-full min-h-screen pt-16 grid grid-cols-1 md:grid-cols-2 bg-black text-white">
-  <div class="h-screen flex flex-col items-center justify-center bg-black p-4 md:p-12">
-    <div class="w-full max-w-sm">
+<div class="w-full min-h-screen pt-16 flex flex-col md:flex-row items-center justify-center gap-6 bg-black text-white">
+  <div class="flex flex-col items-center justify-center bg-black pl-4 md:p-0">
+    <div class="w-100 max-w-sm">
       
-      <Card class="p-6 w-full bg-black border-0">
-        <form on:submit|preventDefault={handleLogin} class="space-y-6">
-              <h2 class="text-center text-4xl font-instrument text-white mb-6">
-                LOGIN
-              </h2>
+      <Card class="pl-0 w-full bg-black border-0">
+        <form on:submit|preventDefault={handleLogin} class="flex flex-col gap-6 p-6">
+          <Heading tag="h3" class="font-instrument mb-6 text-center text-4xl text-white">
+						{id === null ? 'LOGIN' : 'Editar Usuário'}
+					</Heading>
+					<!-- Mensagem de erro -->
+					{#if error}
+						<div class="text-center text-red-500">{error}</div>
+					{/if}
               <div class="mt-20 mb-14">
                 <div>
                 <Label for="login" class="mb-1 text-white font-special">LOGIN:</Label>
@@ -61,7 +67,7 @@
                   required
                   />
               </div>
-
+                <br>
               <div>
                 <Label for="password" class="mb-1 text-white font-special">SENHA:</Label>
                 <Input
@@ -83,7 +89,7 @@
             <div class="flex justify-center">
               <Button 
               type="submit"
-              class="w-3xs bg-white text-[1.1rem] hover:bg-gray-300 text-black font-special rounded-none" 
+              class="w-3xs flex justify-center bg-white text-[1.1rem] hover:bg-gray-300 text-black font-special rounded-xl" 
               disabled={loading}>
               {loading ? 'Entrando...' : 'ENTRAR'}
               </Button>
@@ -95,15 +101,14 @@
       </Card>
     </div>
   </div>
-    <!-- LADO DIREITO: Colado cirurgicamente no formulário -->
-  <div class="hidden md:flex w-full items-center justify-start p-6 md:py-12 md:pl-0">
-    <div class="w-full max-w-sm aspect-[3/4] overflow-hidden rounded-2xl">
-      <img 
-        src="../images/Login.jpeg" 
-        alt="Login visual" 
-        class="w-full h-full object-cover object-center"
-      />
+    <!-- LADO DIREITO -->
+    <div class="hidden md:flex items-center justify-center p-6">
+      <div class="w-full max-w-sm aspect-[3/4] overflow-hidden rounded-2xl">
+        <img 
+          src="../images/Login.jpeg" 
+          alt="Login visual" 
+          class="w-full h-full object-cover object-center"
+        />
+      </div>
     </div>
-  </div>
-  
 </div>

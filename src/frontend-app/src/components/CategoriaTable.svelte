@@ -15,7 +15,7 @@
   
     $: loadCategorias(search);
     async function loadCategorias(searchTerm: string) {
-      loading = true;
+      loading = false;
       try {
         const res = await api.get('/categorias', {
           params: {
@@ -114,10 +114,10 @@
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
     <!-- Tabela para telas médias/grandes -->
-    <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
+    <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300 min-h-[500px] max-h-[600px]">
       <!-- Tabela de categorias -->
       <Table class="w-full border-separate border-spacing-0">
-        <TableHead>
+        <TableHead class="sticky top-0 z-0">
           <TableHeadCell class="text-black w-16 bg-gray-300">ID</TableHeadCell>
           <TableHeadCell class="text-black w-32 bg-gray-300">Nome</TableHeadCell> 
           <TableHeadCell class="w-40 bg-gray-300 text-right"></TableHeadCell> <!-- coluna para editar/remover -->
