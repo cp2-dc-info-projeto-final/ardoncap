@@ -15,7 +15,7 @@
   
     $: loadProdutos(search);
     async function loadProdutos(searchTerm: string) {
-      loading = true;
+      loading = false;
       try {
         const res = await api.get('/produtos', {
           params: {
@@ -114,17 +114,17 @@
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
     <!-- Tabela para telas médias/grandes -->
-    <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
+    <div class= "w-full max-w-5xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300">
       <!-- Tabela de produtos -->
       <Table class="w-full border-separate border-spacing-0">
         <TableHead>
           <TableHeadCell class="text-black w-16  bg-gray-300">ID</TableHeadCell>
-          <TableHeadCell class=" text-black w-32  bg-gray-300">Nome</TableHeadCell>
-          <TableHeadCell class=" text-black w-32  bg-gray-300">Categoria</TableHeadCell>
-          <TableHeadCell class=" text-black w-32  bg-gray-300">Preço</TableHeadCell>
-          <TableHeadCell class=" text-black w-32  bg-gray-300">Qtd</TableHeadCell>
-          <TableHeadCell class=" text-black w-32  bg-gray-300">User</TableHeadCell>
-          <TableHeadCell class="min-w-0  bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
+          <TableHeadCell class=" text-black w-16  bg-gray-300">Nome</TableHeadCell>
+          <TableHeadCell class=" text-black w-16  bg-gray-300">Categoria</TableHeadCell>
+          <TableHeadCell class=" text-black w-16  bg-gray-300">Preço</TableHeadCell>
+          <TableHeadCell class=" text-black w-16  bg-gray-300">Qtd</TableHeadCell>
+          <TableHeadCell class=" text-black w-16  bg-gray-300">User</TableHeadCell>
+          <TableHeadCell class="w-14  bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
           {#each produtos as produto}
@@ -164,7 +164,7 @@
       <div class="flex flex-col items-center gap-4 my-8 max-w-3xl mx-auto md:grid md:grid-cols-2">
         {#each produtos as produto}
           <!-- Card de usuário -->
-          <Card class="max-w-sm w-full p-0 overflow-hidden shadow-lg border-gray-200">
+          <Card class=" w-full p-0 overflow-hidden shadow-lg border-gray-200">
             <div class="px-4 pt-4 pb-2 bg-gray-100 text-left flex items-center justify-between">
               <div>
                 <div class="text-lg font-semibold text-gray-800 text-left">{produto.nome}</div>

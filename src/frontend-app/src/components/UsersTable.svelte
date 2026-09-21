@@ -115,7 +115,7 @@
   <div class="my-8 text-center text-red-500">{error}</div>
 {:else}
   <!-- Tabela para telas médias/grandes -->
-  <div class="hidden xl:block w-full max-w-5xl mx-auto my-8 rounded-xl overflow-hidden border border-gray-300">
+  <div class="w-full max-w-5xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300">
     <!-- Tabela de usuários -->
     <Table class="w-full border-separate border-spacing-0">
       <TableHead>
