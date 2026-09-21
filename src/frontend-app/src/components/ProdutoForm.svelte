@@ -173,7 +173,7 @@
     class="flex flex-col gap-5 p-6"
     on:submit|preventDefault={handleSubmit}
   >
-    <Heading tag="h3" class="mb-2 text-center">
+    <Heading tag="h3" class="mb-2 text-center font-instrument">
       {id === null ? 'Cadastrar Produto' : 'Editar Produto'}
     </Heading>
 
@@ -185,14 +185,14 @@
 
     <!-- Nome -->
     <div>
-      <Label for="nome">Nome do Produto</Label>
+      <Label for="nome" class="font-poppins">Nome do Produto</Label>
 
       <Input
         id="nome"
         bind:value={produto.nome}
         placeholder="Digite o nome do produto"
         required
-        class="mt-1"
+        class="mt-1 font-poppins"
       />
 
       {#if errorOf('nome')}
@@ -204,15 +204,15 @@
 
     <!-- Descrição -->
     <div>
-      <Label for="descricao">Descrição</Label>
+      <Label for="descricao" class="font-poppins">Descrição</Label>
 
       <Textarea
         id="descricao"
         bind:value={produto.descricao}
         placeholder="Digite a descrição do produto"
-        rows="4"
+        rows=3
         required
-        class="mt-1"
+        class="mt-1 font-poppins"
       />
 
       {#if errorOf('descricao')}
@@ -224,7 +224,7 @@
 
     <!-- Quantidade -->
     <div>
-      <Label for="quantidade_disponivel">
+      <Label for="quantidade_disponivel" class="font-poppins">
         Quantidade disponível
       </Label>
 
@@ -234,7 +234,7 @@
         min="0"
         bind:value={produto.quantidade_disponivel}
         required
-        class="mt-1"
+        class="mt-1 font-poppins"
       />
 
       {#if errorOf('quantidade_disponivel')}
@@ -246,7 +246,7 @@
 
     <!-- Preço -->
     <div>
-      <Label for="preco">Preço</Label>
+      <Label for="preco" class="font-poppins">Preço</Label>
 
       <Input
         id="preco"
@@ -256,7 +256,7 @@
         bind:value={produto.preco}
         placeholder="0.00"
         required
-        class="mt-1"
+        class="mt-1 font-poppins"
       />
 
       {#if errorOf('preco')}
@@ -268,12 +268,12 @@
 
     <!-- Categoria -->
     <div>
-      <Label for="id_categoria">Categoria</Label>
+      <Label for="id_categoria" class="font-poppins">Categoria</Label>
 
       <Select
         id="id_categoria"
         bind:value={produto.id_categoria}
-        class="mt-1"
+        class="mt-1 font-poppins"
         required
       >
         <option value={0}>Selecione uma categoria</option>
@@ -293,13 +293,13 @@
     </div>
 
     <!-- Botões de ação -->
-    <div class="flex gap-4 justify-end mt-4">
+    <div class="flex gap-4 justify-between mt-4">
       <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
         <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
         {id === null ? 'Voltar' : 'Cancelar'}
       </Button>
       <!-- Botão salvar -->
-      <Button type="submit" color="red" disabled={loading}>
+      <Button type="submit" color="dark" disabled={loading}>
         <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
         {id === null ? 'Cadastrar' : 'Salvar'}
       </Button>
