@@ -46,10 +46,10 @@
 </section>
 
 <section class="bg-black text-white py-20 mt-5" id="categorias">
-  <h3 class="text-3xl font-special text-center">I. Categorias</h3>
+  <h3 class="text-5xl font-instrument text-center">I. Categorias</h3>
   <br><br>
   <LinksCategoria/>
 </section>
 <section class="bg-black text-white py-20">
-  <h3 class="text-3xl font-special text-center">II. Produtos</h3>
+  <h3 class="text-5xl font-instrument text-center">II. Produtos</h3>
 </section>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Heading, button} from "flowbite-svelte";
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Heading, Button, button} from "flowbite-svelte";
   import { onMount } from "svelte";
   import { logout, getCurrentUser, getToken, type User } from "$lib/auth";
   import { goto } from "$app/navigation";
-  import { ArrowRightToBracketOutline } from "flowbite-svelte-icons";
+  import { ArrowRightToBracketOutline, UserCircleOutline } from "flowbite-svelte-icons";
   import { page } from "$app/stores";
 
   let user: User | null = null;
@@ -112,3 +112,4 @@
     </NavUl>
   </Navbar>
 </div>
+

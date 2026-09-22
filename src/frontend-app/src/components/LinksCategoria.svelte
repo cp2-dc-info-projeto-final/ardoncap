@@ -116,7 +116,7 @@
     <!-- Tabela para telas médias/grandes -->
     <div class="hidden xl:block">
       <!-- Tabela de usuários -->
-      <ul class="w-full max-w-5xl mx-auto my-8 flex flex-wrap gap-7">
+      <ul class="w-full max-w-5xl mx-auto my-8 flex flex-wrap gap-7 font-special">
           {#each categorias as categoria}
                 <li>
                     <a class="text-gray-400  hover:text-white text-2xl hover:text-3xl transition-all" href="#">{categoria.nome}</a>
