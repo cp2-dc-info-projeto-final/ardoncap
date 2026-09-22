@@ -173,7 +173,7 @@
     class="flex flex-col gap-5 p-6"
     on:submit|preventDefault={handleSubmit}
   >
-    <Heading tag="h3" class="mb-2 text-center font-instrument">
+    <Heading tag="h3" class="mb-2 text-center font-special">
       {id === null ? 'Cadastrar Produto' : 'Editar Produto'}
     </Heading>
 
@@ -185,7 +185,7 @@
 
     <!-- Nome -->
     <div>
-      <Label for="nome" class="font-poppins">Nome do Produto</Label>
+      <Label for="nome" class="font-special">Nome do Produto</Label>
 
       <Input
         id="nome"
@@ -204,7 +204,7 @@
 
     <!-- Descrição -->
     <div>
-      <Label for="descricao" class="font-poppins">Descrição</Label>
+      <Label for="descricao" class="font-special">Descrição</Label>
 
       <Textarea
         id="descricao"
@@ -224,7 +224,7 @@
 
     <!-- Quantidade -->
     <div>
-      <Label for="quantidade_disponivel" class="font-poppins">
+      <Label for="quantidade_disponivel" class="font-special">
         Quantidade disponível
       </Label>
 
@@ -246,7 +246,7 @@
 
     <!-- Preço -->
     <div>
-      <Label for="preco" class="font-poppins">Preço</Label>
+      <Label for="preco" class="font-special">Preço</Label>
 
       <Input
         id="preco"
@@ -268,7 +268,7 @@
 
     <!-- Categoria -->
     <div>
-      <Label for="id_categoria" class="font-poppins">Categoria</Label>
+      <Label for="id_categoria" class="font-special">Categoria</Label>
 
       <Select
         id="id_categoria"
@@ -294,12 +294,12 @@
 
     <!-- Botões de ação -->
     <div class="flex gap-4 justify-between mt-4">
-      <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
-        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+      <Button color="light" type="button" onclick={handleCancel} disabled={loading} class="font-special">
+        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom font-special" />
         {id === null ? 'Voltar' : 'Cancelar'}
       </Button>
       <!-- Botão salvar -->
-      <Button type="submit" color="dark" disabled={loading}>
+      <Button type="submit" color="dark" disabled={loading} class="font-special">
         <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
         {id === null ? 'Cadastrar' : 'Salvar'}
       </Button>

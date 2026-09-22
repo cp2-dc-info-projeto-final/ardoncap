@@ -95,7 +95,7 @@
     <!-- Formulário principal -->
     <form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
       <!-- Título -->
-      <Heading tag="h3" class="mb-2 text-center">
+      <Heading tag="h3" class="mb-2 text-center font-special">
         {id === null ? 'Cadastrar Categoria' : 'Editar Categoria'}
       </Heading>
       <!-- Mensagem de erro -->
@@ -104,22 +104,22 @@
       {/if}
       <!-- Campo nome -->
       <div>
-        <Label for="nome">Nome da Categoria</Label>
-        <Input id="nome" bind:value={categoria.nome} placeholder="Digite o nome da categoria" required class="mt-1" />
+        <Label for="nome" class="font-special">Nome da Categoria</Label>
+        <Input id="nome" bind:value={categoria.nome} placeholder="Digite o nome da categoria" required class="mt-1 font-poppins" />
         {#if errorOf('nome')}
           <div class="mt-1 text-sm text-red-500">{errorOf('nome')}</div>
         {/if}
       </div>
   
       <!-- Botões de ação -->
-      <div class="flex gap-4 justify-end mt-4">
-        <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
-          <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+      <div class="flex gap-4 justify-between mt-4">
+        <Button color="light" type="button" onclick={handleCancel} disabled={loading} class="font-special">
+          <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins" />
           {id === null ? 'Voltar' : 'Cancelar'}
         </Button>
         <!-- Botão salvar -->
-        <Button type="submit" color="red" disabled={loading}>
-          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+        <Button type="submit" color="dark" disabled={loading} class="font-special">
+          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins"/>
           {id === null ? 'Cadastrar' : 'Salvar'}
         </Button>
       </div>

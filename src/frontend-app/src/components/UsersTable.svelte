@@ -2,9 +2,9 @@
   export let search = '';
   
   // Tabela de usuários
-  import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge } from 'flowbite-svelte'; // UI
+  import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge, Button} from 'flowbite-svelte'; // UI
   import ConfirmModal from './ConfirmModal.svelte'; // modal de confirmação
-  import { UserEditOutline, TrashBinOutline } from 'flowbite-svelte-icons'; // ícones
+  import { UserEditOutline, TrashBinOutline, FloppyDiskAltOutline, UndoOutline } from 'flowbite-svelte-icons'; // ícones
   import { goto } from '$app/navigation'; // navegação
   import api from '$lib/api'; // API backend
   import type { ApiResponse } from '$lib/api';
@@ -16,7 +16,7 @@
 
   $: loadUsers(search);
   async function loadUsers(searchTerm: string) {
-    loading = true;
+    loading = false;
     try {
       const res = await api.get('/users', {
         params: {
@@ -70,6 +70,11 @@
     closeConfirm();
   }
 
+  // Retorna ao painel
+  function painel() {
+      goto('/painel');
+    }
+
   async function handleDelete(id: number) {
     deletingId = id;
     error = '';
@@ -115,48 +120,56 @@
   <div class="my-8 text-center text-red-500">{error}</div>
 {:else}
   <!-- Tabela para telas médias/grandes -->
-  <div class="w-full max-w-5xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300">
+  <div class="w-full max-w-2xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300 hidden xl:block">
     <!-- Tabela de usuários -->
-    <Table class="w-full border-separate border-spacing-0">
-      <TableHead>
-        <TableHeadCell class="text-black w-16  bg-gray-300">ID</TableHeadCell>
-        <TableHeadCell class="text-black w-16  bg-gray-300">Login</TableHeadCell>
-        <TableHeadCell class="text-black w-16  bg-gray-300">Email</TableHeadCell>
-        <TableHeadCell class="text-black w-16  bg-gray-300">Role</TableHeadCell>
-        <TableHeadCell class="w-24  bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
+    <Table class="w-full table-fixed border-separate border-spacing-0">
+      <TableHead class="sticky top-0 z-0">
+        <TableHeadCell class="text-black w-16 bg-gray-300 font-poppins">ID</TableHeadCell>
+        <TableHeadCell class="text-black w-32 bg-gray-300 font-poppins">Login</TableHeadCell>
+        <TableHeadCell class="text-black w-36 bg-gray-300 font-poppins">Email</TableHeadCell>
+        <TableHeadCell class="text-black w-24 bg-gray-300 font-poppins">Role</TableHeadCell>
+        <TableHeadCell class="w-24 bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
       </TableHead>
       <TableBody>
-        {#each users as user}
+        {#if users.length === 0}
           <TableBodyRow>
-            <TableBodyCell class="text-black">{user.id}</TableBodyCell>
-            <TableBodyCell class="text-black">{user.login}</TableBodyCell>
-            <TableBodyCell class="truncate max-w-0 text-black">{user.email}</TableBodyCell>
-            <TableBodyCell>
-              <Badge color={user.role === 'admin' ? 'blue' : 'gray'} class="text-xs">
-                {user.role}
-              </Badge>
-            </TableBodyCell>
-            <TableBodyCell>
-              <!-- Botão editar -->
-              <button
-                class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
-                title="Editar"
-                on:click={() => goto(`/users/edit/${user.id}`)}
-              >
-                <UserEditOutline class="w-5 h-5 text-black" />
-              </button>
-              <!-- Botão remover -->
-              <button
-                title="Remover"
-                class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
-                on:click={() => openConfirm(user.id)}
-                disabled={deletingId === user.id || loading}
-              >
-                <TrashBinOutline class="w-5 h-5 text-black" />
-              </button>
+            <TableBodyCell colspan="5" class="text-center text-gray-400 py-8">
+              Nenhum usuário encontrado.
             </TableBodyCell>
           </TableBodyRow>
-        {/each}
+        {:else}
+          {#each users as user}
+            <TableBodyRow>
+              <TableBodyCell class="text-black truncate font-poppins">{user.id}</TableBodyCell>
+              <TableBodyCell class="text-black truncate font-poppins">{user.login}</TableBodyCell>
+              <TableBodyCell class="text-black truncate font-poppins">{user.email}</TableBodyCell>
+              <TableBodyCell>
+                <Badge color={user.role === 'admin' ? 'blue' : 'gray'} class="text-xs">
+                  {user.role}
+                </Badge>
+              </TableBodyCell>
+              <TableBodyCell>
+                <!-- Botão editar -->
+                <button
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
+                  title="Editar"
+                  on:click={() => goto(`/users/edit/${user.id}`)}
+                >
+                  <UserEditOutline class="w-5 h-5 text-black" />
+                </button>
+                <!-- Botão remover -->
+                <button
+                  title="Remover"
+                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
+                  on:click={() => openConfirm(user.id)}
+                  disabled={deletingId === user.id || loading}
+                >
+                  <TrashBinOutline class="w-5 h-5 text-black" />
+                </button>
+              </TableBodyCell>
+            </TableBodyRow>
+          {/each}
+        {/if}
       </TableBody>
     </Table>
   </div>
@@ -216,3 +229,10 @@
   onConfirm={handleConfirm}
   onCancel={handleCancel}
 />
+
+<!-- Botão de voltar -->
+<div class="flex gap-4 justify-center mt-4">
+  <Button color="light" type="button" onclick={painel} disabled={loading} class="font-special flex items-center justify-center">
+    <UndoOutline class="w-5 h-5 font-special" />
+  </Button>
+</div>

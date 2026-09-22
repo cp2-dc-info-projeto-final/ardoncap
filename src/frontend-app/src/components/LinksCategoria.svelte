@@ -15,7 +15,7 @@
   
     $: loadCategorias(search);
     async function loadCategorias(searchTerm: string) {
-      loading = true;
+      loading = false;
       try {
         const res = await api.get('/categorias', {
           params: {

@@ -2,16 +2,17 @@
     export let search = '';
     
     // Tabela de produto
-    import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge } from 'flowbite-svelte'; // UI
+    import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge, Button } from 'flowbite-svelte'; // UI
     import ConfirmModal from './ConfirmModal.svelte'; // modal de confirmação
-    import { UserEditOutline, TrashBinOutline } from 'flowbite-svelte-icons'; // ícones
+    import { UserEditOutline, TrashBinOutline, ArrowLeftOutline, FloppyDiskAltOutline, UndoOutline } from 'flowbite-svelte-icons'; // ícones
     import { goto } from '$app/navigation'; // navegação
     import api from '$lib/api'; // API backend
     import type { ApiResponse } from '$lib/api';
     import { onMount } from 'svelte'; // ciclo de vida
     import type { Produto } from '$lib/models/Produto';
-  
+
     let produtos: Produto[] = [];   // get de produtos
+    export let id: number | null = null;
   
     $: loadProdutos(search);
     async function loadProdutos(searchTerm: string) {
@@ -68,6 +69,11 @@
     function handleCancel() {
       closeConfirm();
     }
+
+    // Retorna ao painel
+    function painel() {
+      goto('/painel');
+    }
   
     async function handleDelete(id: number) {
       deletingId = id;
@@ -114,48 +120,56 @@
     <div class="my-8 text-center text-red-500">{error}</div>
   {:else}
     <!-- Tabela para telas médias/grandes -->
-    <div class= "w-full max-w-5xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300">
+    <div class= "w-full max-w-3xl mx-auto my-8 rounded-xl overflow-y-auto border border-gray-300 hidden xl:block">
       <!-- Tabela de produtos -->
-      <Table class="w-full border-separate border-spacing-0">
-        <TableHead>
-          <TableHeadCell class="text-black w-16  bg-gray-300">ID</TableHeadCell>
-          <TableHeadCell class=" text-black w-16  bg-gray-300">Nome</TableHeadCell>
-          <TableHeadCell class=" text-black w-16  bg-gray-300">Categoria</TableHeadCell>
-          <TableHeadCell class=" text-black w-16  bg-gray-300">Preço</TableHeadCell>
-          <TableHeadCell class=" text-black w-16  bg-gray-300">Qtd</TableHeadCell>
-          <TableHeadCell class=" text-black w-16  bg-gray-300">User</TableHeadCell>
-          <TableHeadCell class="w-14  bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
+      <Table class="w-full table-fixed border-separate border-spacing-0">
+        <TableHead class="sticky top-0 z-0">
+          <TableHeadCell class="text-black w-16 bg-gray-300 font-poppins">ID</TableHeadCell>
+          <TableHeadCell class="text-black w-32 bg-gray-300 font-poppins">Nome</TableHeadCell>
+          <TableHeadCell class="text-black w-28 bg-gray-300 font-poppins">Categoria</TableHeadCell>
+          <TableHeadCell class="text-black w-20 bg-gray-300 font-poppins">Preço</TableHeadCell>
+          <TableHeadCell class="text-black w-16 bg-gray-300 font-poppins">Qtd</TableHeadCell>
+          <TableHeadCell class="text-black w-24 bg-gray-300 font-poppins">User</TableHeadCell>
+          <TableHeadCell class="w-24 bg-gray-300"></TableHeadCell> <!-- coluna para editar/remover -->
         </TableHead>
         <TableBody>
-          {#each produtos as produto}
+          {#if produtos.length === 0}
             <TableBodyRow>
-              <TableBodyCell class="text-black">{produto.id}</TableBodyCell>
-              <TableBodyCell class="text-black">{produto.nome}</TableBodyCell>
-              <TableBodyCell class="text-black">{produto.categoria_nome}</TableBodyCell>
-              <TableBodyCell class="text-black">{produto.preco}</TableBodyCell>
-              <TableBodyCell class="text-black">{produto.quantidade_disponivel}</TableBodyCell>
-              <TableBodyCell class="text-black">{produto.id_usuario}</TableBodyCell>
-              <TableBodyCell>
-                <!-- Botão editar -->
-                <button
-                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
-                  title="Editar"
-                  on:click={() => goto(`/produtos/edit/${produto.id}`)}
-                >
-                  <UserEditOutline class="w-5 h-5 text-black" />
-                </button>
-                <!-- Botão remover -->
-                <button
-                  title="Remover"
-                  class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
-                  on:click={() => openConfirm(produto.id)}
-                  disabled={deletingId === produto.id || loading}
-                >
-                  <TrashBinOutline class="w-5 h-5 text-black" />
-                </button>
+              <TableBodyCell colspan="7" class="text-center text-gray-400 py-8">
+                Nenhum produto encontrado.
               </TableBodyCell>
             </TableBodyRow>
-          {/each}
+          {:else}
+            {#each produtos as produto}
+              <TableBodyRow>
+                <TableBodyCell class="text-black truncate">{produto.id}</TableBodyCell>
+                <TableBodyCell class="text-black truncate">{produto.nome}</TableBodyCell>
+                <TableBodyCell class="text-black truncate">{produto.categoria_nome}</TableBodyCell>
+                <TableBodyCell class="text-black truncate">{produto.preco}</TableBodyCell>
+                <TableBodyCell class="text-black truncate">{produto.quantidade_disponivel}</TableBodyCell>
+                <TableBodyCell class="text-black truncate">{produto.id_usuario}</TableBodyCell>
+                <TableBodyCell>
+                  <!-- Botão editar -->
+                  <button
+                    class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
+                    title="Editar"
+                    on:click={() => goto(`/produtos/edit/${produto.id}`)}
+                  >
+                    <UserEditOutline class="w-5 h-5 text-black" />
+                  </button>
+                  <!-- Botão remover -->
+                  <button
+                    title="Remover"
+                    class="p-2 rounded border border-black hover:border-gray-300 transition bg-transparent"
+                    on:click={() => openConfirm(produto.id)}
+                    disabled={deletingId === produto.id || loading}
+                  >
+                    <TrashBinOutline class="w-5 h-5 text-black" />
+                  </button>
+                </TableBodyCell>
+              </TableBodyRow>
+            {/each}
+          {/if}
         </TableBody>
       </Table>
     </div>
@@ -191,7 +205,7 @@
                   disabled={deletingId === produto.id || loading}
                 >
                   <TrashBinOutline class="w-5 h-5 text-black" />
-                </button>
+              </button>
               </div>
             </div>
           </Card>
@@ -209,3 +223,12 @@
     onConfirm={handleConfirm}
     onCancel={handleCancel}
   />
+
+<!-- Botão de voltar -->
+<div class="flex gap-4 justify-center mt-4">
+  <Button color="light" type="button" onclick={painel} disabled={loading} class="font-special flex items-center justify-center">
+    <UndoOutline class="w-5 h-5 font-special" />
+  </Button>
+</div>
+
+

@@ -109,7 +109,7 @@
   <!-- Formulário principal -->
   <form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
     <!-- Título -->
-    <Heading tag="h3" class="mb-2 text-center">
+    <Heading tag="h3" class="mb-2 text-center font-special">
       {id === null ? 'Cadastrar Usuário' : 'Editar Usuário'}
     </Heading>
     <!-- Mensagem de erro -->
@@ -118,15 +118,15 @@
     {/if}
     <!-- Campo login -->
     <div>
-      <Label for="login">Login</Label>
-      <Input id="login" bind:value={user.login} placeholder="Digite o login" required class="mt-1" />
+      <Label for="login" class="font-poppins">Login</Label>
+      <Input id="login" bind:value={user.login} placeholder="Digite o login" required class="mt-1 font-poppins"/>
       {#if errorOf('login')}
         <div class="mt-1 text-sm text-red-500">{errorOf('login')}</div>
       {/if}
     </div>
     <!-- Campo email -->
     <div>
-      <Label for="email">Email</Label>
+      <Label for="email" class="font-poppins">Email</Label>
       <Input id="email" type="email" bind:value={user.email} placeholder="Digite o e-mail" required class="mt-1" />
       {#if errorOf('email')}
         <div class="mt-1 text-sm text-red-500">{errorOf('email')}</div>
@@ -134,7 +134,7 @@
     </div>
     <!-- Campo senha -->
     <div>
-      <Label for="senha">Senha {id !== null ? '(deixe vazio para manter atual)' : ''}</Label>
+      <Label for="senha" class="font-poppins">Senha {id !== null ? '(deixe vazio para manter atual)' : ''}</Label>
       <Input 
         id="senha" 
         type="password" 
@@ -142,7 +142,7 @@
         placeholder={id === null ? 'Digite a senha (mínimo 6 caracteres)' : 'Nova senha (opcional)'} 
         required={id === null}
         minlength={6}
-        class="mt-1" 
+        class="mt-1 font-poppins" 
       />
       {#if errorOf('senha')}
         <div class="mt-1 text-sm text-red-500">{errorOf('senha')}</div>
@@ -150,22 +150,22 @@
     </div>
     <!-- Campo role -->
     <div>
-      <Label for="role">Perfil</Label>
-      <Select id="role" bind:value={user.role} items={roleOptions} class="mt-1" />
+      <Label for="role" class="font-poppins">Perfil</Label>
+      <Select id="role" bind:value={user.role} items={roleOptions} class="mt-1 font-poppins" />
       {#if errorOf('role')}
-        <div class="mt-1 text-sm text-red-500">{errorOf('role')}</div>
+        <div class="mt-1 text-sm text-red-500 font-poppins">{errorOf('role')}</div>
       {/if}
     </div>
     <!-- Botões de ação -->
-    <div class="flex gap-4 justify-end mt-4">
+    <div class="flex gap-4 justify-between mt-4">
       <!-- Botão cancelar/voltar -->
-      <Button color="light" type="button" onclick={handleCancel} disabled={loading}>
-        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+      <Button color="light" type="button" onclick={handleCancel} disabled={loading} class="font-special">
+        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins" />
         {id === null ? 'Voltar' : 'Cancelar'}
       </Button>
       <!-- Botão salvar -->
-      <Button type="submit" color="primary" disabled={loading}>
-        <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
+      <Button type="submit" color="primary" disabled={loading} class="font-special">
+        <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins" />
         {id === null ? 'Cadastrar' : 'Salvar'}
       </Button>
     </div>
