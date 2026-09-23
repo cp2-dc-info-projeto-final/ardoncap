@@ -46,7 +46,7 @@
             {:else if error}
                 <p class="text-red-500">{error}</p>
             {:else if user}
-            <div class="hidden xl:flex items-center justify-between gap-4 w-full max-w-5xl mx-auto my-8 rounded-xl bg-white px-4 py-2">
+            <div class="xl:flex items-center justify-between gap-4 w-full max-w-5xl mx-auto my-8 rounded-xl bg-white px-4 py-2">
                 <div class="flex flex-col min-w-0 flex-1 px-4 py-2">
                   <span class="truncate text-lg font-light font-special text-black">
                     {user.login}
