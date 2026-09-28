@@ -27,6 +27,7 @@ router.post('/', verifyToken, async function(req, res) {
     const { preco } = req.body;
     const { id_categoria } = req.body;
     const id_usuario = req.user.id;
+    const { dados_imagem } = req.body
 
     // Validação básica
     if (!nome) {
@@ -69,6 +70,14 @@ router.post('/', verifyToken, async function(req, res) {
       });
     }
 
+    if (!dados_imagem) {
+      return res.status(400).json({
+        success: false,
+        message: 'Imagem é obrigatoria',
+        errors: [{field: 'dados_imagem', message: 'Imagem é obrigatória', code: 'REQUIRED' }]
+      });
+    }
+
     // Verificar se a categoria existe 
     const categoriaExiste = await pool.query('SELECT id FROM categoria WHERE id = $1', [id_categoria]);
     if (categoriaExiste.rows.length === 0) {
@@ -83,6 +92,15 @@ router.post('/', verifyToken, async function(req, res) {
       `INSERT INTO produto (nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario]
+    );
+
+    const novoProduto = result.rows[0];
+
+    // 2. Insere a imagem utilizando o ID do produto acabado de criar
+    await pool.query(
+      `INSERT INTO imagem_produto (produto_id, dados_imagem, nome_imagem)
+       VALUES ($1, $2)`,
+      [novoProduto.id, dados_imagem]
     );
 
     return sendSuccess(res, 201, 'Produto criado com sucesso', result.rows[0]);

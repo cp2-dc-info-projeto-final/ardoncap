@@ -25,6 +25,14 @@ CREATE TABLE usuario (
     CONSTRAINT ck_usuario_role_valid CHECK (role IN ('admin', 'user')) -- tipos de usuário
 );
 
+CREATE TABLE IF NOT EXISTS imagem_usuario (
+    id BIGINT GENERATED ALWAYS AS IDENTITY,
+    usuario_id BIGINT NOT NULL REFERENCES usuario(id),
+    dados_imagem BYTEA,
+    nome_arquivo VARCHAR(255),
+    tipo_mime VARCHAR(50)
+);
+
 CREATE TABLE categoria (
     id int GENERATED ALWAYS AS IDENTITY,
     nome text NOT NULL,
@@ -44,6 +52,14 @@ CREATE TABLE produto (
     CONSTRAINT pk_produto PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS imagem_produto (
+    id BIGINT GENERATED ALWAYS AS IDENTITY,
+    produto_id BIGINT NOT NULL REFERENCES produto(id),
+    dados_imagem BYTEA,
+    nome_arquivo VARCHAR(255),
+    tipo_mime VARCHAR(50) 
+);
+
 CREATE TABLE endereco (
     id bigint GENERATED ALWAYS AS IDENTITY,
     CEP int NOT NULL,
@@ -55,23 +71,6 @@ CREATE TABLE endereco (
     id_usuario bigint REFERENCES usuario(id) NOT NULL,
 
     CONSTRAINT pk_endereco PRIMARY KEY (id)
-);
-
-CREATE TABLE carrinho (
-    id bigint GENERATED ALWAYS AS IDENTITY,
-    id_usuario int NOT NULL REFERENCES usuario(id),
-
-    CONSTRAINT pk_carrinho PRIMARY KEY (id)
-);
-
-CREATE TABLE item_carrinho (
-    id bigint GENERATED ALWAYS AS IDENTITY,
-    quantidade int NOT NULL,
-    preco_unitario int NOT NULL,
-    id_carrinho bigint NOT NULL REFERENCES carrinho(id),
-    id_produto bigint NOT NULL REFERENCES produto(id),
-
-    CONSTRAINT pk_item_carrinho PRIMARY KEY (id)
 );
 
 CREATE TABLE pedido (
