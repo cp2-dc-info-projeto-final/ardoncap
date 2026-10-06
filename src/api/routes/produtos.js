@@ -26,8 +26,8 @@ router.post('/', verifyToken, async function(req, res) {
     const { quantidade_disponivel } = req.body;
     const { preco } = req.body;
     const { id_categoria } = req.body;
+    const { imagem_base64 } = req.body;
     const id_usuario = req.user.id;
-    const { dados_imagem } = req.body
 
     // Validação básica
     if (!nome) {
@@ -70,16 +70,16 @@ router.post('/', verifyToken, async function(req, res) {
       });
     }
 
-    if (!dados_imagem) {
+    if (!imagem_base64) {
       return res.status(400).json({
         success: false,
-        message: 'Imagem é obrigatoria',
-        errors: [{field: 'dados_imagem', message: 'Imagem é obrigatória', code: 'REQUIRED' }]
+        message: 'Imagem é obrigatória',
+        errors: [{field: 'imagem_base64', message: 'A imagem em formato Base64 é obrigatória', code: 'REQUIRED' }]
       });
     }
 
     // Verificar se a categoria existe 
-    const categoriaExiste = await pool.query('SELECT id FROM categoria WHERE id = $1', [id_categoria]);
+    const categoriaExiste = await pool.query('SELECT id FROM categoria WHERE id = \$1', [id_categoria]);
     if (categoriaExiste.rows.length === 0) {
       return res.status(404).json({
         success: false,
@@ -88,22 +88,16 @@ router.post('/', verifyToken, async function(req, res) {
       });
     }
 
+    // Inserindo o produto incluindo a coluna de imagem
     const result = await pool.query(
-      `INSERT INTO produto (nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario]
+      `INSERT INTO produto (nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario, imagem)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [nome, descricao, quantidade_disponivel, preco, id_categoria, id_usuario, imagem_base64]
     );
 
     const novoProduto = result.rows[0];
 
-    // 2. Insere a imagem utilizando o ID do produto acabado de criar
-    await pool.query(
-      `INSERT INTO imagem_produto (produto_id, dados_imagem, nome_imagem)
-       VALUES ($1, $2)`,
-      [novoProduto.id, dados_imagem]
-    );
-
-    return sendSuccess(res, 201, 'Produto criado com sucesso', result.rows[0]);
+    return sendSuccess(res, 201, 'Produto criado com sucesso', novoProduto);
   } catch (error) {
     console.error('Erro ao criar produto:', error);
     if (error.code === '23514') {

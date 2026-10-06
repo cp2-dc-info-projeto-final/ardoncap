@@ -25,14 +25,6 @@ CREATE TABLE usuario (
     CONSTRAINT ck_usuario_role_valid CHECK (role IN ('admin', 'user')) -- tipos de usuário
 );
 
-CREATE TABLE IF NOT EXISTS imagem_usuario (
-    id BIGINT GENERATED ALWAYS AS IDENTITY,
-    usuario_id BIGINT NOT NULL REFERENCES usuario(id),
-    dados_imagem BYTEA,
-    nome_arquivo VARCHAR(255),
-    tipo_mime VARCHAR(50)
-);
-
 CREATE TABLE categoria (
     id int GENERATED ALWAYS AS IDENTITY,
     nome text NOT NULL,
@@ -46,18 +38,11 @@ CREATE TABLE produto (
     descricao text NOT NULL,
     quantidade_disponivel int NOT NULL,
     preco numeric(10,2),
+    imagem text NOT NULL,
     id_categoria INT NOT NULL REFERENCES categoria(id),
     id_usuario bigint NOT NULL REFERENCES usuario(id),
 
     CONSTRAINT pk_produto PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS imagem_produto (
-    id BIGINT GENERATED ALWAYS AS IDENTITY,
-    produto_id BIGINT NOT NULL REFERENCES produto(id),
-    dados_imagem BYTEA,
-    nome_arquivo VARCHAR(255),
-    tipo_mime VARCHAR(50) 
 );
 
 CREATE TABLE endereco (

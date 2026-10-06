@@ -5,6 +5,7 @@
   import {  P, ImagePlaceholder, Skeleton, TextPlaceholder, Button } from "flowbite-svelte";
 	import LinksCategoria from '../components/LinksCategoria.svelte';
   import { goto } from '$app/navigation';
+	import LinksProdutos from '../components/LinksProdutos.svelte';
 </script>
 
 <style>
@@ -52,4 +53,6 @@
 </section>
 <section class="bg-black text-white py-20">
   <h3 class="text-5xl font-instrument text-center">II. Produtos</h3>
+  <br><br>
+  <LinksProdutos/>
 </section>

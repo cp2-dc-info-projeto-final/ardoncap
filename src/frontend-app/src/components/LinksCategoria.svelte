@@ -41,54 +41,7 @@
   
     let loading = true;
     let error = '';
-    let deletingId: number | null = null; // id em deleção
-    let confirmOpen = false; // modal aberto?
-    let confirmTargetId: number | null = null; // id alvo do modal
-  
-    // Abre modal de confirmação
-    function openConfirm(id: number) {
-      confirmTargetId = id;
-      confirmOpen = true;
-    }
-    // Fecha modal
-    function closeConfirm() {
-      confirmOpen = false;
-      confirmTargetId = null;
-    }
-  
-    // Confirma remoção
-    function handleConfirm() {
-      if (confirmTargetId !== null) {
-        handleDelete(confirmTargetId);
-      }
-      closeConfirm();
-    }
-  
-    // Cancela remoção
-    function handleCancel() {
-      closeConfirm();
-    }
-  
-    async function handleDelete(id: number) {
-      deletingId = id;
-      error = '';
-      try {
-        const res = await api.delete(`/categorias/${id}`);
-        const body = res.data as ApiResponse<null>;
-        if (!body.success) {
-          error = body.message;
-          return;
-        }
-        categorias = categorias.filter(categoria => categoria.id !== id);
-      } catch (e: any) {
-        console.error('Erro ao deletar categoria:', e);
-        const body = e.response?.data as ApiResponse<null> | undefined;
-        error = body?.message || 'Erro ao remover categoria.';
-      } finally {
-        deletingId = null;
-      }
-    }
-  
+    
     onMount(async () => {
       try {
         const res = await api.get('/categorias');
@@ -142,13 +95,3 @@
       </div>
     </div>
   {/if}
-  
-  <!-- Modal de confirmação -->
-  <ConfirmModal
-    open={confirmOpen}
-    message="Tem certeza que deseja remover esta categoria?"
-    confirmText="Remover"
-    cancelText="Cancelar"
-    onConfirm={handleConfirm}
-    onCancel={handleCancel}
-  />
