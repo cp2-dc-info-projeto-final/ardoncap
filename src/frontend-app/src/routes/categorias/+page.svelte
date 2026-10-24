@@ -61,6 +61,8 @@
         <CirclePlusOutline class="w-5 h-5" />
       </button>
     </div>
+    <div>
     <CategoriaTable search={search}/>
+    </div>
   </div>
 {/if}

@@ -3,7 +3,6 @@
   import Menu from '../../components/Menu.svelte';
 </script>
 
-<Menu />
 <div class="w-full max-w-3xl px-4 md:px-8">
   <div class="text-center p-8 pt-32">
     <Heading tag="h1" class="text-6xl font-instrument font-light tracking-tight text-white dark:text-white mb-6">Sobre</Heading>

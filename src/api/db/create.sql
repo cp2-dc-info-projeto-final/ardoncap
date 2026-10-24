@@ -38,6 +38,7 @@ CREATE TABLE produto (
     descricao text NOT NULL,
     quantidade_disponivel int NOT NULL,
     preco numeric(10,2),
+    imagem text NOT NULL,
     id_categoria INT NOT NULL REFERENCES categoria(id),
     id_usuario bigint NOT NULL REFERENCES usuario(id),
 
@@ -55,23 +56,6 @@ CREATE TABLE endereco (
     id_usuario bigint REFERENCES usuario(id) NOT NULL,
 
     CONSTRAINT pk_endereco PRIMARY KEY (id)
-);
-
-CREATE TABLE carrinho (
-    id bigint GENERATED ALWAYS AS IDENTITY,
-    id_usuario int NOT NULL REFERENCES usuario(id),
-
-    CONSTRAINT pk_carrinho PRIMARY KEY (id)
-);
-
-CREATE TABLE item_carrinho (
-    id bigint GENERATED ALWAYS AS IDENTITY,
-    quantidade int NOT NULL,
-    preco_unitario int NOT NULL,
-    id_carrinho bigint NOT NULL REFERENCES carrinho(id),
-    id_produto bigint NOT NULL REFERENCES produto(id),
-
-    CONSTRAINT pk_item_carrinho PRIMARY KEY (id)
 );
 
 CREATE TABLE pedido (
@@ -111,6 +95,5 @@ CREATE TABLE avaliacao (
 INSERT INTO usuario (login, email, senha, role) VALUES
 
 -- senha efelantinho
-('hermenegildo', 'hermenegildo@email.com', '$2a$12$f2c.uHGHS4drfaz6HR870OLamkarD57kI.gkr4//Vbbp0vN9IrFfG', 'admin'),
 ('Ardoncap', 'ardoncap@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'admin'),
 ('ArdoncapUser', 'ardoncapuser@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'user');
