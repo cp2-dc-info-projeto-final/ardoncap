@@ -3,7 +3,7 @@
     import api from '$lib/api';
     import type { ApiFieldError, ApiResponse } from '$lib/api';
     import type { User, UserFormData } from '$lib/models/User';
-    import { BookOpenOutline, EditOutline, ShoppingBagSolid,  } from 'flowbite-svelte-icons';
+    import { BookOpenOutline, EditOutline, ShoppingBagSolid, ClipboardCheckSolid  } from 'flowbite-svelte-icons';
     import { goto } from '$app/navigation';
 
 
@@ -56,20 +56,31 @@
                   </span>
                 </div>
                     <button 
-                        class="flex items-center gap-2 px-3 py-2 text-black rounded-lg font-poppins hover:text-gray-400 transition-colors" on:click={() => goto('/profile/pedido')}>
+                        class="flex items-center gap-2 px-3 py-2 text-black rounded-lg font-poppins hover:text-gray-400 transition-colors" 
+                        on:click={() => goto('/profile/pedido')}>
                         <ShoppingBagSolid class="shrink-0 h-6 w-6" />
                     </button>
                     <button 
-                        class="flex items-center gap-2 px-3 py-2 text-black rounded-lg font-poppins hover:text-gray-400 transition-colors" on:click={() => goto('/profile/endereco')}>
+                        class="flex items-center gap-2 px-3 py-2 text-black rounded-lg font-poppins hover:text-gray-400 transition-colors" 
+                        on:click={() => goto('/profile/endereco')}>
                         <BookOpenOutline class="shrink-0 h-7 w-7" />
                     </button>
-                    <button class="shrink-0 flex items-center gap-2 px-4 py-2 text-black rounded-lg font-poppins hover:text-gray-400" on:click={() => goto(`/profile/edit/${user.id}`)}>
-                    <EditOutline class="shrink-0 h-7 w-7" />
+                    <button
+                        class="shrink-0 flex items-center gap-2 px-4 py-2 text-black rounded-lg font-poppins hover:text-gray-400" 
+                        on:click={() => goto(`/profile/edit/${user.id}`)}>
+                        <EditOutline class="shrink-0 h-7 w-7" />
                     </button>
-              </div>
+                    <button
+                        class="shrink-0 flex items-center gap-2 px-4 py-2 text-black rounded-lg font-poppins hover:text-gray-400 transition-colors" 
+                        on:click={() => goto('/profile/vendas')}>
+                        <ClipboardCheckSolid class="shrink-0 h-6 w-6" />
+                    </button>
+                </div>
             {:else}
                 <p>Nenhum usuário encontrado.</p>
             {/if}
         </div>
     </div>
 </div>
+
+

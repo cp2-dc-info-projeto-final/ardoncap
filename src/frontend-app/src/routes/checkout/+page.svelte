@@ -64,7 +64,7 @@
 				// Limpa o carrinho localstorage e redireciona para confirmação ou histórico
 				cart.limpar();
 				alert('Pedido realizado com sucesso!');
-				await goto('/profile'); // Redireciona para o perfil onde ficará o histórico
+				await goto('/profile/pedido'); // Redireciona para o perfil onde ficará o histórico
 			} else {
 				error = body.message || 'Erro ao processar o seu pedido.';
 			}
@@ -79,7 +79,7 @@
 	onMount(async () => {
 		// Se tentar acessar o checkout com o carrinho vazio, volta para a loja
 		if ($cart.length === 0) {
-			await goto('/produtos');
+			await goto('/');
 			return;
 		}
 		await carregarEnderecos();

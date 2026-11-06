@@ -49,7 +49,7 @@
 	<div class="flex h-screen flex-col items-center justify-center bg-black p-4">
 		<div class="w-full max-w-sm">
 			<!-- Card de Visualização -->
-			<Card class="pl-0 w-full bg-black border-0">
+			<Card class="pl-0 w-full bg-white border-0">
 				<div class="flex flex-col gap-6 p-6">
 					
 					{#if loading}
