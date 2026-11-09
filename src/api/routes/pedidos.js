@@ -3,6 +3,14 @@ var router = express.Router();
 const pool = require('../db/config');
 const { verifyToken } = require('../middlewares/auth');
 
+const TRANSICOES_STATUS = {
+  pendente:  ['pago', 'cancelado'],
+  pago:      ['enviado', 'cancelado'],
+  enviado:   ['entregue'],
+  entregue:  [],
+  cancelado: []
+};
+
 function sendSuccess(res, status, message, data) {
   const payload = { success: true };
   if (message) payload.message = message;
@@ -177,6 +185,127 @@ router.get('/:id', verifyToken, async function(req, res) {
   } catch (error) {
     console.error('Erro ao buscar detalhes do pedido:', error);
     return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
+
+router.put('/:id', verifyToken, async function(req, res) {
+  const id_pedido = Number(req.params.id);
+  const id_usuario = req.user?.id;
+  const isAdmin = req.user?.role === 'admin'; // adapte à sua forma de identificar admin
+
+  if (!Number.isInteger(id_pedido) || id_pedido <= 0) {
+    return sendError(res, 400, 'ID de pedido inválido.');
+  }
+
+  const { status, id_endereco } = req.body;
+
+  if (status === undefined && id_endereco === undefined) {
+    return sendError(res, 400, 'Informe ao menos um campo para atualizar: status ou id_endereco.');
+  }
+
+  if (status !== undefined && (typeof status !== 'string' || !(status in TRANSICOES_STATUS))) {
+    return sendError(res, 400, 'Status inválido.');
+  }
+
+  if (id_endereco !== undefined && (!Number.isInteger(id_endereco) || id_endereco <= 0)) {
+    return sendError(res, 400, 'ID de endereço inválido.');
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Trava o pedido para evitar duas alterações simultâneas (ex.: cancelar duas vezes e devolver estoque em dobro)
+    const pedidoResult = await client.query(
+      'SELECT id, status, id_usuario, id_endereco FROM pedido WHERE id = $1 FOR UPDATE',
+      [id_pedido]
+    );
+
+    // Mesmo 404 para "não existe" e "não é seu", para não vazar a existência do pedido
+    if (pedidoResult.rows.length === 0 ||
+        (!isAdmin && pedidoResult.rows[0].id_usuario !== id_usuario)) {
+      await client.query('ROLLBACK');
+      return sendError(res, 404, 'Pedido não encontrado.');
+    }
+
+    const pedido = pedidoResult.rows[0];
+    let novoStatus = pedido.status;
+    let novoEndereco = pedido.id_endereco;
+
+    // --- Mudança de status ---
+    if (status !== undefined && status !== pedido.status) {
+      if (!TRANSICOES_STATUS[pedido.status].includes(status)) {
+        await client.query('ROLLBACK');
+        return sendError(res, 409, `Não é possível mudar o pedido de "${pedido.status}" para "${status}".`);
+      }
+      // Cliente comum só pode cancelar; demais transições são do admin
+      if (!isAdmin && status !== 'cancelado') {
+        await client.query('ROLLBACK');
+        return sendError(res, 403, 'Você não tem permissão para alterar o pedido para este status.');
+      }
+      novoStatus = status;
+    }
+
+    // --- Mudança de endereço (só enquanto pendente) ---
+    if (id_endereco !== undefined && id_endereco !== pedido.id_endereco) {
+      if (pedido.status !== 'pendente') {
+        await client.query('ROLLBACK');
+        return sendError(res, 409, 'O endereço só pode ser alterado enquanto o pedido está pendente.');
+      }
+      // O endereço deve pertencer ao DONO do pedido (não a quem está fazendo a requisição)
+      const addressCheck = await client.query(
+        'SELECT id FROM endereco WHERE id = $1 AND id_usuario = $2',
+        [id_endereco, pedido.id_usuario]
+      );
+      if (addressCheck.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return sendError(res, 404, 'Endereço inválido ou não pertence ao dono do pedido.');
+      }
+      novoEndereco = id_endereco;
+    }
+
+    // --- Cancelamento: devolve o estoque ---
+    if (novoStatus === 'cancelado' && pedido.status !== 'cancelado') {
+      // Trava os produtos em ordem fixa de id (evita deadlock com a rota de criação)
+      await client.query(
+        `SELECT id FROM produto
+          WHERE id IN (SELECT id_produto FROM item_pedido WHERE id_pedido = $1)
+          ORDER BY id
+          FOR UPDATE`,
+        [id_pedido]
+      );
+
+      await client.query(
+        `UPDATE produto p
+            SET quantidade_disponivel = p.quantidade_disponivel + i.total
+           FROM (SELECT id_produto, SUM(quantidade) AS total
+                   FROM item_pedido
+                  WHERE id_pedido = $1
+                  GROUP BY id_produto) i
+          WHERE p.id = i.id_produto`,
+        [id_pedido]
+      );
+    }
+
+    const updated = await client.query(
+      `UPDATE pedido
+          SET status = $1,
+              id_endereco = $2
+        WHERE id = $3
+        RETURNING *`,
+      [novoStatus, novoEndereco, id_pedido]
+    );
+
+    await client.query('COMMIT');
+
+    return sendSuccess(res, 200, 'Pedido atualizado com sucesso!', updated.rows[0]);
+
+  } catch (error) {
+    try { await client.query('ROLLBACK'); } catch (e) { console.error('Falha no rollback:', e); }
+    console.error('Erro ao atualizar pedido:', error);
+    return sendError(res, 500, 'Erro interno ao atualizar o pedido.');
+  } finally {
+    client.release();
   }
 });
 

@@ -176,6 +176,34 @@ router.get('/', verifyToken, async function(req, res) {
   }
 });
 
+/* LISTAR OS 12 PRODUTOS MAIS RECENTES */
+router.get('/recentes', verifyToken, async function(req, res) {
+  try {
+    const result = await pool.query(`
+      SELECT p.*, c.nome AS categoria_nome
+      FROM produto p
+      INNER JOIN categoria c ON p.id_categoria = c.id
+      ORDER BY p.id DESC
+      LIMIT 12
+    `);
+
+    return res.status(200).json({
+      success: true,
+      message: null,
+      data: result.rows
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar produtos recentes:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor',
+      errors: []
+    });
+  }
+});
+
 /* BUSCAR PRODUTO POR ID */
 router.get('/:id', verifyToken, async function(req, res) {
   try {
@@ -202,6 +230,32 @@ router.get('/:id', verifyToken, async function(req, res) {
     return sendSuccess(res, 200, 'Produto encontrado', result.rows[0]);
   } catch (error) {
     console.error('Erro ao buscar produto:', error);
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
+
+/* BUSCAR PRODUTOS DE UM USUÁRIO */
+router.get('/usuario/:id', verifyToken, async function(req, res) {
+  try {
+    const { id } = req.params;
+
+    if (!id || !/^\d+$/.test(id)) {
+      return sendError(res, 400, 'ID de usuário inválido');
+    }
+
+    const result = await pool.query(
+      `SELECT p.*, c.nome AS categoria_nome
+       FROM produto p
+       INNER JOIN categoria c ON p.id_categoria = c.id
+       WHERE p.id_usuario = $1
+       ORDER BY p.id DESC`,
+      [id]
+    );
+
+    return sendSuccess(res, 200, 'Produtos do usuário encontrados', result.rows);
+
+  } catch (error) {
+    console.error('Erro ao buscar produtos do usuário:', error);
     return sendError(res, 500, 'Erro interno do servidor');
   }
 });

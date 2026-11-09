@@ -85,30 +85,30 @@
 						{/if}
 
 						<!-- Título com o Nome do Produto -->
-						<Heading tag="h3" class="font-instrument text-center text-4xl text-white uppercase mt-2">
+						<Heading tag="h3" class="font-instrument text-center text-4xl text-black uppercase mt-2">
 							{produto.nome}
 						</Heading>
 
 						<!-- Informações do Produto -->
 						<div class="flex flex-col gap-4 text-center">
 							<div>
-								<span class="font-special text-gray-500 block text-xs tracking-wider">PREÇO:</span>
-								<span class="font-poppins text-2xl font-bold text-white">
+								<span class="font-special text-black block text-xs tracking-wider">PREÇO:</span>
+								<span class="font-poppins text-2xl font-bold text-black">
 									{produto.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
 								</span>
 							</div>
 
 							<div>
-								<span class="font-special text-gray-500 block text-xs tracking-wider">DISPONÍVEL:</span>
-								<span class="font-poppins text-sm text-white">
+								<span class="font-special text-black block text-xs tracking-wider">DISPONÍVEL:</span>
+								<span class="font-poppins text-sm text-black">
 									{produto.quantidade_disponivel} unidades
 								</span>
 							</div>
 
 							{#if produto.descricao}
 								<div class="mt-2">
-									<span class="font-special text-gray-500 block text-xs tracking-wider">DESCRIÇÃO:</span>
-									<p class="font-poppins text-sm text-gray-300 leading-relaxed mt-1">
+									<span class="font-special text-black block text-xs tracking-wider">DESCRIÇÃO:</span>
+									<p class="font-poppins text-sm text-black leading-relaxed mt-1">
 										{produto.descricao}
 									</p>
 								</div>
@@ -117,7 +117,7 @@
 
                         <div class="mt-6 flex justify-center">
                             <Button 
-                            class="w-full bg-white hover:bg-gray-200 text-black rounded-xl font-special"
+                            class="w-full bg-black hover:bg-gray-200 text-white font-special"
                             disabled={produto.quantidade_disponivel <= 0}
                             onclick={() => cart.adicionar(produto)}
                             >
