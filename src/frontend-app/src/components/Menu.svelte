@@ -92,7 +92,6 @@
             <!-- só exibe menu usuários para admin-->
             <NavLi href="/painel" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg">Painel</NavLi>
           {/if}
-          <NavLi href="/meusprodutos" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg">Meus Produtos</NavLi>
           <NavLi href="/carrinho" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg"><CartSolid class="shrink-0 h-6 w-6" /></NavLi>
           <NavLi>
             <div class="flex items-center">
