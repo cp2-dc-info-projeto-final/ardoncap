@@ -1,16 +1,21 @@
+
 <script lang="ts">
     import { onMount } from 'svelte';
     import api from '$lib/api';
     import type { ApiFieldError, ApiResponse } from '$lib/api';
     import type { User, UserFormData } from '$lib/models/User';
-    import { BookOpenOutline, EditOutline, ShoppingBagSolid, MapPinAltSolid  } from 'flowbite-svelte-icons';
+    import {
+        BookOpenOutline,
+        EditOutline,
+        ShoppingBagSolid,
+        MapPinAltSolid
+    } from 'flowbite-svelte-icons';
     import { goto } from '$app/navigation';
     import type { Produto } from '$lib/models/Produto';
 
+    export let id: number | null = null;
 
-    export let id: number | null = null; // id recebido do componente pai
-
-    let user: UserFormData | null = null; // Começa como null para sabermos quando carregou
+    let user: UserFormData | null = null;
     let loading = true;
     let error = '';
 
@@ -18,15 +23,17 @@
     let loadingProdutos = true;
     let erroProdutos = '';
 
-
     // Função para buscar o usuário
     async function loadUser(userId: number | null) {
         if (!userId) return;
+
         loading = true;
         error = '';
+
         try {
             const res = await api.get(`/users/public/${userId}`);
             const body = res.data as ApiResponse<User>;
+
             if (body.success && body.data) {
                 user = { ...body.data, senha: '' };
             } else {
@@ -48,6 +55,7 @@
         loadProdutos(id);
     }
 
+    // Buscar produtos do usuário
     async function loadProdutos(userId: number | null) {
         if (!userId) {
             loadingProdutos = false;
@@ -75,14 +83,17 @@
     }
 </script>
 
-
 <div class="w-full max-w-5xl mx-auto px-4 md:px-8 py-8">
 
     {#if loading}
-        <p class="text-center text-white py-8">Carregando perfil...</p>
+        <p class="text-center text-white py-8">
+            Carregando perfil...
+        </p>
 
     {:else if error}
-        <p class="text-center text-red-500 py-8">{error}</p>
+        <p class="text-center text-red-500 py-8">
+            {error}
+        </p>
 
     {:else if user}
 
@@ -131,20 +142,20 @@
             <div class="pt-6">
 
                 {#if loadingProdutos}
-                <p>Carregando produtos...</p>
+                    <p>Carregando produtos...</p>
 
-            {:else if erroProdutos}
-                <p>{erroProdutos}</p>
+                {:else if erroProdutos}
+                    <p>{erroProdutos}</p>
 
-            {:else if produtos.length === 0}
-                <p>Sem produtos aqui</p>
+                {:else if produtos.length === 0}
+                    <p>Sem produtos aqui</p>
 
-            {:else}
+                {:else}
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
 
                         {#each produtos as produto}
                             <a
-                                href={`/produto/${produto.id}`}
+                                href={`/produto/${produto.id}?from=profile`}
                                 class="group min-w-0"
                             >
                                 <div class="aspect-square overflow-hidden rounded-lg bg-gray-100">
@@ -186,4 +197,3 @@
     {/if}
 
 </div>
-

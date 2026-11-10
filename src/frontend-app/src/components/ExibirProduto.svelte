@@ -1,12 +1,14 @@
+
 <script lang="ts">
-	import { Card, Button, Heading } from 'flowbite-svelte'; // UI
-	import { onMount } from 'svelte'; // ciclo de vida
-	import api from '\$lib/api'; // API backend
-	import type { ApiResponse } from '\$lib/api';
-	import { goto } from '\$app/navigation';
+	import { Card, Button, Heading } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+	import api from '$lib/api';
+	import type { ApiResponse } from '$lib/api';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { ArrowLeftOutline } from 'flowbite-svelte-icons';
-	import type { Produto } from '\$lib/models/Produto';
-    import { cart } from '$lib/cart';
+	import type { Produto } from '$lib/models/Produto';
+	import { cart } from '$lib/cart';
 
 	export let id: number | string | null = null;
 
@@ -19,6 +21,7 @@
 			try {
 				const res = await api.get(`/produtos/${id}`);
 				const body = res.data as ApiResponse<Produto>;
+
 				if (body.success && body.data) {
 					produto = body.data;
 				} else {
@@ -37,7 +40,15 @@
 	});
 
 	function handleBack() {
-		goto('/'); 
+		const origem = $page.url.searchParams.get('from');
+
+		if (origem === 'profile') {
+			goto('/profile');
+		} else if (origem === 'LinksProdutos') {
+			goto('/LinksProdutos');
+		} else {
+			goto('/');
+		}
 	}
 </script>
 
@@ -45,104 +56,142 @@
 	<title>Ardoncap - {produto ? produto.nome : 'Visualizar Produto'}</title>
 </svelte:head>
 
-<div class="w-full max-w-3xl px-4 md:px-8">
-	<div class="flex h-screen flex-col items-center justify-center bg-black p-4">
-		<div class="w-full max-w-sm">
-			<!-- Card de Visualização -->
-			<Card class="pl-0 w-full bg-white border-0">
-				<div class="flex flex-col gap-6 p-6">
-					
-					{#if loading}
-						<div class="text-center p-8 text-white font-poppins">Carregando produto...</div>
-					{:else if error}
-						<div class="text-center text-red-500 font-poppins mb-4">{error}</div>
-						<Button
-							class="font-special w-full !flex !justify-center !items-center rounded-xl bg-white text-[1.1rem] text-black hover:bg-gray-300"
-							onclick={handleBack}
-						>
-							<ArrowLeftOutline class="mr-2 inline h-5 w-5 align-text-bottom" />
-							VOLTAR
-						</Button>
-					{:else if produto}
-						<!-- Imagem do Produto (se existir) -->
+<div class="min-h-screen w-full bg-black px-5 py-10 md:px-12">
+
+	<div class="mx-auto flex min-h-[85vh] max-w-6xl items-center justify-center">
+
+		<div class="w-full">
+
+			{#if loading}
+
+				<div class="py-20 text-center">
+					<p class="font-poppins text-sm text-neutral-400">
+						Carregando produto...
+					</p>
+				</div>
+
+			{:else if error}
+
+				<div class="mx-auto flex max-w-md flex-col items-center gap-8 text-center">
+					<p class="font-poppins text-sm text-neutral-300">{error}</p>
+
+					<Button
+						class="!bg-white !text-black font-special uppercase tracking-widest hover:!bg-neutral-300"
+						onclick={handleBack}
+					>
+						<ArrowLeftOutline class="mr-2 h-5 w-5" />
+						VOLTAR
+					</Button>
+				</div>
+
+			{:else if produto}
+
+				<!-- Conteúdo horizontal -->
+				<div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+
+					<!-- Imagem -->
+					<div class="flex min-h-[300px] items-center justify-center md:min-h-[500px]">
 						{#if produto.imagem}
-							<div class="w-full flex justify-center mb-2">
-								<img 
-									src={produto.imagem} 
-									alt={produto.nome} 
-									class="max-h-48 object-contain rounded-2xl border border-neutral-800"
-								/>
+							<img
+								src={produto.imagem}
+								alt={produto.nome}
+								class="max-h-[500px] w-full object-contain"
+							/>
+						{:else}
+							<div class="font-special text-xs tracking-widest text-neutral-600">
+								SEM IMAGEM
 							</div>
 						{/if}
+					</div>
+
+					<!-- Informações -->
+					<div class="flex flex-col gap-8">
 
 						<!-- Categoria -->
 						{#if produto.categoria_nome}
-							<div class="text-center">
-								<span class="font-special bg-neutral-900 text-gray-400 px-3 py-1 rounded-full text-[0.65rem] tracking-widest uppercase">
-									{produto.categoria_nome}
+							<span class="font-special text-xs uppercase tracking-[0.3em] text-neutral-400">
+								{produto.categoria_nome}
+							</span>
+						{/if}
+
+						<!-- Nome -->
+						<div class="space-y-4">
+							<Heading
+								tag="h1"
+								class="!m-0 font-instrument font-light text-5xl uppercase leading-[1.05] !text-white md:text-6xl"
+							>
+								{produto.nome}
+							</Heading>
+						</div>
+
+						<!-- Preço -->
+						<div class="space-y-2">
+							<span class="font-special text-[0.7rem] tracking-[0.25em] text-neutral-500">
+								PREÇO
+							</span>
+
+							<p class="font-poppins text-3xl font-semibold text-white">
+								{produto.preco.toLocaleString('pt-BR', {
+									style: 'currency',
+									currency: 'BRL'
+								})}
+							</p>
+						</div>
+
+						<!-- Disponibilidade -->
+						<div class="flex items-center gap-3">
+							<span class="font-special text-[0.7rem] tracking-[0.2em] text-neutral-500">
+								DISPONÍVEL
+							</span>
+
+							<span class="font-poppins text-sm text-white">
+								{produto.quantidade_disponivel} unidades
+							</span>
+						</div>
+
+						<!-- Descrição -->
+						{#if produto.descricao}
+							<div class="max-w-lg space-y-3">
+								<span class="font-special text-[0.7rem] tracking-[0.25em] text-neutral-500">
+									DESCRIÇÃO
 								</span>
+
+								<p class="font-poppins text-sm leading-7 text-neutral-300">
+									{produto.descricao}
+								</p>
 							</div>
 						{/if}
 
-						<!-- Título com o Nome do Produto -->
-						<Heading tag="h3" class="font-instrument text-center text-4xl text-black uppercase mt-2">
-							{produto.nome}
-						</Heading>
+						<!-- Ações -->
+						<div class="flex flex-col gap-4 pt-3 sm:flex-row">
 
-						<!-- Informações do Produto -->
-						<div class="flex flex-col gap-4 text-center">
-							<div>
-								<span class="font-special text-black block text-xs tracking-wider">PREÇO:</span>
-								<span class="font-poppins text-2xl font-bold text-black">
-									{produto.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-								</span>
-							</div>
-
-							<div>
-								<span class="font-special text-black block text-xs tracking-wider">DISPONÍVEL:</span>
-								<span class="font-poppins text-sm text-black">
-									{produto.quantidade_disponivel} unidades
-								</span>
-							</div>
-
-							{#if produto.descricao}
-								<div class="mt-2">
-									<span class="font-special text-black block text-xs tracking-wider">DESCRIÇÃO:</span>
-									<p class="font-poppins text-sm text-black leading-relaxed mt-1">
-										{produto.descricao}
-									</p>
-								</div>
-							{/if}
-						</div>
-
-                        <div class="mt-6 flex justify-center">
-                            <Button 
-                            class="w-full bg-black hover:bg-gray-200 text-white font-special"
-                            disabled={produto.quantidade_disponivel <= 0}
-                            onclick={() => cart.adicionar(produto)}
-                            >
-                            {#if produto.quantidade_disponivel > 0}
-                                ADICIONAR AO CARRINHO
-                            {:else}
-                                ESGOTADO
-                            {/if}
-                            </Button>
-                        </div>
-
-						<!-- Botão de Voltar -->
-						<div class="mt-6 flex justify-center">
 							<Button
-								class="font-special w-full !flex !justify-center !items-center rounded-xl bg-white text-[1.1rem] text-black hover:bg-gray-200"
+								class="w-full !rounded-none !bg-white !py-3 font-special text-xs tracking-[0.15em] !text-black hover:!bg-neutral-300"
+								disabled={produto.quantidade_disponivel <= 0}
+								onclick={() => cart.adicionar(produto)}
+							>
+								{#if produto.quantidade_disponivel > 0}
+									ADICIONAR AO CARRINHO
+								{:else}
+									ESGOTADO
+								{/if}
+							</Button>
+
+							<Button
+								class="w-full !rounded-none !border !border-neutral-700 !bg-transparent !py-3 font-special text-xs tracking-[0.15em] !text-white hover:!border-white hover:!bg-neutral-900"
 								onclick={handleBack}
 							>
-								<ArrowLeftOutline class="mr-2 inline h-5 w-5 align-text-bottom" />
+								<ArrowLeftOutline class="mr-2 h-4 w-4" />
 								VOLTAR
 							</Button>
+
 						</div>
-					{/if}
-					
+
+					</div>
 				</div>
-			</Card>
+
+			{/if}
+
 		</div>
 	</div>
 </div>

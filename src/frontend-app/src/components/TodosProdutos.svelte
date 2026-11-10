@@ -118,7 +118,7 @@
     });
   </script>
   
-  <div class="w-full max-w-6xl mx-auto px-4 my-8 font-poppins">
+  <div class="w-full max-w-6xl mx-auto px-4 mt-24 mb-8 md:mt-8 font-poppins">
   
     <!-- FILTROS -->
     <form
@@ -160,7 +160,7 @@
         <button
           type="button"
           on:click={limparFiltros}
-          class="flex-1 border border-neutral-300 px-5 py-3 text-sm hover:bg-neutral-100 transition-colors"
+          class="flex-1 border border-neutral-300 px-5 py-3 text-sm bg-white transition-colors"
         >
           Limpar
         </button>
