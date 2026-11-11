@@ -73,6 +73,7 @@ CREATE TABLE item_pedido (
     id bigint GENERATED ALWAYS AS IDENTITY,
     quantidade int NOT NULL,
     preco_unitario int NOT NULL,
+    status text NOT NULL,
     subtotal int NOT NULL,
     id_pedido bigint NOT NULL REFERENCES pedido(id),
     id_produto bigint NOT NULL REFERENCES produto(id),
@@ -97,3 +98,11 @@ INSERT INTO usuario (login, email, senha, role) VALUES
 -- senha efelantinho
 ('Ardoncap', 'ardoncap@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'admin'),
 ('ArdoncapUser', 'ardoncapuser@yahoo.com', '$2a$12$7d0imLUVIPYWExaqnQbdAe8jb71JXuS3U.g0155qVF2i0B.L6INyy', 'user');
+
+INSERT INTO categoria (nome) VALUES
+
+('Camisetas'),
+('Calças'),
+('Calçados'),
+('Casacos'),
+('Acessórios');

@@ -17,6 +17,7 @@ export interface ItemPedido {
   id: number;
   quantidade: number;
   preco_unitario: number;
+  status: string;
   subtotal: number;       
   id_pedido: bigint;
   id_produto: bigint;
@@ -31,3 +32,5 @@ export interface PedidoFormData {
     quantidade: number;
   }[];
 }
+
+

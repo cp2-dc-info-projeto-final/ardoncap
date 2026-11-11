@@ -131,13 +131,13 @@
             <div class="pt-6">
 
                 {#if loadingProdutos}
-                <p>Carregando produtos...</p>
+                <p class="font-special">Carregando produtos...</p>
 
             {:else if erroProdutos}
                 <p>{erroProdutos}</p>
 
             {:else if produtos.length === 0}
-                <p>Sem produtos aqui</p>
+                <p class="font-special">Sem produtos aqui</p>
 
             {:else}
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
@@ -165,7 +165,7 @@
                                     </h3>
 
                                     {#if produto.preco !== null && produto.preco !== undefined}
-                                        <p class="text-sm font-semibold text-black mt-2">
+                                        <p class="text-sm font-special text-black mt-2">
                                             {Number(produto.preco).toLocaleString('pt-BR', {
                                                 style: 'currency',
                                                 currency: 'BRL'

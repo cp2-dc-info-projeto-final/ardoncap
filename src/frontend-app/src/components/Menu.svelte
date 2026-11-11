@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { logout, getCurrentUser, getToken, type User } from "$lib/auth";
   import { goto } from "$app/navigation";
-  import { ArrowRightToBracketOutline, CartSolid, UserCircleOutline } from "flowbite-svelte-icons";
+  import { ArrowRightToBracketOutline, CartSolid, UserCircleOutline, StoreOutline } from "flowbite-svelte-icons";
   import { page } from "$app/stores";
 
   let user: User | null = null;
@@ -92,6 +92,7 @@
             <!-- só exibe menu usuários para admin-->
             <NavLi href="/painel" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg">Painel</NavLi>
           {/if}
+          <NavLi href="/areavendedor" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg"><StoreOutline class="shrink-0 h-6 w-6" /></NavLi>
           <NavLi href="/carrinho" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg"><CartSolid class="shrink-0 h-6 w-6" /></NavLi>
           <NavLi>
             <div class="flex items-center">
