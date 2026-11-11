@@ -175,7 +175,7 @@ router.get('/vendedor', verifyToken, async function(req, res) {
           e.numero,
           e.cidade,
           e.estado,
-          e."CEP" AS cep,
+          e.cep,
           e.complemento,
 
           ip.id AS id_item,
@@ -370,11 +370,16 @@ router.get('/:id', verifyToken, async function(req, res) {
               'imagem', prod.imagem,
               'descricao', prod.descricao,
               'preco', prod.preco,
-              'categoria_nome', c.nome
-          ) AS produto
+              'categoria_nome', c.nome,
+              'id_vendedor', prod.id_usuario,
+              'vendedor', vendedor.login
+          ) AS produto   
+      
       FROM item_pedido ip
       JOIN produto prod ON ip.id_produto = prod.id
       JOIN categoria c ON prod.id_categoria = c.id
+      JOIN usuario vendedor ON vendedor.id = prod.id_usuario
+
       WHERE ip.id_pedido = $1`,
       [id]
     );
