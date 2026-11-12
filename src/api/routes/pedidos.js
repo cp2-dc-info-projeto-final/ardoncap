@@ -175,7 +175,7 @@ router.get('/vendedor', verifyToken, async function(req, res) {
           e.numero,
           e.cidade,
           e.estado,
-          e."CEP" AS cep,
+          e.cep,
           e.complemento,
 
           ip.id AS id_item,

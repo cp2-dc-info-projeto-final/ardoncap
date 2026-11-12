@@ -198,8 +198,8 @@
     }
   </script>
 
-  <svelte:head>
-	<title>Ardoncap - {id === null ? 'Novo Produto' : 'Editar Produto'}</title>
+<svelte:head>
+<title>Ardoncap - {id === null ? 'Novo Produto' : 'Editar Produto'}</title>
 </svelte:head>
 
 <div class="min-h-screen w-full bg-[#080808] px-5 pb-12 pt-24 md:px-12 md:pt-32">
@@ -297,12 +297,15 @@
 							ADICIONAR FOTOGRAFIA
 						</Label>
 
-						<Fileupload
+						<input
 							id="imagem"
+							type="file"
 							accept="image/*"
-							class="font-poppins"
 							bind:files={arquivosSelecionados}
+							class="h-12 w-full cursor-pointer rounded-none border-0 bg-[#151515] pr-4 font-poppins text-xs text-neutral-400 focus:bg-[#1c1c1c] focus:outline-none focus:ring-1 focus:ring-white/20 file:mr-5 file:h-full file:cursor-pointer file:rounded-none file:border-0 file:bg-white/10 file:px-7 file:py-3 file:font-special file:text-[10px] file:tracking-[0.2em] file:text-white hover:file:bg-white/20"
 						/>
+
+
 
 						{#if errorOf('imagem_base64')}
 							<p class="font-poppins text-xs text-red-400">
@@ -353,7 +356,7 @@
 							placeholder="Descreva os detalhes do produto..."
 							rows={4}
 							required
-							class="!rounded-none !border-0 !bg-[#151515] !px-4 !py-4 font-poppins !text-sm !text-white placeholder:!text-neutral-600 focus:!bg-[#1c1c1c] focus:!ring-1 focus:!ring-white/20"
+							class="!rounded-none !border-0 !bg-[#151515] !px-4 !py-4 font-poppins !text-sm !text-white placeholder:!text-neutral-600 focus:!bg-[#1c1c1c] focus:!ring-1 focus:!ring-white/20 resize-none"
 						/>
 
 						{#if errorOf('descricao')}
@@ -377,7 +380,7 @@
 								bind:value={produto.preco}
 								placeholder="0,00"
 								required
-								class="number-input !h-12 !rounded-none !border-0 !bg-[#151515] !px-4 font-poppins !text-sm !text-white placeholder:!text-neutral-600 focus:!ring-1 focus:!ring-white/20"
+								class="number-input !h-12 !rounded-none !border-0 !bg-[#151515] !px-4 font-poppins !text-sm !text-white placeholder:!text-neutral-600 focus:!ring-1 focus:!ring-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 							/>
 
 							{#if errorOf('preco')}
@@ -396,7 +399,7 @@
 								min="0"
 								bind:value={produto.quantidade_disponivel}
 								required
-								class="number-input !h-12 !rounded-none !border-0 !bg-[#151515] !px-4 font-poppins !text-sm !text-white focus:!ring-1 focus:!ring-white/20"
+								class="number-input !h-12 !rounded-none !border-0 !bg-[#151515] !px-4 font-poppins !text-sm !text-white focus:!ring-1 focus:!ring-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
 							/>
 
 							{#if errorOf('quantidade_disponivel')}
@@ -412,20 +415,25 @@
 							CATEGORIA
 						</Label>
 
-						<Select
-							id="id_categoria"
-							bind:value={produto.id_categoria}
-							class="!h-12 !rounded-none !border-0 !bg-[#151515] !px-4 font-poppins !text-sm !text-white focus:!ring-1 focus:!ring-white/20"
-							required
-						>
-							<option value={0}>Selecione uma categoria</option>
-
-							{#each categorias as categoria}
-								<option value={categoria.value}>
-									{categoria.name}
+						<div class="relative">
+							<select
+								id="id_categoria"
+								bind:value={produto.id_categoria}
+								required
+								class="h-12 w-full appearance-none rounded-none border-0 bg-[#151515] px-4 pr-10 font-poppins text-sm text-white focus:bg-[#1c1c1c] focus:outline-none focus:ring-1 focus:ring-white/20"
+							>
+								<option value={0} class="bg-[#151515] text-neutral-400">
+									Selecione uma categoria
 								</option>
-							{/each}
-						</Select>
+						
+								{#each categorias as categoria}
+									<option value={categoria.value} class="bg-[#151515] text-white">
+										{categoria.name}
+									</option>
+								{/each}
+							</select>
+						</div>
+						
 					</div>
 
 				</div>
@@ -464,18 +472,3 @@
 	</div>
 
 </div>
-
-<style>
-	/* Remove as setas dos campos numéricos no Chrome, Safari e Edge */
-	:global(.number-input input::-webkit-inner-spin-button),
-	:global(.number-input input::-webkit-outer-spin-button) {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
-	/* Remove as setas dos campos numéricos no Firefox */
-	:global(.number-input input[type='number']) {
-		-moz-appearance: textfield;
-		appearance: textfield;
-	}
-</style>
