@@ -14,5 +14,8 @@
     <a href="/produtos" class="text-2xl flex items-center gap-2 px-6 py-5 bg-white hover:bg-gray-300 text-black font-special shadow transition duration-200">
       PRODUTOS
     </a>
+    <a href="/pedidos" class="text-2xl flex items-center gap-2 px-6 py-5 bg-white hover:bg-gray-300 text-black font-special shadow transition duration-200">
+      PEDIDOS
+    </a>
   </div>
 </div>

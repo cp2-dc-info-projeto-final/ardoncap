@@ -4,7 +4,7 @@
   // Tabela de usuários
   import { Table, TableHead, TableHeadCell, TableBody, TableBodyRow, TableBodyCell, Card, Badge, Button} from 'flowbite-svelte'; // UI
   import ConfirmModal from './ConfirmModal.svelte'; // modal de confirmação
-  import { UserEditOutline, TrashBinOutline, FloppyDiskAltOutline, UndoOutline } from 'flowbite-svelte-icons'; // ícones
+  import { UserEditOutline, TrashBinOutline, ArrowLeftOutline } from 'flowbite-svelte-icons'; // ícones
   import { goto } from '$app/navigation'; // navegação
   import api from '$lib/api'; // API backend
   import type { ApiResponse } from '$lib/api';
@@ -230,9 +230,10 @@
   onCancel={handleCancel}
 />
 
-<!-- Botão de voltar -->
-<div class="flex gap-4 justify-center mt-4">
-  <Button color="light" type="button" onclick={painel} disabled={loading} class="font-special flex items-center justify-center">
-    <UndoOutline class="w-5 h-5 font-special" />
-  </Button>
-</div>
+<!-- Botão voltar -->
+<Button 
+	class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
+	onclick={() => goto('/painel')}
+			>
+	<ArrowLeftOutline class="mr-1.5 h-4 w-4" /> VOLTAR
+</Button>
