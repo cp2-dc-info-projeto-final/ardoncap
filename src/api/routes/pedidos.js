@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const pool = require('../db/config');
-const { verifyToken } = require('../middlewares/auth');
+const { verifyToken, isAdmin } = require('../middlewares/auth');
 
 const TRANSICOES_STATUS = {
   pendente:  ['enviado', 'cancelado'],
@@ -25,138 +25,231 @@ function sendError(res, status, message, errors = []) {
   });
 }
 
-router.post('/', verifyToken, async function(req, res) {
-  const client = await pool.connect(); 
+// PEDIDOS PARA O ADMINISTRADOR
+router.get('/admin', verifyToken, isAdmin, async function(req, res) {
   try {
-    const id_usuario = req.user?.id;
-    const { id_endereco, items } = req.body;
+    const result = await pool.query(`
+      SELECT
+        p.id AS id_pedido,
+        p.data_pedido,
+        p.status AS status_pedido,
+        p.valor,
 
-    if (!id_endereco || !items || !Array.isArray(items) || items.length === 0) {
-      return sendError(res, 400, 'Endereço de entrega e itens do carrinho são obrigatórios.');
+        u.id AS id_comprador,
+        u.login AS comprador,
+        u.email AS email_comprador,
+
+        e.rua,
+        e.numero,
+        e.cidade,
+        e.estado,
+        e.cep AS cep,
+        e.complemento,
+
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'id_item', ip.id,
+              'id_produto', prod.id,
+              'nome', prod.nome,
+              'imagem', prod.imagem,
+              'quantidade', ip.quantidade,
+              'preco_unitario', ip.preco_unitario,
+              'subtotal', ip.subtotal,
+              'status', ip.status,
+              'id_vendedor', vendedor.id,
+              'vendedor', vendedor.login,
+              'categoria', c.nome
+            )
+          ) FILTER (WHERE ip.id IS NOT NULL),
+          '[]'::json
+        ) AS items
+
+      FROM pedido p
+      JOIN usuario u ON u.id = p.id_usuario
+      JOIN endereco e ON e.id = p.id_endereco
+      LEFT JOIN item_pedido ip ON ip.id_pedido = p.id
+      LEFT JOIN produto prod ON prod.id = ip.id_produto
+      LEFT JOIN usuario vendedor ON vendedor.id = prod.id_usuario
+      LEFT JOIN categoria c ON c.id = prod.id_categoria
+
+      GROUP BY
+        p.id,
+        u.id,
+        e.id
+
+      ORDER BY p.data_pedido DESC
+    `);
+
+    return sendSuccess(
+      res,
+      200,
+      'Pedidos carregados com sucesso.',
+      result.rows
+    );
+
+  } catch (error) {
+    console.error('Erro ao buscar pedidos administrativos:', error);
+    return sendError(res, 500, 'Erro interno do servidor.');
+  }
+});
+
+router.get('/admin/:id', verifyToken, isAdmin, async function(req, res) {
+  const id_pedido = Number(req.params.id);
+
+  if (!Number.isInteger(id_pedido) || id_pedido <= 0) {
+    return sendError(res, 400, 'ID do pedido inválido.');
+  }
+
+  try {
+    const result = await pool.query(`
+      SELECT
+        p.id AS id_pedido,
+        p.data_pedido,
+        p.status AS status_pedido,
+        p.valor,
+
+        u.id AS id_comprador,
+        u.login AS comprador,
+        u.email AS email_comprador,
+
+        e.rua,
+        e.numero,
+        e.cidade,
+        e.estado,
+        e.cep,
+        e.complemento,
+
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'id_item', ip.id,
+              'id_produto', prod.id,
+              'nome', prod.nome,
+              'imagem', prod.imagem,
+              'quantidade', ip.quantidade,
+              'preco_unitario', ip.preco_unitario,
+              'subtotal', ip.subtotal,
+              'status', ip.status,
+              'id_vendedor', vendedor.id,
+              'vendedor', vendedor.login,
+              'categoria', c.nome
+            )
+          ) FILTER (WHERE ip.id IS NOT NULL),
+          '[]'::json
+        ) AS items
+
+      FROM pedido p
+      JOIN usuario u ON u.id = p.id_usuario
+      JOIN endereco e ON e.id = p.id_endereco
+      LEFT JOIN item_pedido ip ON ip.id_pedido = p.id
+      LEFT JOIN produto prod ON prod.id = ip.id_produto
+      LEFT JOIN usuario vendedor ON vendedor.id = prod.id_usuario
+      LEFT JOIN categoria c ON c.id = prod.id_categoria
+
+      WHERE p.id = $1
+
+      GROUP BY
+        p.id,
+        u.id,
+        e.id
+    `, [id_pedido]);
+
+    if (result.rows.length === 0) {
+      return sendError(res, 404, 'Pedido não encontrado.');
     }
 
-    // Inicia a transação SQL
+    return sendSuccess(
+      res,
+      200,
+      'Detalhes do pedido carregados.',
+      result.rows[0]
+    );
+
+  } catch (error) {
+    console.error('Erro ao buscar detalhes administrativos:', error);
+    return sendError(res, 500, 'Erro interno do servidor.');
+  }
+});
+
+router.delete('/admin/:id', verifyToken, isAdmin, async function(req, res) {
+  const id_pedido = Number(req.params.id);
+
+  if (!Number.isInteger(id_pedido) || id_pedido <= 0) {
+    return sendError(res, 400, 'ID do pedido inválido.');
+  }
+
+  const client = await pool.connect();
+
+  try {
     await client.query('BEGIN');
 
-    // Valida se o endereço existe e pertence ao utilizador
-    const addressCheck = await client.query(
-      'SELECT id FROM endereco WHERE id = \$1 AND id_usuario = \$2',
-      [id_endereco, id_usuario]
-    );
-    if (addressCheck.rows.length === 0) {
-      await client.query('ROLLBACK');
-      return sendError(res, 404, 'Endereço de entrega inválido ou não pertence a este utilizador.');
-    }
-
-    let valorTotalPedido = 0;
-    const itensProcessados = [];
-
-    // Validar estoques, coletar preços e preparar dados
-    for (const item of items) {
-      const { id_produto, quantidade } = item;
-
-      if (!id_produto || !quantidade || quantidade <= 0) {
-        await client.query('ROLLBACK');
-        return sendError(res, 400, 'Quantidade ou ID do produto inválido.');
-      }
-
-      // Busca o produto e bloqueia a linha para evitar concorrência (FOR UPDATE)
-      const productCheck = await client.query(
-        'SELECT id, nome, preco, quantidade_disponivel FROM produto WHERE id = \$1 FOR UPDATE',
-        [id_produto]
-      );
-
-      if (productCheck.rows.length === 0) {
-        await client.query('ROLLBACK');
-        return sendError(res, 404, `Produto com ID ${id_produto} não foi encontrado.`);
-      }
-
-      const produto = productCheck.rows[0];
-
-      // Verifica estoque disponível
-      if (produto.quantidade_disponivel < quantidade) {
-        await client.query('ROLLBACK');
-        return sendError(res, 400, `Estoque insuficiente para o produto "${produto.nome}". Disponível: ${produto.quantidade_disponivel}`);
-      }
-
-      const precoUnitarioCentavos = Math.round(produto.preco * 100);
-      const subtotalCentavos = precoUnitarioCentavos * quantidade;
-
-      valorTotalPedido += subtotalCentavos;
-
-      itensProcessados.push({
-        id_produto,
-        quantidade,
-        preco_unitario: precoUnitarioCentavos,
-        subtotal: subtotalCentavos
-      });
-
-      // Atualiza/Dar baixa no estoque do produto
-      await client.query(
-        'UPDATE produto SET quantidade_disponivel = quantidade_disponivel - \$1 WHERE id = \$2',
-        [quantidade, id_produto]
-      );
-    }
-
-    // Insere o Pedido principal
-    const statusInicial = 'pendente';
+    // Verifica se o pedido existe e bloqueia sua linha.
     const pedidoResult = await client.query(
-      'INSERT INTO pedido (status, valor, id_usuario, id_endereco) VALUES (\$1, \$2, \$3, \$4) RETURNING *',
-      [statusInicial, valorTotalPedido, id_usuario, id_endereco]
+      `SELECT id, status
+       FROM pedido
+       WHERE id = $1
+       FOR UPDATE`,
+      [id_pedido]
     );
-    const novoPedido = pedidoResult.rows[0];
 
-    for (const item of itensProcessados) {
-      await client.query(
-        `INSERT INTO item_pedido
-         (quantidade, preco_unitario, status, subtotal, id_pedido, id_produto)
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        [
-          item.quantidade,
-          item.preco_unitario,
-          'pendente',
-          item.subtotal,
-          novoPedido.id,
-          item.id_produto
-        ]
-      );
+    if (pedidoResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return sendError(res, 404, 'Pedido não encontrado.');
     }
+
+    // Busca e bloqueia os itens do pedido.
+    const itensResult = await client.query(
+      `SELECT id, id_produto, quantidade, status
+       FROM item_pedido
+       WHERE id_pedido = $1
+       FOR UPDATE`,
+      [id_pedido]
+    );
+
+    // Devolve ao estoque somente os itens ainda pendentes.
+    for (const item of itensResult.rows) {
+      if (item.status === 'pendente') {
+        await client.query(
+          `UPDATE produto
+           SET quantidade_disponivel = quantidade_disponivel + $1
+           WHERE id = $2`,
+          [item.quantidade, item.id_produto]
+        );
+      }
+    }
+
+    // Remove primeiro os itens para respeitar a chave estrangeira.
+    await client.query(
+      'DELETE FROM item_pedido WHERE id_pedido = $1',
+      [id_pedido]
+    );
+
+    // Remove o pedido.
+    await client.query(
+      'DELETE FROM pedido WHERE id = $1',
+      [id_pedido]
+    );
 
     await client.query('COMMIT');
 
-    return sendSuccess(res, 201, 'Pedido realizado com sucesso!', { id_pedido: novoPedido.id });
-
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Erro na transação de pedido:', error);
-    return sendError(res, 500, 'Erro interno ao processar o pedido.');
-  } finally {
-    client.release();
-  }
-});
-
-router.get('/', verifyToken, async function(req, res) {
-  try {
-    const id_usuario = req.user?.id;
-
-    // Busca os pedidos trazendo os detalhes textuais condensados do endereço escolhido
-    const result = await pool.query(
-      `SELECT p.*, 
-              e.rua as endereco_rua, e.numero as endereco_numero, e.cidade as endereco_cidade
-       FROM pedido p
-       JOIN endereco e ON p.id_endereco = e.id
-       WHERE p.id_usuario = $1 
-       ORDER BY p.data_pedido DESC`,
-      [id_usuario]
+    return sendSuccess(
+      res,
+      200,
+      'Pedido excluído com sucesso.',
+      { id_pedido }
     );
 
-    return sendSuccess(res, 200, 'Histórico de pedidos carregado', result.rows);
   } catch (error) {
-    console.error('Erro ao buscar histórico de pedidos:', error);
-    return sendError(res, 500, 'Erro interno do servidor');
+    return sendError(
+      res,
+      error.status || 500,
+      error.message || 'Erro interno ao atualizar o pedido.'
+    );
   }
 });
 
+//PEDIDOS PARA VENDEDOR
 router.get('/vendedor', verifyToken, async function(req, res) {
   try {
     const id_vendedor = req.user?.id;
@@ -342,6 +435,144 @@ router.put('/vendedor/item/:id', verifyToken, async function(req, res) {
   }
 });
 
+//PEDIDOS PARA COMPRADOR
+router.post('/', verifyToken, async function(req, res) {
+  const client = await pool.connect(); 
+  try {
+    const id_usuario = req.user?.id;
+    const { id_endereco, items } = req.body;
+
+    if (!id_endereco || !items || !Array.isArray(items) || items.length === 0) {
+      return sendError(res, 400, 'Endereço de entrega e itens do carrinho são obrigatórios.');
+    }
+
+    // Inicia a transação SQL
+    await client.query('BEGIN');
+
+    // Valida se o endereço existe e pertence ao utilizador
+    const addressCheck = await client.query(
+      'SELECT id FROM endereco WHERE id = \$1 AND id_usuario = \$2',
+      [id_endereco, id_usuario]
+    );
+    if (addressCheck.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return sendError(res, 404, 'Endereço de entrega inválido ou não pertence a este utilizador.');
+    }
+
+    let valorTotalPedido = 0;
+    const itensProcessados = [];
+
+    // Validar estoques, coletar preços e preparar dados
+    for (const item of items) {
+      const { id_produto, quantidade } = item;
+
+      if (!id_produto || !quantidade || quantidade <= 0) {
+        await client.query('ROLLBACK');
+        return sendError(res, 400, 'Quantidade ou ID do produto inválido.');
+      }
+
+      // Busca o produto e bloqueia a linha para evitar concorrência (FOR UPDATE)
+      const productCheck = await client.query(
+        'SELECT id, nome, preco, quantidade_disponivel FROM produto WHERE id = \$1 FOR UPDATE',
+        [id_produto]
+      );
+
+      if (productCheck.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return sendError(res, 404, `Produto com ID ${id_produto} não foi encontrado.`);
+      }
+
+      const produto = productCheck.rows[0];
+
+      // Verifica estoque disponível
+      if (produto.quantidade_disponivel < quantidade) {
+        await client.query('ROLLBACK');
+        return sendError(res, 400, `Estoque insuficiente para o produto "${produto.nome}". Disponível: ${produto.quantidade_disponivel}`);
+      }
+
+      const precoUnitarioCentavos = Math.round(produto.preco * 100);
+      const subtotalCentavos = precoUnitarioCentavos * quantidade;
+
+      valorTotalPedido += subtotalCentavos;
+
+      itensProcessados.push({
+        id_produto,
+        quantidade,
+        preco_unitario: precoUnitarioCentavos,
+        subtotal: subtotalCentavos
+      });
+
+      // Atualiza/Dar baixa no estoque do produto
+      await client.query(
+        'UPDATE produto SET quantidade_disponivel = quantidade_disponivel - \$1 WHERE id = \$2',
+        [quantidade, id_produto]
+      );
+    }
+
+    // Insere o Pedido principal
+    const statusInicial = 'pendente';
+    const pedidoResult = await client.query(
+      'INSERT INTO pedido (status, valor, id_usuario, id_endereco) VALUES (\$1, \$2, \$3, \$4) RETURNING *',
+      [statusInicial, valorTotalPedido, id_usuario, id_endereco]
+    );
+    const novoPedido = pedidoResult.rows[0];
+
+    for (const item of itensProcessados) {
+      await client.query(
+        `INSERT INTO item_pedido
+         (quantidade, preco_unitario, status, subtotal, id_pedido, id_produto)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [
+          item.quantidade,
+          item.preco_unitario,
+          'pendente',
+          item.subtotal,
+          novoPedido.id,
+          item.id_produto
+        ]
+      );
+    }
+
+    await client.query('COMMIT');
+
+    return sendSuccess(res, 201, 'Pedido realizado com sucesso!', { id_pedido: novoPedido.id });
+
+  }  catch (error) {
+    try {
+      await client.query('ROLLBACK');
+    } catch (rollbackError) {
+      console.error('Falha no rollback:', rollbackError);
+    }
+  
+    console.error('Erro na transação de pedido:', error);
+    return sendError(res, 500, 'Erro interno ao processar o pedido.');
+  } finally {
+    client.release();
+  }
+});
+
+router.get('/', verifyToken, async function(req, res) {
+  try {
+    const id_usuario = req.user?.id;
+
+    // Busca os pedidos trazendo os detalhes textuais condensados do endereço escolhido
+    const result = await pool.query(
+      `SELECT p.*, 
+              e.rua as endereco_rua, e.numero as endereco_numero, e.cidade as endereco_cidade
+       FROM pedido p
+       JOIN endereco e ON p.id_endereco = e.id
+       WHERE p.id_usuario = $1 
+       ORDER BY p.data_pedido DESC`,
+      [id_usuario]
+    );
+
+    return sendSuccess(res, 200, 'Histórico de pedidos carregado', result.rows);
+  } catch (error) {
+    console.error('Erro ao buscar histórico de pedidos:', error);
+    return sendError(res, 500, 'Erro interno do servidor');
+  }
+});
+
 router.get('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
@@ -349,7 +580,7 @@ router.get('/:id', verifyToken, async function(req, res) {
 
     // Busca as informações do pedido
     const pedidoResult = await pool.query(
-      `SELECT p.*, e.rua, e.numero, e.cidade, e.estado, e.CEP
+      `SELECT p.*, e.rua, e.numero, e.cidade, e.estado, e.cep
        FROM pedido p
        JOIN endereco e ON p.id_endereco = e.id
        WHERE p.id = $1 AND p.id_usuario = $2`,
@@ -395,7 +626,6 @@ router.get('/:id', verifyToken, async function(req, res) {
     return sendError(res, 500, 'Erro interno do servidor');
   }
 });
-
 
 router.put('/:id', verifyToken, async function(req, res) {
   const id_pedido = Number(req.params.id);
