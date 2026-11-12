@@ -123,7 +123,7 @@
 
                     <button
                         class="flex items-center px-1 py-2 text-black hover:text-gray-400 transition-colors"
-                        on:click={() => goto('/profile/endereco')}
+                        on:click={() => goto('/profile/endereco?from=profile')}
                     >
                         <MapPinAltSolid class="shrink-0 h-7 w-7" />
                     </button>
@@ -186,14 +186,9 @@
                                 </div>
                             </a>
                         {/each}
-
                     </div>
                 {/if}
-
             </div>
-
         </div>
-
     {/if}
-
 </div>

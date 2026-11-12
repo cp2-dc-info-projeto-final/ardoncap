@@ -63,19 +63,19 @@
                    duration-300 hover:bg-neutral-900 hover:text-white"
 						href={`/produto/${produto.id}?from=linksProdutos`}
 					>
-						<div class="w-30 h-30 overflow-hidden bg-white flex items-center justify-center p-1">
-              {#if produto.imagem}
-                <img
-                  src={produto.imagem}
-                  alt={produto.nome}
-                  class="max-w-full max-h-full object-contain"
-                />
-              {:else}
-                <div class="text-[0.6rem] text-neutral-600 uppercase tracking-tighter group-hover:text-white">
-                  Sem foto
-                </div>
-              {/if}
-            </div>
+						<div class="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden bg-transparent">
+							{#if produto.imagem}
+								<img
+									src={produto.imagem}
+									alt={produto.nome}
+									class="block h-full w-full object-contain"
+								/>
+							{:else}
+								<div class="text-[0.6rem] text-neutral-600 uppercase tracking-tighter group-hover:text-white">
+									Sem foto
+								</div>
+							{/if}
+						</div>
 
 						<!-- Detalhes do Produto -->
           <div class="flex w-full flex-col items-start text-left">
@@ -153,12 +153,12 @@
                        hover:bg-neutral-900"
 			>
 				<!-- Imagem -->
-				<div class="flex aspect-square w-full items-center justify-center bg-white p-2">
+				<div class="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden bg-transparent">
 					{#if produto.imagem}
 						<img
 							src={produto.imagem}
 							alt={produto.nome}
-							class="max-h-full max-w-full object-contain"
+							class="block h-full w-full object-contain"
 						/>
 					{:else}
 						<div class="text-[0.6rem] text-neutral-600 uppercase">

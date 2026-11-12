@@ -3,6 +3,7 @@
 	import { Button, Heading } from 'flowbite-svelte';
 	import { ArrowLeftOutline, MapPinOutline } from 'flowbite-svelte-icons';
 	import api from '$lib/api';
+	import { page } from '$app/stores';
 	import type { ApiResponse } from '$lib/api';
 	import type { Endereco } from '$lib/models/Endereco';
 
@@ -32,6 +33,18 @@
 			loading = false;
 		}
 	}
+
+	function handleBack() {
+    const origem = $page.url.searchParams.get('from');
+
+    if (origem === 'profile') {
+        goto('/profile');
+    } else if (origem === 'carrinho') {
+        goto('/carrinho');
+    } else {
+        goto('/');
+    }
+}
 
 	onMount(async () => {
 		await carregarEnderecos();
@@ -75,8 +88,7 @@
 			</div>
 			<Button 
 				class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
-				onclick={() => goto('/profile')}
-			>
+				onclick={handleBack}>
 				<ArrowLeftOutline class="mr-1.5 h-4 w-4" /> VOLTAR
 			</Button>
 

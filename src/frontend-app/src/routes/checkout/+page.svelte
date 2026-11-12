@@ -119,9 +119,9 @@
 					{:else if enderecos.length === 0}
 						<div class="text-center py-6 border border-dashed border-neutral-800 rounded-xl flex flex-col gap-3 items-center">
 							<p class="text-xs text-neutral-400 font-poppins">Nenhum endereço cadastrado no seu perfil.</p>
-							<Button 
+							<Button
 								class="font-special text-xs bg-white text-black hover:bg-gray-300 rounded-xl px-4 py-2"
-								onclick={() => goto('/profile/endereco')}
+								onclick={() => goto('/profile/endereco?from=carrinho')}
 							>
 								Cadastrar Endereço
 							</Button>
