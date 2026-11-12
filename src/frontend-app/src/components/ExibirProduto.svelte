@@ -90,13 +90,13 @@
 				<div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
 
 					<!-- Imagem -->
-					<div class="flex min-h-[300px] items-center justify-center md:min-h-[500px]">
+					<div class="flex min-h-[300px] items-center justify-center md:min-h-[500px]" href="">
 						{#if produto.imagem}
-							<img
-								src={produto.imagem}
-								alt={produto.nome}
-								class="max-h-[500px] w-full object-contain"
-							/>
+								<img
+									src={produto.imagem}
+									alt={produto.nome}
+									class="max-h-[500px] w-full object-contain"
+								/>
 						{:else}
 							<div class="font-special text-xs tracking-widest text-neutral-600">
 								SEM IMAGEM

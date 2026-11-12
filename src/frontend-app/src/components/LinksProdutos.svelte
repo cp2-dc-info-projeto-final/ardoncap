@@ -196,17 +196,16 @@
 	</div>
 </div>
 
-
-	<!-- Botão Ver Todos -->
-	<div class="my-10 flex justify-center">
-		<a
-			href="/todesprodutos"
-			class="border border-neutral-900 px-8 py-3 text-sm
-             tracking-widest text-white uppercase
-             transition-all duration-300
-             hover:bg-neutral-900"
-		>
-			Ver todos os produtos
-		</a>
-	</div>
+<!-- Botão Ver Todos -->
+<div class="my-10 flex justify-center">
+    <a
+        href="/todesprodutos"
+        class="border border-neutral-800 bg-neutral-950 rounded-lg
+               px-8 py-3 text-sm font-special tracking-widest
+               text-white uppercase transition-all duration-300
+               hover:bg-neutral-800 hover:border-neutral-700"
+    >
+        Ver todos os produtos
+    </a>
+</div>
 {/if}

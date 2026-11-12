@@ -4,6 +4,9 @@
     import api from '$lib/api';
     import type { ApiResponse } from '$lib/api';
 
+    import { Button, Heading } from 'flowbite-svelte';
+    import { ShoppingBagOutline } from 'flowbite-svelte-icons';
+
     type Status = 'pendente' | 'enviado' | 'entregue' | 'cancelado';
     type Filtro = 'todos' | Status;
 
@@ -171,7 +174,6 @@
 
             mensagem = `Item "${item.nome_produto}" atualizado para ${statusLabels[novoStatus].toLowerCase()}.`;
 
-            // Atualiza também o status geral dos pedidos
             await carregarPedidos();
 
         } catch (e: any) {
@@ -196,62 +198,60 @@
 </script>
 
 <svelte:head>
-    <title>Área do vendedor | Ardoncap</title>
+    <title>Ardoncap - Pedidos recebidos</title>
     <meta
         name="description"
         content="Gerencie os pedidos realizados nos seus produtos."
     />
 </svelte:head>
 
-<div class="min-h-screen w-full text-white px-4 py-8 md:px-8">
+<div class="min-h-screen w-full bg-black text-white px-4 pt-32 pb-12 md:px-8">
 
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-5xl mx-auto flex flex-col gap-8">
 
         <!-- CABEÇALHO -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div class="pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 
-            <div>
-                <p class="text-sm text-neutral-500 mb-2">
-                    Ardoncap / Área do vendedor
-                </p>
+            <div class="flex items-center gap-3">
+                <ShoppingBagOutline class="h-8 w-8 text-white shrink-0" />
 
-                <h1 class="text-3xl font-special">
-                    Pedidos recebidos
-                </h1>
-
-                <p class="text-sm text-neutral-400 mt-2">
-                    Gerencie os produtos comprados pelos seus clientes.
-                </p>
+                <div>
+                    <Heading
+                        tag="h2"
+                        class="font-instrument text-3xl uppercase tracking-wider text-white"
+                    >
+                        Pedidos recebidos
+                    </Heading>
+                </div>
             </div>
 
-            <button
+            <Button
                 onclick={carregarPedidos}
                 disabled={loading}
-                class="px-4 py-2 rounded-lg border border-neutral-700
-                       hover:bg-neutral-800 transition text-sm disabled:opacity-50"
+                class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
             >
-                ↻ Atualizar pedidos
-            </button>
+                ↻ ATUALIZAR
+            </Button>
 
         </div>
 
         <!-- MENSAGENS -->
         {#if mensagem}
-            <div class="mb-5 p-3 rounded-lg border border-green-500/20
+            <div class="p-3 rounded-lg border border-green-500/20
                         bg-green-500/10 text-green-400 text-sm">
                 {mensagem}
             </div>
         {/if}
 
         {#if error}
-            <div class="mb-5 p-3 rounded-lg border border-red-500/20
+            <div class="p-3 rounded-lg border border-red-500/20
                         bg-red-500/10 text-red-400 text-sm">
                 {error}
             </div>
         {/if}
 
         <!-- FILTROS -->
-        <div class="flex flex-wrap gap-2 mb-6">
+        <div class="flex flex-wrap gap-2">
 
             {#each [
                 { valor: 'todos', label: 'Todos' },
@@ -266,7 +266,7 @@
                     class={`px-4 py-2 rounded-lg text-sm border transition
                         ${filtro === opcao.valor
                             ? 'bg-white text-black border-white'
-                            : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:text-white'
+                            : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:bg-neutral-800 hover:text-white'
                         }`}
                 >
                     {opcao.label}
@@ -288,7 +288,9 @@
             <div class="bg-neutral-950 border border-neutral-800 rounded-2xl
                         text-center py-16 px-4">
 
-                <div class="text-4xl mb-4">📦</div>
+                <div class="flex justify-center mb-4">
+                    <ShoppingBagOutline class="h-10 w-10 text-neutral-600" />
+                </div>
 
                 <h2 class="text-lg font-special">
                     Nenhum pedido encontrado
@@ -324,7 +326,7 @@
                                     </h2>
 
                                     <p class="text-sm text-neutral-400 mt-2">
-                                        {formatarData(pedido.data_pedido)}
+                                        Realizado em {formatarData(pedido.data_pedido)}
                                     </p>
 
                                     <p class="text-sm text-neutral-400 mt-1">
@@ -339,7 +341,7 @@
 
                                     <span class={`text-xs px-3 py-1 rounded-full border
                                         ${classeStatus(pedido.status_pedido)}`}>
-                                        Pedido: {statusLabels[pedido.status_pedido]}
+                                        Situação: {statusLabels[pedido.status_pedido]}
                                     </span>
 
                                     <span class="text-sm text-neutral-400">
@@ -355,20 +357,20 @@
 
                         </div>
 
-                        <!-- ITENS -->
+                        <!-- ITENS DO PEDIDO -->
                         <div class="p-5 md:p-6">
 
-                            <h3 class="text-sm font-semibold text-neutral-400
-                                       uppercase tracking-wider mb-4">
+                            <h3 class="font-special text-lg mb-5">
                                 Produtos deste pedido
                             </h3>
 
-                            <div class="flex flex-col gap-5">
+                            <div class="flex flex-col">
 
-                                {#each pedido.items as item (item.id_item)}
+                                {#each pedido.items as item, i (item.id_item)}
 
                                     <div class="flex flex-col md:flex-row gap-4
-                                                md:items-center">
+                                                md:items-center py-5
+                                                {i !== pedido.items.length - 1 ? 'border-b border-neutral-800' : ''}">
 
                                         <!-- PRODUTO -->
                                         <div class="flex gap-4 flex-1 min-w-0">
@@ -378,13 +380,13 @@
                                                     src={item.imagem_produto}
                                                     alt={item.nome_produto}
                                                     class="w-24 h-24 object-cover rounded-xl
-                                                           bg-neutral-900 border border-neutral-800"
+                                                           bg-neutral-900 border border-neutral-800 shrink-0"
                                                 />
                                             {:else}
                                                 <div class="w-24 h-24 rounded-xl bg-neutral-900
                                                             border border-neutral-800 flex
                                                             items-center justify-center
-                                                            text-neutral-600 text-xs">
+                                                            text-neutral-600 text-xs shrink-0">
                                                     Sem imagem
                                                 </div>
                                             {/if}
@@ -400,11 +402,11 @@
                                                 </p>
 
                                                 <p class="text-sm text-neutral-400">
-                                                    Unitário:
+                                                    Valor unitário:
                                                     {formatarValor(item.preco_unitario)}
                                                 </p>
 
-                                                <p class="text-sm font-semibold mt-1">
+                                                <p class="text-sm font-semibold mt-2">
                                                     Subtotal:
                                                     {formatarValor(item.subtotal)}
                                                 </p>
@@ -414,8 +416,7 @@
                                         </div>
 
                                         <!-- STATUS E AÇÕES -->
-                                        <div class="flex flex-col gap-3 md:items-end
-                                                    md:min-w-48">
+                                        <div class="flex flex-col gap-3 md:items-end md:min-w-48">
 
                                             <span class={`text-xs px-3 py-1 rounded-full
                                                            border w-fit
@@ -430,8 +431,8 @@
                                                     <button
                                                         onclick={() => atualizarStatus(item, 'enviado')}
                                                         disabled={atualizandoId !== null}
-                                                        class="px-3 py-2 rounded-lg bg-blue-600
-                                                               hover:bg-blue-500 text-white text-xs
+                                                        class="px-3 py-2 rounded-lg bg-neutral-100
+                                                               hover:bg-white text-black text-xs
                                                                font-medium transition disabled:opacity-50"
                                                     >
                                                         Marcar como enviado
@@ -455,8 +456,8 @@
                                                 <button
                                                     onclick={() => atualizarStatus(item, 'entregue')}
                                                     disabled={atualizandoId !== null}
-                                                    class="px-3 py-2 rounded-lg bg-green-600
-                                                           hover:bg-green-500 text-white text-xs
+                                                    class="px-3 py-2 rounded-lg bg-neutral-100
+                                                           hover:bg-white text-black text-xs
                                                            font-medium transition disabled:opacity-50"
                                                 >
                                                     Marcar como entregue
@@ -486,36 +487,38 @@
 
                                     </div>
 
-                                    <div class="border-b border-neutral-800 last:hidden"></div>
-
                                 {/each}
 
                             </div>
 
                         </div>
 
-                        <!-- ENDEREÇO -->
+                        <!-- ENDEREÇO DE ENTREGA -->
                         <div class="px-5 md:px-6 py-5 border-t border-neutral-800
                                     bg-neutral-900/30">
 
-                            <h3 class="text-sm font-semibold mb-2">
+                            <h3 class="font-special text-lg mb-3">
                                 Endereço de entrega
                             </h3>
 
-                            <p class="text-sm text-neutral-400">
-                                {pedido.rua}, {pedido.numero}
-                                {#if pedido.complemento}
-                                    - {pedido.complemento}
-                                {/if}
-                            </p>
+                            <div class="text-sm text-neutral-400 space-y-1">
 
-                            <p class="text-sm text-neutral-400">
-                                {pedido.cidade} - {pedido.estado}
-                            </p>
+                                <p>
+                                    {pedido.rua}, {pedido.numero}
+                                    {#if pedido.complemento}
+                                        - {pedido.complemento}
+                                    {/if}
+                                </p>
 
-                            <p class="text-sm text-neutral-500">
-                                CEP: {pedido.cep}
-                            </p>
+                                <p>
+                                    {pedido.cidade} - {pedido.estado}
+                                </p>
+
+                                <p>
+                                    CEP: {pedido.cep}
+                                </p>
+
+                            </div>
 
                         </div>
 
