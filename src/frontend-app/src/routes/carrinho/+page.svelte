@@ -90,12 +90,6 @@
 
 								<!-- Informações -->
 								<div class="flex flex-col min-w-0 gap-3">
-
-									<!-- Nome do produto -->
-									<span class="font-special text-sm md:text-base uppercase tracking-wider text-white whitespace-normal break-words leading-relaxed">
-										{item.produto.nome}
-									</span>
-
 									<!-- Valor unitário -->
 									<div class="flex flex-col gap-1">
 										<span class="font-poppins text-[0.65rem] uppercase tracking-widest text-neutral-500">
@@ -213,6 +207,13 @@
 					>
 						Finalizar Pedido
 					</Button>
+
+					<button
+                        class="font-special text-xs text-neutral-500 hover:text-neutral-300 uppercase tracking-widest flex items-center justify-center gap-1.5"
+                        onclick={() => cart.limpar()}
+                    >
+                        Limpar Todo Carrinho
+                    </button>
 				</Card>
 
 			</div>

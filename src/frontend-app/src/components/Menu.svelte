@@ -5,48 +5,76 @@
   import { goto } from "$app/navigation";
   import { ArrowRightToBracketOutline, CartSolid, UserCircleOutline, StoreOutline } from "flowbite-svelte-icons";
   import { page } from "$app/stores";
+  import api from '$lib/api';
 
   let user: User | null = null;
   let hasToken = false;
   let loadingUser = false;
   let authRequestId = 0;
+  let possuiProdutos = false;
 
   // Verifica token sincronamente (instantâneo)
-  async function updateAuthStatus() {
+  // Verifica autenticação e se o usuário possui produtos
+async function updateAuthStatus() {
     hasToken = getToken() !== null;
 
     if (!hasToken) {
-      user = null;
-      loadingUser = false;
-      return;
+        user = null;
+        possuiProdutos = false;
+        loadingUser = false;
+        return;
     }
 
     if (user || loadingUser) {
-      return;
+        return;
     }
 
     loadingUser = true;
     const requestId = ++authRequestId;
 
     try {
-      const userData = await getCurrentUser();
-      if (requestId !== authRequestId) {
-        return;
-      }
-      user = userData;
-      hasToken = userData !== null;
-    } catch {
-      if (requestId !== requestId) {
-        return;
-      }
-      user = null;
-      hasToken = false;
+        const userData = await getCurrentUser();
+
+        if (requestId !== authRequestId) return;
+
+        user = userData;
+        hasToken = userData !== null;
+
+        if (userData) {
+            await verificarProdutosUsuario(Number(userData.id));
+        } else {
+            possuiProdutos = false;
+        }
+
+    } catch (error) {
+        if (requestId !== authRequestId) return;
+
+        user = null;
+        hasToken = false;
+        possuiProdutos = false;
+
+        console.error('Erro ao verificar autenticação:', error);
+
     } finally {
-      if (requestId === authRequestId) {
-        loadingUser = false;
-      }
+        if (requestId === authRequestId) {
+            loadingUser = false;
+        }
     }
-  }
+}
+
+async function verificarProdutosUsuario(usuarioId: number) {
+    try {
+        const res = await api.get(`/produtos/usuario/${usuarioId}`);
+
+        possuiProdutos = res.data.success &&
+            Array.isArray(res.data.data) &&
+            res.data.data.length > 0;
+
+    } catch (error) {
+        console.error('Erro ao verificar produtos:', error);
+        possuiProdutos = false;
+    }
+}
 
   // Reativo à mudança de página
   $: if ($page.url.pathname) {
@@ -70,6 +98,8 @@
       console.error("Erro no logout: ", error);
     }
   }
+
+  
 </script>
 
 
@@ -92,7 +122,14 @@
             <!-- só exibe menu usuários para admin-->
             <NavLi href="/painel" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg">Painel</NavLi>
           {/if}
-          <NavLi href="/areavendedor" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg"><StoreOutline class="shrink-0 h-6 w-6" /></NavLi>
+          {#if possuiProdutos}
+    <NavLi
+        href="/areavendedor"
+        nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 transition-colors rounded-lg"
+    >
+        <StoreOutline class="shrink-0 h-6 w-6" />
+    </NavLi>
+{/if}
           <NavLi href="/carrinho" nonActiveClass="text-lg font-light font-poppins px-4 py-2 text-white max-md:text-black hover:text-gray-500 focus:text-gray-600 transition-colors rounded-lg"><CartSolid class="shrink-0 h-6 w-6" /></NavLi>
           <NavLi>
             <div class="flex items-center">
