@@ -4,7 +4,7 @@
     import api from '$lib/api';
     import type { ApiResponse } from '$lib/api';
 
-    import { Button, Heading } from 'flowbite-svelte';
+    import { Heading } from 'flowbite-svelte';
     import { ShoppingBagOutline } from 'flowbite-svelte-icons';
 
     type Status = 'pendente' | 'enviado' | 'entregue' | 'cancelado';
@@ -224,14 +224,6 @@
                     </Heading>
                 </div>
             </div>
-
-            <Button
-                onclick={carregarPedidos}
-                disabled={loading}
-                class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
-            >
-                ↻ ATUALIZAR
-            </Button>
 
         </div>
 

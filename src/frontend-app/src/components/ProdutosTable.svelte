@@ -224,11 +224,11 @@
     onCancel={handleCancel}
   />
 
-<!-- Botão de voltar -->
-<div class="flex gap-4 justify-center mt-4">
-  <Button color="light" type="button" onclick={painel} disabled={loading} class="font-special flex items-center justify-center">
-    <UndoOutline class="w-5 h-5 font-special" />
-  </Button>
-</div>
-
+<!-- Botão voltar -->
+<Button 
+	class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
+	onclick={() => goto('/painel')}
+			>
+	<ArrowLeftOutline class="mr-1.5 h-4 w-4" /> VOLTAR
+</Button>
 
