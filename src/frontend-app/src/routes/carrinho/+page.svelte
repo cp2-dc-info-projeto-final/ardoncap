@@ -116,15 +116,6 @@
 						</Card>
 					{/each}
 
-					<!-- Botão para Limpar Carrinho -->
-					<div class="flex justify-end">
-						<button 
-							class="font-special text-xs text-neutral-500 hover:text-neutral-300 uppercase tracking-widest"
-							onclick={() => cart.limpar()}
-						>
-							Limpar Todo o Carrinho
-						</button>
-					</div>
 				</div>
 
 				<!-- Resumo do Pedido -->
@@ -157,6 +148,15 @@
 					</Button>
 				</Card>
 
+			</div>
+			<!-- Botão para Limpar Carrinho -->
+			<div class="flex justify-center">
+				<button 
+					class="font-special text-xs text-neutral-500 hover:text-neutral-300 uppercase tracking-widest"
+					onclick={() => cart.limpar()}
+				>
+					Limpar Todo o Carrinho
+				</button>
 			</div>
 		{/if}
 
