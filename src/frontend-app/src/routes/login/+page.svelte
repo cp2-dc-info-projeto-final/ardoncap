@@ -2,6 +2,8 @@
   import { Card, Button, Input, Label, Alert, Img, Heading } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import { login as authLogin } from "$lib/auth";
+  import { getCurrentUser } from '$lib/auth';
+  import { cart } from '$lib/cart';
   export let id: number | null = null; // id do usuário
 
   let login = '';
@@ -20,10 +22,19 @@
     error = '';
 
     try {
-      const result = await authLogin({ login, password });
-      
-      if (result.success) {
-        await goto('/');
+        const result = await authLogin({ login, password });
+        
+        if (result.success) {
+      const usuario = await getCurrentUser();
+
+      if (!usuario) {
+          error = 'Não foi possível recuperar os dados do usuário.';
+          return;
+      }
+
+      cart.definirUsuario(usuario.id);
+
+      await goto('/');
       } else {
         error = result.message || 'Credenciais inválidas';
       }

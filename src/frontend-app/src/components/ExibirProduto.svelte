@@ -83,8 +83,32 @@
         );
     }
 	}
-</script>
 
+	let mensagemCarrinho = '';
+	let timeoutMensagem: ReturnType<typeof setTimeout> | undefined;
+
+function adicionarAoCarrinho() {
+    const sucesso = cart.adicionar(produto);
+
+    mensagemCarrinho = sucesso
+        ? 'PRODUTO ADICIONADO AO CARRINHO!'
+        : 'ESTOQUE INDISPONÍVEL!';
+
+    if (timeoutMensagem) clearTimeout(timeoutMensagem);
+
+    timeoutMensagem = setTimeout(() => {
+        mensagemCarrinho = '';
+    }, 2500);
+}
+</script>
+{#if mensagemCarrinho}
+	<div
+		class="mt-3 border border-neutral-700 bg-neutral-900 p-3 text-center font-special text-xs tracking-wider text-white"
+		role="status"
+			>
+				{mensagemCarrinho}
+						</div>
+					{/if}
 <svelte:head>
 	<title>Ardoncap - {produto ? produto.nome : 'Visualizar Produto'}</title>
 </svelte:head>
@@ -198,19 +222,19 @@
 						<!-- Ações -->
 						<div class="flex flex-col gap-4 pt-3 sm:flex-row">
 
-    					{#if !isOwner}
-        					<Button
+						{#if !isOwner}
+							<Button
 								class="w-full !rounded-none !bg-white !py-3 font-special text-xs tracking-[0.15em] !text-black hover:!bg-neutral-300"
 								disabled={produto.quantidade_disponivel <= 0}
-								onclick={() => cart.adicionar(produto)}
+								onclick={adicionarAoCarrinho}
 							>
-						{#if produto.quantidade_disponivel > 0}
-							ADICIONAR AO CARRINHO
-						{:else}
-							ESGOTADO
+								{#if produto.quantidade_disponivel > 0}
+									ADICIONAR AO CARRINHO
+								{:else}
+									ESGOTADO
+								{/if}
+							</Button>
 						{/if}
-        					</Button>
-    					{/if}
 
     					{#if isOwner}
         					<Button

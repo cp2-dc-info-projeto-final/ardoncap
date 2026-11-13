@@ -7,6 +7,7 @@
     import { cart } from '$lib/cart';
 	import type { User } from '$lib/auth';
 	import { getCurrentUser } from '$lib/auth';
+	import { CartOutline } from 'flowbite-svelte-icons';
   
   	let authUser: User | null = null;
 	let produtos: Produto[] = [];
@@ -39,7 +40,41 @@
 		authUser = await getCurrentUser();
 		await loadProdutos();
 	});
+
+	let mensagemCarrinho = '';
+	let timeoutMensagem: ReturnType<typeof setTimeout>;
+
+	function adicionarAoCarrinho(produto: Produto) {
+		const sucesso = cart.adicionar(produto);
+
+		if (sucesso) {
+			mensagemCarrinho = 'Produto adicionado ao carrinho!';
+		} else {
+			mensagemCarrinho = 'Estoque indisponível para este produto.';
+		}
+
+		if (timeoutMensagem) clearTimeout(timeoutMensagem);
+
+		timeoutMensagem = setTimeout(() => {
+			mensagemCarrinho = '';
+		}, 2500);
+	}
+
 </script>
+
+{#if mensagemCarrinho}
+    <div
+        class="fixed top-24 right-6 z-50 flex items-center gap-3
+               border border-neutral-700 bg-neutral-950
+               px-5 py-4 text-white shadow-xl
+               animate-in fade-in slide-in-from-top-2"
+        role="status"
+    >
+        <span class="font-poppins text-sm">
+            {mensagemCarrinho}
+        </span>
+    </div>
+{/if}
 
 {#if loading}
 	<div class="font-poppins my-12 animate-pulse text-center text-gray-400">
@@ -115,7 +150,7 @@
 					onclick={(event) => {
 						event.preventDefault();
 						event.stopPropagation();
-						cart.adicionar(produto);
+						adicionarAoCarrinho(produto);
 					}}
 					class="flex items-center justify-center p-1
 						   text-neutral-700 transition-colors
@@ -195,6 +230,23 @@
 								currency: 'BRL'
 							})}
 						</span>
+					{/if}
+					{#if produto.quantidade_disponivel > 0 &&
+						Number(authUser?.id) !== Number(produto.id_usuario)}
+						<button
+							type="button"
+							onclick={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								adicionarAoCarrinho(produto);
+							}}
+							class="mt-2 flex items-center justify-center gap-2
+								   bg-neutral-950 py-2 text-xs text-white
+								   transition-colors hover:bg-neutral-700"
+						>
+							<CartOutline class="h-4 w-4" />
+							Adicionar
+						</button>
 					{/if}
 				</div>
 			</a>

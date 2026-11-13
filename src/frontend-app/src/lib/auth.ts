@@ -1,6 +1,7 @@
 import api from './api';
 import type { ApiResponse } from './api';
 import type { User } from './models/User';
+import { cart } from '$lib/cart';
 
 export interface LoginCredentials {
   login: string;
@@ -72,6 +73,7 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 export async function logout(): Promise<void> {
   try {
     const token = getToken();
+    cart.definirUsuario(null);
     if (token) {
       // Tenta fazer logout no servidor, mas não falha se não der certo
       try {

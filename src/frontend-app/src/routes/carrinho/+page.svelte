@@ -19,6 +19,7 @@
     function finalizarCompra() {
         goto('/checkout');
     }
+
 </script>
 
 <svelte:head>
@@ -76,7 +77,12 @@
 							<div class="flex items-center gap-5 min-w-0 flex-1">
 
 								<!-- Imagem -->
-								<div class="w-24 h-24 bg-neutral-900 border border-neutral-800 flex items-center justify-center p-2 shrink-0 overflow-hidden">
+								<button
+									type="button"
+									class="w-24 h-24 bg-neutral-900 border border-neutral-800 flex items-center justify-center p-2 shrink-0 overflow-hidden cursor-pointer hover:border-neutral-500 transition-colors"
+									onclick={() => goto(`/produto/${item.produto.id}`)}
+									aria-label="Ver anúncio do produto"
+								>
 									{#if item.produto.imagem}
 										<img
 											src={item.produto.imagem}
@@ -86,7 +92,7 @@
 									{:else}
 										<span class="text-xs text-neutral-600 uppercase">N/A</span>
 									{/if}
-								</div>
+								</button>
 
 								<!-- Informações -->
 								<div class="flex flex-col min-w-0 gap-3">
