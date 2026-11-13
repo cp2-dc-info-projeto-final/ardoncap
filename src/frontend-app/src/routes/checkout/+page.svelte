@@ -94,9 +94,9 @@
 	<div class="max-w-5xl mx-auto flex flex-col gap-8">
 		
 		<!-- Título principal -->
-		<div class="border-b border-neutral-800 pb-4 flex items-center gap-3">
-			<CreditCardOutline class="h-8 w-8 text-neutral-400" />
-			<Heading tag="h2" class="font-instrument text-3xl uppercase tracking-wider">Finalizar Compra</Heading>
+		<div class="pb-4 flex items-center gap-3">
+			<CreditCardOutline class="h-8 w-8 text-white" />
+			<Heading tag="h2" class="font-instrument text-3xl uppercase tracking-wider text-white">Finalizar Compra</Heading>
 		</div>
 
 		{#if error}

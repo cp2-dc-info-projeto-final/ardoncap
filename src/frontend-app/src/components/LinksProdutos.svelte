@@ -4,8 +4,11 @@
 	import type { ApiResponse } from '$lib/api';
 	import { onMount } from 'svelte';
 	import type { Produto } from '$lib/models/Produto';
-  import { cart } from '$lib/cart';
-
+    import { cart } from '$lib/cart';
+	import type { User } from '$lib/auth';
+	import { getCurrentUser } from '$lib/auth';
+  
+  	let authUser: User | null = null;
 	let produtos: Produto[] = [];
 	let loading = true;
 	let error = '';
@@ -33,6 +36,7 @@
 	}
 
 	onMount(async () => {
+		authUser = await getCurrentUser();
 		await loadProdutos();
 	});
 </script>
@@ -104,34 +108,37 @@
                 </span>
               {/if}
 
-              <button
-                type="button"
-                onclick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  cart.adicionar(produto);
-                }}
-                class="flex items-center justify-center p-1
-                      text-neutral-700 transition-colors
-                      hover:text-black group-hover:text-white"
-                aria-label="Adicionar {produto.nome} ao carrinho"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.7"
-                  stroke="currentColor"
-                  class="h-4 w-4"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.25 3h1.386c.51 0 .955.343 1.085.836L5.25 6.75m0 0h14.25l-1.5 9H6.75l-1.5-9Zm0 0L4.5 3m3.75 15.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm9 0a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"
-                  />
-                </svg>
-              </button>
-
+			  {#if produto.quantidade_disponivel > 0 &&
+				Number(authUser?.id) !== Number(produto.id_usuario)}
+				<button
+					type="button"
+					onclick={(event) => {
+						event.preventDefault();
+						event.stopPropagation();
+						cart.adicionar(produto);
+					}}
+					class="flex items-center justify-center p-1
+						   text-neutral-700 transition-colors
+						   hover:text-black group-hover:text-white"
+					aria-label="Adicionar {produto.nome} ao carrinho"
+				>
+					<!-- SVG do carrinho -->
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.7"
+						stroke="currentColor"
+						class="h-4 w-4"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M2.25 3h1.386c.51 0 .955.343 1.085.836L5.25 6.75m0 0h14.25l-1.5 9H6.75l-1.5-9Zm0 0L4.5 3m3.75 15.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm9 0a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"
+						/>
+					</svg>
+				</button>
+			{/if}
             </div>
           </div>
 					</a>

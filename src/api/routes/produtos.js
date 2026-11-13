@@ -261,28 +261,77 @@ router.get('/usuario/:id', verifyToken, async function(req, res) {
 });
 
 /* ATUALIZAR PRODUTO POR ID */
-router.put('/:id', verifyToken, isAdmin, async function(req, res) {
+router.put('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
-    const { nome } = req.body;
-    const { descricao } = req.body;
-    const { quantidade_disponivel } = req.body;
-    const { preco } = req.body;
-    const { id_categoria } = req.body;
+    const {
+      nome,
+      descricao,
+      quantidade_disponivel,
+      preco,
+      id_categoria
+    } = req.body;
 
+    // Verifica se o produto existe e identifica seu proprietário
+    const produtoExiste = await pool.query(
+      'SELECT id, id_usuario FROM produto WHERE id = $1',
+      [id]
+    );
+
+    if (produtoExiste.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Produto não encontrado',
+        errors: [{
+          field: 'id',
+          message: 'Produto não existe',
+          code: 'NOT_FOUND'
+        }]
+      });
+    }
+
+    const produto = produtoExiste.rows[0];
+
+    // Verifica se é proprietário ou administrador
+    const isOwner =
+      Number(req.user.id) === Number(produto.id_usuario);
+
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'Você não tem permissão para editar este produto',
+        errors: [{
+          field: 'permissao',
+          message: 'Apenas o proprietário ou administrador pode editar este produto',
+          code: 'FORBIDDEN'
+        }]
+      });
+    }
+
+    // Validações
     if (!nome) {
       return res.status(400).json({
         success: false,
-        message: 'Nome é obrigatorio',
-        errors: [{field: 'nome', message: 'Nome é obrigatório', code: 'REQUIRED' }]
+        message: 'Nome é obrigatório',
+        errors: [{
+          field: 'nome',
+          message: 'Nome é obrigatório',
+          code: 'REQUIRED'
+        }]
       });
     }
 
     if (!descricao) {
       return res.status(400).json({
         success: false,
-        message: 'Descrição é obrigatoria',
-        errors: [{field: 'descricao', message: 'Descrição é obrigatória', code: 'REQUIRED' }]
+        message: 'Descrição é obrigatória',
+        errors: [{
+          field: 'descricao',
+          message: 'Descrição é obrigatória',
+          code: 'REQUIRED'
+        }]
       });
     }
 
@@ -290,7 +339,11 @@ router.put('/:id', verifyToken, isAdmin, async function(req, res) {
       return res.status(400).json({
         success: false,
         message: 'Quantidade disponível é obrigatória',
-        errors: [{field: 'quantidade_disponivel', message: 'Quantidade disponível deve ser um número maior que zero', code: 'REQUIRED' }]
+        errors: [{
+          field: 'quantidade_disponivel',
+          message: 'Quantidade deve ser maior que zero',
+          code: 'REQUIRED'
+        }]
       });
     }
 
@@ -298,7 +351,11 @@ router.put('/:id', verifyToken, isAdmin, async function(req, res) {
       return res.status(400).json({
         success: false,
         message: 'Preço é obrigatório',
-        errors: [{field: 'preco', message: 'Preço deve ser um número maior ou igual a zero', code: 'REQUIRED' }]
+        errors: [{
+          field: 'preco',
+          message: 'Preço deve ser maior ou igual a zero',
+          code: 'REQUIRED'
+        }]
       });
     }
 
@@ -306,89 +363,145 @@ router.put('/:id', verifyToken, isAdmin, async function(req, res) {
       return res.status(400).json({
         success: false,
         message: 'Categoria é obrigatória',
-        errors: [{field: 'id_categoria', message: 'Categoria é obrigatória', code: 'REQUIRED' }]
+        errors: [{
+          field: 'id_categoria',
+          message: 'Categoria é obrigatória',
+          code: 'REQUIRED'
+        }]
       });
     }
 
-    const produtoExiste = await pool.query('SELECT id FROM produto WHERE id = $1', [id]);
-    if (produtoExiste.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Produto não encontrado',
-        errors: [{ field: 'id', message: 'Produto não existe', code: 'NOT_FOUND' }]
-      });
-    }
+    const categoriaExiste = await pool.query(
+      'SELECT id FROM categoria WHERE id = $1',
+      [id_categoria]
+    );
 
-    const categoriaExiste = await pool.query('SELECT id FROM categoria WHERE id = $1', [id_categoria]);
     if (categoriaExiste.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Categoria não encontrada',
-        errors: [{field: 'id_categoria', message: 'Categoria não existe', code: 'NOT_FOUND' }]
+        errors: [{
+          field: 'id_categoria',
+          message: 'Categoria não existe',
+          code: 'NOT_FOUND'
+        }]
       });
     }
 
+    // Atualiza somente se a permissão continuar válida
     const result = await pool.query(
-      `UPDATE produto SET nome = $1, descricao = $2, quantidade_disponivel = $3, preco = $4, id_categoria = $5 WHERE id = $6 RETURNING *`,
-      [nome, descricao, quantidade_disponivel, preco, id_categoria, id]
+      `UPDATE produto
+       SET nome = $1,
+           descricao = $2,
+           quantidade_disponivel = $3,
+           preco = $4,
+           id_categoria = $5
+       WHERE id = $6
+         AND (id_usuario = $7 OR $8 = 'admin')
+       RETURNING *`,
+      [
+        nome,
+        descricao,
+        quantidade_disponivel,
+        preco,
+        id_categoria,
+        id,
+        req.user.id,
+        req.user.role
+      ]
     );
+
+    if (result.rows.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: 'Você não tem permissão para editar este produto'
+      });
+    }
 
     return res.status(200).json({
       success: true,
       message: 'Produto atualizado com sucesso',
       data: result.rows[0]
     });
+
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
+
     if (error.code === '23514') {
       return res.status(400).json({
         success: false,
-        message: 'Dados inválidos. Verifique os campos e tente novamente.',
-        errors: [{ field: 'dados', message: 'Dados inválidos', code: 'INVALID_DATA' }]
+        message: 'Dados inválidos. Verifique os campos e tente novamente.'
       });
     }
+
     if (error.code === '23503') {
       return res.status(400).json({
         success: false,
-        message: 'Categoria informada não existe.',
-        errors: [{ field: 'id_categoria', message: 'Categoria não existe', code: 'NOT_FOUND' }]
+        message: 'Categoria informada não existe.'
       });
     }
+
     return res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor',
-      errors: [{ field: 'servidor', message: 'Erro interno do servidor', code: 'INTERNAL_ERROR' }]
+      message: 'Erro interno do servidor'
     });
   }
 });
 
 /* EXCLUIR PRODUTO POR ID */
-router.delete('/:id', verifyToken, isAdmin, async function(req, res) {
+router.delete('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
 
-    const produtoExiste = await pool.query(
-      'SELECT id FROM produto WHERE id = $1', [id]);
-    if (produtoExiste.rows.length === 0) {
-      return res.status(404).json({
+    const result = await pool.query(
+      `DELETE FROM produto
+       WHERE id = $1
+         AND (id_usuario = $2 OR $3 = 'admin')
+       RETURNING id`,
+      [id, req.user.id, req.user.role]
+    );
+
+    if (result.rows.length === 0) {
+      // Verifica se o produto existe
+      const produtoExiste = await pool.query(
+        'SELECT id FROM produto WHERE id = $1',
+        [id]
+      );
+
+      if (produtoExiste.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Produto não encontrado',
+          errors: [{
+            field: 'id',
+            message: 'Produto não existe',
+            code: 'NOT_FOUND'
+          }]
+        });
+      }
+
+      return res.status(403).json({
         success: false,
-        message: 'Produto não encontrado',
-        errors: [{ field: 'id', message: 'Produto não existe', code: 'NOT_FOUND' }]
+        message: 'Você não tem permissão para excluir este produto',
+        errors: [{
+          field: 'permissao',
+          message: 'Apenas o proprietário ou administrador pode excluir este produto',
+          code: 'FORBIDDEN'
+        }]
       });
     }
-
-    await pool.query('DELETE FROM produto WHERE id = $1', [id]);
 
     return res.status(200).json({
       success: true,
       message: 'Produto deletado com sucesso'
     });
+
   } catch (error) {
     console.error('Erro ao deletar produto:', error);
 
     return res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor',
+      message: 'Erro interno do servidor'
     });
   }
 });

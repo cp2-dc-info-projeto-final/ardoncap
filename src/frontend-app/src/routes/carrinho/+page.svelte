@@ -90,12 +90,6 @@
 
 								<!-- Informações -->
 								<div class="flex flex-col min-w-0 gap-3">
-
-									<!-- Nome do produto -->
-									<span class="font-special text-sm md:text-base uppercase tracking-wider text-white whitespace-normal break-words leading-relaxed">
-										{item.produto.nome}
-									</span>
-
 									<!-- Valor unitário -->
 									<div class="flex flex-col gap-1">
 										<span class="font-poppins text-[0.65rem] uppercase tracking-widest text-neutral-500">
@@ -207,21 +201,23 @@
 
                     </div>
 
-                    <Button
-                        class="font-special w-full bg-white text-black hover:bg-gray-300 rounded-xl text-[1.1rem] py-3 uppercase tracking-wider mt-2"
-                        onclick={finalizarCompra}
-                    >
-                        Finalizar Pedido
-                    </Button>
+					<Button 
+						class="font-special w-full bg-white text-black hover:bg-gray-300 rounded-xl text-[1.1rem] py-3 uppercase tracking-wider mt-2"
+						onclick={finalizarCompra}
+					>
+						Finalizar Pedido
+					</Button>
 
-                    <button
+					<button
                         class="font-special text-xs text-neutral-500 hover:text-neutral-300 uppercase tracking-widest flex items-center justify-center gap-1.5"
                         onclick={() => cart.limpar()}
                     >
                         Limpar Todo Carrinho
                     </button>
-                </Card>
-            </div>
-        {/if}
-    </div>
+				</Card>
+
+			</div>
+		{/if}
+
+	</div>
 </div>

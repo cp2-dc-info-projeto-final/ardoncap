@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import { Card, Button, Heading } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
@@ -9,6 +8,12 @@
 	import { ArrowLeftOutline } from 'flowbite-svelte-icons';
 	import type { Produto } from '$lib/models/Produto';
 	import { cart } from '$lib/cart';
+	import { getCurrentUser } from '$lib/auth';
+	import type { User } from '$lib/auth';
+	import Avaliacoes from '../components/Avaliacoes.svelte';
+
+	let authUser: User | null = null;
+	let isOwner = false;
 
 	export let id: number | string | null = null;
 
@@ -17,24 +22,29 @@
 	let error = '';
 
 	onMount(async () => {
-		if (id !== null) {
-			try {
-				const res = await api.get(`/produtos/${id}`);
-				const body = res.data as ApiResponse<Produto>;
+    try {
+        authUser = await getCurrentUser();
 
-				if (body.success && body.data) {
-					produto = body.data;
-				} else {
-					error = body.message || 'Produto não encontrado.';
-				}
-			} catch (e: any) {
-				const body = e.response?.data as ApiResponse<Produto> | undefined;
-				error = body?.message || 'Erro ao carregar o produto.';
-			} finally {
-				loading = false;
-			}
-		} else {
-			error = 'ID de produto inválido.';
+        if (id !== null) {
+            const res = await api.get(`/produtos/${id}`);
+            const body = res.data as ApiResponse<Produto>;
+
+            if (body.success && body.data) {
+                produto = body.data;
+
+                // Verifica se o usuário logado é o dono do produto
+                isOwner = authUser !== null &&
+    			Number(authUser.id) === Number(produto.id_usuario);
+            } else {
+                error = body.message || 'Produto não encontrado.';
+            }
+        } else {
+            error = 'ID de produto inválido.';
+        }
+		} catch (e: any) {
+			const body = e.response?.data as ApiResponse<Produto> | undefined;
+			error = body?.message || 'Erro ao carregar o produto.';
+		} finally {
 			loading = false;
 		}
 	});
@@ -49,6 +59,29 @@
 		} else {
 			goto('/');
 		}
+	}
+
+	async function removerProduto() {
+    if (!produto || !isOwner) return;
+
+    const confirmar = confirm(
+        'Tem certeza que deseja remover este produto?'
+    );
+
+    if (!confirmar) return;
+
+    try {
+        await api.delete(`/produtos/${produto.id}`);
+
+        alert('Produto removido com sucesso!');
+
+        goto('/');
+    } catch (e: any) {
+        alert(
+            e.response?.data?.message ||
+            'Erro ao remover o produto.'
+        );
+    }
 	}
 </script>
 
@@ -90,7 +123,7 @@
 				<div class="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
 
 					<!-- Imagem -->
-					<div class="flex min-h-[300px] items-center justify-center md:min-h-[500px]" href="">
+					<div class="flex min-h-[300px] items-center justify-center md:min-h-[500px]">
 						{#if produto.imagem}
 								<img
 									src={produto.imagem}
@@ -165,17 +198,35 @@
 						<!-- Ações -->
 						<div class="flex flex-col gap-4 pt-3 sm:flex-row">
 
-							<Button
+    					{#if !isOwner}
+        					<Button
 								class="w-full !rounded-none !bg-white !py-3 font-special text-xs tracking-[0.15em] !text-black hover:!bg-neutral-300"
 								disabled={produto.quantidade_disponivel <= 0}
 								onclick={() => cart.adicionar(produto)}
 							>
-								{#if produto.quantidade_disponivel > 0}
-									ADICIONAR AO CARRINHO
-								{:else}
-									ESGOTADO
-								{/if}
+						{#if produto.quantidade_disponivel > 0}
+							ADICIONAR AO CARRINHO
+						{:else}
+							ESGOTADO
+						{/if}
+        					</Button>
+    					{/if}
+
+    					{#if isOwner}
+        					<Button
+            					class="w-full !rounded-none !border !border-neutral-700 !bg-transparent !py-3 font-special text-xs tracking-[0.15em] !text-white hover:!bg-neutral-900"
+            					onclick={() => goto(`/produtosuser/edit/${produto.id}`)}
+        					>
+            				EDITAR
+        					</Button>
+
+							<Button
+								class="w-full !rounded-none !border !border-neutral-700 !bg-transparent !py-3 font-special text-xs tracking-[0.15em] !text-white hover:!border-white hover:!bg-neutral-900"
+								onclick={removerProduto}
+							>
+								REMOVER
 							</Button>
+    					{/if}
 
 							<Button
 								class="w-full !rounded-none !border !border-neutral-700 !bg-transparent !py-3 font-special text-xs tracking-[0.15em] !text-white hover:!border-white hover:!bg-neutral-900"
@@ -184,14 +235,13 @@
 								<ArrowLeftOutline class="mr-2 h-4 w-4" />
 								VOLTAR
 							</Button>
-
 						</div>
-
 					</div>
 				</div>
-
+				<Avaliacoes produtoId={produto.id} 
+							isOwner={isOwner}
+				/>
 			{/if}
-
 		</div>
 	</div>
 </div>

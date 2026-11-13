@@ -97,7 +97,7 @@
 
     {:else if user}
 
-        <div class="w-full rounded-xl bg-white p-5 md:p-8">
+        <div class="w-full rounded-xl bg-white px-3 pt-3 pb-5 md:px-5 md:pt-4 md:pb-8">
 
             <!-- CABEÇALHO -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-gray-200 pb-5">

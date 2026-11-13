@@ -91,7 +91,11 @@ CREATE TABLE avaliacao (
 
     CONSTRAINT pk_avaliacao PRIMARY KEY (id),
     CONSTRAINT ck_avaliacao_nota CHECK (nota >= 1 AND nota <= 5)
-);   
+);
+
+ALTER TABLE avaliacao
+ADD CONSTRAINT uk_avaliacao_usuario_produto
+UNIQUE (id_usuario, id_produto);
 
 INSERT INTO usuario (login, email, senha, role) VALUES
 
