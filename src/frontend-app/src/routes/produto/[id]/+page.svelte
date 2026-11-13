@@ -1,8 +1,8 @@
 <script lang="ts">
     import { page } from '$app/stores';
     import { get } from 'svelte/store';
-	import ExibirProduto from '../../../components/ExibirProduto.svelte';
     const { id } = get(page).params;
+	import ExibirProduto from '../../../components/ExibirProduto.svelte';
 </script>
 
 {#if id}

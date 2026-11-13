@@ -170,7 +170,7 @@
 
 
                 <!-- Resumo do Pedido -->
-                <Card class="w-full p-6 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-col gap-6">
+                <Card class="w-full max-w-full lg:max-w-none p-5 md:p-6 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-col gap-6">
 
                     <span class="font-special text-xs text-neutral-500 tracking-widest uppercase">
                         Resumo da Compra

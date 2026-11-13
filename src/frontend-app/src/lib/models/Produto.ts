@@ -8,6 +8,7 @@ export interface Produto {
     id_categoria: number;
     id_usuario: bigint;
     categoria_nome: string;
+    vendedor?: string;
   }
   
   export interface ProdutoFormData {
@@ -18,4 +19,5 @@ export interface Produto {
     preco: number;
     imagem: string;
     id_categoria: number;
+    vendedor?: string;
   }  

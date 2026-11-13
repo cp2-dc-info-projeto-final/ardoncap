@@ -51,47 +51,56 @@
 	});
 </script>
 
+
 <svelte:head>
-	<title>Ardoncap - Meus Endereços</title>
+    <title>Ardoncap - Meus Endereços</title>
 </svelte:head>
 
-<div class="min-h-screen w-full bg-black text-white px-4 pt-32 pb-12 md:px-8">
-	<div class="max-w-5xl mx-auto flex flex-col gap-10">
-		
-		<!-- Cabeçalho Principal -->
-		<div class="pb-4 flex items-center gap-3">
-			<Heading tag="h2" class="font-instrument text-white text-3xl uppercase tracking-wider">Gerenciar Endereços</Heading>
-		</div>
+<div class="min-h-screen w-full bg-black text-white px-3 sm:px-5 md:px-6 lg:px-8 pt-28 md:pt-32 pb-12">
 
-		{#if error}
-			<div class="text-sm text-red-500 font-poppins bg-red-950/30 p-3 rounded-xl border border-red-900/50">
-				{error}
-			</div>
-		{/if}
+    <div class="w-full max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
 
-		<div class="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
-			
-			<!-- Coluna do Formulário (Ocupa 2 colunas no desktop) -->
-			<div class="lg:col-span-2">
-				<!-- Passamos a função carregarEnderecos para atualizar a lista ao salvar -->
-				<FormEndereco onSalvo={carregarEnderecos} />
-			</div>
+        <!-- Cabeçalho Principal -->
+        <div class="pb-3 flex items-center justify-center sm:justify-start">
+            <Heading tag="h2" class="font-instrument text-white text-2xl md:text-3xl uppercase tracking-wider">
+                Gerenciar Endereços
+            </Heading>
+        </div>
 
-			<!-- Coluna da Listagem (Ocupa 3 colunas no desktop) -->
-			<div class="lg:col-span-3">
-				<!-- Passamos os dados da lista e a função de atualização para o CRUD interno -->
-				<ListaEnderecos 
-					{enderecos} 
-					{loading} 
-					onAtualizarLista={carregarEnderecos} 
-				/>
-			</div>
-			<Button 
-				class="font-special !flex !items-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-3 py-1.5"
-				onclick={handleBack}>
-				<ArrowLeftOutline class="mr-1.5 h-4 w-4" /> VOLTAR
-			</Button>
+        {#if error}
+            <div class="text-sm text-red-500 font-poppins bg-red-950/30 p-3 rounded-xl border border-red-900/50">
+                {error}
+            </div>
+        {/if}
 
-		</div>
-	</div>
+        <!-- Conteúdo Principal -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-5 md:gap-6 lg:gap-8 items-start w-full">
+
+            <!-- Formulário -->
+            <div class="md:col-span-2 w-full min-w-0">
+                <FormEndereco onSalvo={carregarEnderecos} />
+            </div>
+
+            <!-- Listagem -->
+            <div class="md:col-span-3 w-full min-w-0 max-w-full box-border">
+                <ListaEnderecos
+                    {enderecos}
+                    {loading}
+                    onAtualizarLista={carregarEnderecos}
+                />
+            </div>
+
+            <!-- Botão Voltar -->
+            <div class="md:col-span-5 flex justify-center sm:justify-start w-full">
+                <Button
+                    class="font-special !flex !items-center justify-center text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 rounded-lg px-4 py-2"
+                    onclick={handleBack}
+                >
+                    <ArrowLeftOutline class="mr-1.5 h-4 w-4" />
+                    VOLTAR
+                </Button>
+            </div>
+
+        </div>
+    </div>
 </div>

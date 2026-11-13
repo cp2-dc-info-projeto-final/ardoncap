@@ -8,7 +8,6 @@
     import { goto } from '$app/navigation'; // navegação
     import api from '$lib/api'; // API backend
     import type { ApiResponse } from '$lib/api';
-    import { onMount } from 'svelte'; // ciclo de vida
     import type { Produto } from '$lib/models/Produto';
 
     let produtos: Produto[] = [];   // get de produtos
@@ -94,24 +93,6 @@
         deletingId = null;
       }
     }
-  
-    onMount(async () => {
-      try {
-        const res = await api.get('/produtos');
-        const body = res.data as ApiResponse<Produto[]>;
-        if (body.success) {
-          produtos = body.data ?? [];
-        } else {
-          error = body.message;
-        } 
-      } catch (e: any) {
-        console.error('Erro ao carregar usuários:', e);
-        const body = e.response?.data as ApiResponse<Produto[]> | undefined;
-        error = body?.message || 'Erro ao carregar Produtos';
-      } finally {
-        loading = false;
-      }
-    });
   </script>
   
   {#if loading}
@@ -210,6 +191,11 @@
             </div>
           </Card>
         {/each}
+        {#if produtos.length === 0}
+          <div class="text-center text-gray-400 py-8 md:col-span-2">
+            Nenhum produto encontrado.
+          </div>
+        {/if}
       </div>
     </div>
   {/if}

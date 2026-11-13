@@ -21,4 +21,12 @@
       Nossos nomes são: <b>Artur, Caio Henrique, Domingos e Pedro Henrique </b>
     </P>
   </div>
+  <div class="w-full flex justify-center px-4 pb-16">
+    <img
+        src="../images/Ardoncap.png"
+        alt="Identidade visual do ArdonCap"
+        class="w-full max-w-2xl h-auto object-contain rounded-2xl border border-neutral-800 shadow-2xl"
+    />
+  </div>
 </div>
+

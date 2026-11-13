@@ -12,6 +12,12 @@
     } from 'flowbite-svelte-icons';
     import { goto } from '$app/navigation';
     import type { Produto } from '$lib/models/Produto';
+    import { page } from '$app/stores';
+    import { Button } from 'flowbite-svelte';
+
+    $: origemPerfil = $page.url.pathname.startsWith('/profilestore')
+    ? 'profilestore'
+    : 'profile';
 
     export let id: number | null = null;
 
@@ -22,6 +28,23 @@
     let produtos: Produto[] = [];
     let loadingProdutos = true;
     let erroProdutos = '';
+
+    let usuarioLogadoId: number | null = null;
+    let isDonoPerfil = false;
+
+    // Buscar o usuário autenticado
+    async function loadUsuarioLogado() {
+        try {
+            const res = await api.get('/users/me');
+            const body = res.data as ApiResponse<User>;
+
+            if (body.success && body.data) {
+                usuarioLogadoId = Number(body.data.id);
+            }
+        } catch (e) {
+            usuarioLogadoId = null;
+        }
+    }
 
     // Função para buscar o usuário
     async function loadUser(userId: number | null) {
@@ -50,10 +73,18 @@
     let ultimoId: number | null = null;
 
     $: if (id && id !== ultimoId) {
-        ultimoId = id;
-        loadUser(id);
-        loadProdutos(id);
+    ultimoId = id;
+
+    loadUser(id);
+    loadProdutos(id);
+    loadUsuarioLogado();
     }
+
+    $: isDonoPerfil =
+        usuarioLogadoId !== null &&
+        user !== null &&
+        usuarioLogadoId === Number(user.id);
+        
 
     // Buscar produtos do usuário
     async function loadProdutos(userId: number | null) {
@@ -81,83 +112,128 @@
             loadingProdutos = false;
         }
     }
+
 </script>
 
-<div class="w-full max-w-5xl mx-auto px-4 md:px-8 py-8">
+
+<div class="w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-8 py-6 md:py-10">
 
     {#if loading}
-        <p class="text-center text-white py-8">
+        <p class="text-center text-white py-12">
             Carregando perfil...
         </p>
 
     {:else if error}
-        <p class="text-center text-red-500 py-8">
+        <p class="text-center text-red-500 py-12">
             {error}
         </p>
 
     {:else if user}
 
-        <div class="w-full rounded-xl bg-white px-3 pt-3 pb-5 md:px-5 md:pt-4 md:pb-8">
+        <div class="w-full bg-white rounded-xl shadow-sm overflow-hidden">
 
-            <!-- CABEÇALHO -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-gray-200 pb-5">
+            <!-- CABEÇALHO DO PERFIL -->
+            <div class="px-4 py-5 sm:px-6 md:px-8 md:py-7 border-b border-gray-200">
 
-                <div class="flex flex-col min-w-0 flex-1">
-                    <span class="truncate text-lg font-light font-special text-black">
-                        {user.login}
-                    </span>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-                    <span class="truncate text-sm font-light font-special text-gray-400">
-                        {user.email}
-                    </span>
-                </div>
+                    <!-- INFORMAÇÕES DO USUÁRIO -->
+                    <div class="min-w-0 flex-1">
+                        <h1 class="text-xl md:text-2xl font-semibold text-black font-special truncate">
+                            {user.login}
+                        </h1>
 
-                <div class="flex items-center gap-1">
+                        <p class="text-sm md:text-base text-gray-400 mt-1 truncate font-special">
+                            {user.email}
+                        </p>
+                    </div>
 
-                    <button
-                        class="flex items-center px-1 py-2 text-black hover:text-gray-400 transition-colors"
-                        on:click={() => goto('/profile/pedido')}
-                    >
-                        <ShoppingBagSolid class="shrink-0 h-6 w-6" />
-                    </button>
+                    <!-- AÇÕES DO PROPRIETÁRIO -->
+                    {#if isDonoPerfil}
+                        <div class="flex items-center justify-start sm:justify-end gap-2">
 
-                    <button
-                        class="flex items-center px-1 py-2 text-black hover:text-gray-400 transition-colors"
-                        on:click={() => goto('/profile/endereco?from=profile')}
-                    >
-                        <MapPinAltSolid class="shrink-0 h-7 w-7" />
-                    </button>
+                            <button
+                                class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-black hover:bg-gray-100 transition"
+                                title="Meus pedidos"
+                                on:click={() => goto('/profile/pedido')}
+                            >
+                                <ShoppingBagSolid class="h-5 w-5 shrink-0" />
+                                <span class="text-xs hidden md:inline">Pedidos</span>
+                            </button>
 
-                    <button
-                        class="flex items-center px-1 py-2 text-black hover:text-gray-400 transition-colors"
-                        on:click={() => goto(`/profile/edit/${user.id}`)}
-                    >
-                        <EditOutline class="shrink-0 h-7 w-7" />
-                    </button>
+                            <button
+                                class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-black hover:bg-gray-100 transition"
+                                title="Meus endereços"
+                                on:click={() => goto('/profile/endereco?from=profile')}
+                            >
+                                <MapPinAltSolid class="h-5 w-5 shrink-0" />
+                                <span class="text-xs hidden md:inline">Endereços</span>
+                            </button>
+
+                            <button
+                                class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-black hover:bg-gray-100 transition"
+                                title="Editar perfil"
+                                on:click={() => goto(`/profile/edit/${user.id}`)}
+                            >
+                                <EditOutline class="h-5 w-5 shrink-0" />
+                                <span class="text-xs hidden md:inline">Editar</span>
+                            </button>
+
+                        </div>
+                    {/if}
 
                 </div>
             </div>
 
-            <!-- PRODUTOS DO USUÁRIO -->
-            <div class="pt-6">
+            <!-- ÁREA DE PRODUTOS -->
+            <div class="px-4 py-6 sm:px-6 md:px-8 md:py-8">
+
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg md:text-xl font-semibold text-black font-special">
+                        Produtos
+                    </h2>
+
+                    <span class="text-xs text-gray-400">
+                        {produtos.length} {produtos.length === 1 ? 'produto' : 'produtos'}
+                    </span>
+                </div>
 
                 {#if loadingProdutos}
-                    <p>Carregando produtos...</p>
+
+                    <p class="text-center text-gray-400 py-12">
+                        Carregando produtos...
+                    </p>
 
                 {:else if erroProdutos}
-                    <p>{erroProdutos}</p>
+
+                    <p class="text-center text-red-500 py-12">
+                        {erroProdutos}
+                    </p>
 
                 {:else if produtos.length === 0}
-                    <p>Sem produtos aqui</p>
 
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <ShoppingBagSolid class="w-10 h-10 text-gray-300 mb-3" />
+
+                        <p class="text-gray-500 font-medium font-instrument">
+                            Sem produtos por aqui
+                        </p>
+
+                        <p class="text-sm text-gray-400 mt-1 font-instrument">
+                            Este usuário ainda não possui produtos cadastrados.
+                        </p>
+                    </div>
                 {:else}
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                    <!-- GRADE RESPONSIVA -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-7 sm:gap-x-5">
 
                         {#each produtos as produto}
                             <a
-                                href={`/produto/${produto.id}?from=profile`}
+                                href={`/produto/${produto.id}?from=${origemPerfil}${origemPerfil === 'profilestore' ? `&idPerfil=${user.id}` : ''}`}
                                 class="group min-w-0"
                             >
+
+                                <!-- IMAGEM -->
                                 <div class="aspect-square overflow-hidden rounded-lg bg-gray-100">
                                     <img
                                         src={produto.imagem}
@@ -166,12 +242,13 @@
                                     />
                                 </div>
 
+                                <!-- INFORMAÇÕES -->
                                 <div class="mt-3">
-                                    <p class="text-xs text-gray-400">
+                                    <p class="text-xs text-gray-400 truncate">
                                         {produto.categoria_nome}
                                     </p>
 
-                                    <h3 class="text-sm text-black font-medium truncate mt-1">
+                                    <h3 class="text-sm text-black font-medium truncate mt-1 group-hover:text-gray-500 transition-colors">
                                         {produto.nome}
                                     </h3>
 
@@ -184,11 +261,42 @@
                                         </p>
                                     {/if}
                                 </div>
+
                             </a>
                         {/each}
                     </div>
                 {/if}
             </div>
+            {#if isDonoPerfil}
+                <div class="px-4 pb-5 sm:px-6 md:px-8 md:pb-7 flex justify-end">
+                    <Button
+                        pill={true}
+                        color="light"
+                        class="!p-3"
+                        aria-label="Cadastrar produto"
+                        onclick={() => goto('/produtosuser/new')}
+                    >
+                        <svg
+                            class="w-6 h-6 text-gray-800"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 12h14m-7 7V5"
+                            />
+                        </svg>
+                    </Button>
+                </div>
+            {/if}
         </div>
+        
     {/if}
 </div>

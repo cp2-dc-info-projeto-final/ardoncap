@@ -19,6 +19,10 @@
   }
 </style>
 
+<svelte:head>
+    <title>Ardoncap - ínicio</title>
+</svelte:head>
+
 <Button 
   pill={true} 
   color="light" 

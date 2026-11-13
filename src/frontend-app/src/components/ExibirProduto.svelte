@@ -32,34 +32,56 @@
             if (body.success && body.data) {
                 produto = body.data;
 
+                // Busca os dados públicos do vendedor
+                const vendedorRes = await api.get(
+                    `/users/public/${produto.id_usuario}`
+                );
+
+                if (vendedorRes.data.success) {
+                    produto.vendedor = vendedorRes.data.data.login;
+                }
+
                 // Verifica se o usuário logado é o dono do produto
-                isOwner = authUser !== null &&
-    			Number(authUser.id) === Number(produto.id_usuario);
+                isOwner =
+                    authUser !== null &&
+                    Number(authUser.id) === Number(produto.id_usuario);
+
             } else {
                 error = body.message || 'Produto não encontrado.';
             }
         } else {
             error = 'ID de produto inválido.';
         }
-		} catch (e: any) {
-			const body = e.response?.data as ApiResponse<Produto> | undefined;
-			error = body?.message || 'Erro ao carregar o produto.';
-		} finally {
-			loading = false;
-		}
-	});
+    } catch (e: any) {
+        const body = e.response?.data as ApiResponse<Produto> | undefined;
+        error = body?.message || 'Erro ao carregar o produto.';
+    } finally {
+        loading = false;
+    }
+});
 
-	function handleBack() {
-		const origem = $page.url.searchParams.get('from');
+function handleBack() {
+    const origem = $page.url.searchParams.get('from');
+    const idPerfil = $page.url.searchParams.get('idPerfil');
 
-		if (origem === 'profile') {
-			goto('/profile');
-		} else if (origem === 'LinksProdutos') {
-			goto('/LinksProdutos');
-		} else {
-			goto('/');
-		}
-	}
+    switch (origem) {
+        case 'profile':
+            goto('/profile');
+            break;
+
+        case 'profilestore':
+            goto(`/profilestore/${idPerfil}`);
+            break;
+
+        case 'LinksProdutos':
+            goto('/LinksProdutos');
+            break;
+
+        default:
+            goto('/');
+            break;
+    }
+}
 
 	async function removerProduto() {
     if (!produto || !isOwner) return;
@@ -106,9 +128,10 @@ function adicionarAoCarrinho() {
 		class="mt-3 border border-neutral-700 bg-neutral-900 p-3 text-center font-special text-xs tracking-wider text-white"
 		role="status"
 			>
-				{mensagemCarrinho}
-						</div>
-					{/if}
+		{mensagemCarrinho}
+	</div>
+{/if}
+
 <svelte:head>
 	<title>Ardoncap - {produto ? produto.nome : 'Visualizar Produto'}</title>
 </svelte:head>
@@ -217,6 +240,34 @@ function adicionarAoCarrinho() {
 									{produto.descricao}
 								</p>
 							</div>
+						{/if}
+
+						<!-- Vendedor -->
+						{#if produto.vendedor && produto.id_usuario}
+						<div class="space-y-3">
+							<a
+								href={`/profilestore/${produto.id_usuario}`}
+								class="group flex w-fit items-center gap-3 border border-neutral-800 bg-neutral-950 px-4 py-3 transition-colors hover:border-white"
+							>
+								<div class="flex h-10 w-10 items-center justify-center bg-neutral-800 font-special text-sm uppercase text-white">
+									{produto.vendedor.charAt(0)}
+								</div>
+
+								<div class="flex flex-col gap-1">
+									<span class="font-poppins text-sm text-white group-hover:text-neutral-300">
+										{produto.vendedor}
+									</span>
+
+									<span class="font-special text-[0.6rem] tracking-[0.15em] text-neutral-500">
+										VISUALIZAR PERFIL
+									</span>
+								</div>
+
+								<span class="ml-2 text-neutral-500 transition-transform group-hover:translate-x-1 group-hover:text-white">
+									→
+								</span>
+							</a>
+						</div>
 						{/if}
 
 						<!-- Ações -->

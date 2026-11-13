@@ -260,6 +260,7 @@ router.get('/usuario/:id', verifyToken, async function(req, res) {
   }
 });
 
+
 /* ATUALIZAR PRODUTO POR ID */
 router.put('/:id', verifyToken, async function(req, res) {
   try {
@@ -269,7 +270,8 @@ router.put('/:id', verifyToken, async function(req, res) {
       descricao,
       quantidade_disponivel,
       preco,
-      id_categoria
+      id_categoria,
+      imagem_base64
     } = req.body;
 
     // Verifica se o produto existe e identifica seu proprietário
@@ -388,16 +390,17 @@ router.put('/:id', verifyToken, async function(req, res) {
       });
     }
 
-    // Atualiza somente se a permissão continuar válida
+    // Atualiza os dados do produto, incluindo a imagem
     const result = await pool.query(
       `UPDATE produto
        SET nome = $1,
            descricao = $2,
            quantidade_disponivel = $3,
            preco = $4,
-           id_categoria = $5
-       WHERE id = $6
-         AND (id_usuario = $7 OR $8 = 'admin')
+           id_categoria = $5,
+           imagem = COALESCE($6, imagem)
+       WHERE id = $7
+         AND (id_usuario = $8 OR $9 = 'admin')
        RETURNING *`,
       [
         nome,
@@ -405,6 +408,7 @@ router.put('/:id', verifyToken, async function(req, res) {
         quantidade_disponivel,
         preco,
         id_categoria,
+        imagem_base64 || null,
         id,
         req.user.id,
         req.user.role
@@ -448,6 +452,7 @@ router.put('/:id', verifyToken, async function(req, res) {
   }
 });
 
+
 /* EXCLUIR PRODUTO POR ID */
 router.delete('/:id', verifyToken, async function(req, res) {
   try {
@@ -462,7 +467,6 @@ router.delete('/:id', verifyToken, async function(req, res) {
     );
 
     if (result.rows.length === 0) {
-      // Verifica se o produto existe
       const produtoExiste = await pool.query(
         'SELECT id FROM produto WHERE id = $1',
         [id]
@@ -498,6 +502,19 @@ router.delete('/:id', verifyToken, async function(req, res) {
 
   } catch (error) {
     console.error('Erro ao deletar produto:', error);
+
+    // Produto vinculado a um pedido
+    if (error.code === '23503') {
+      return res.status(409).json({
+        success: false,
+        message: 'Não é possível excluir este produto, pois ele está vinculado a um ou mais pedidos.',
+        errors: [{
+          field: 'produto',
+          message: 'Este produto possui registros de pedidos associados e não pode ser excluído.',
+          code: 'PRODUTO_VINCULADO_A_PEDIDO'
+        }]
+      });
+    }
 
     return res.status(500).json({
       success: false,

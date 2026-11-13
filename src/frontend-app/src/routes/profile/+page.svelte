@@ -7,6 +7,7 @@
     import { onMount } from 'svelte';
     import { getCurrentUser } from '$lib/auth';
     import type { User } from '$lib/auth';
+    import { Button } from 'flowbite-svelte';
 
     // Pega o id direto do store do SvelteKit de forma reativa ou segura
     $: routeId = $page.params.id; 
@@ -24,10 +25,14 @@
     });
 </script>
 
+
+
 {#if loading}
     <div class="text-center p-8 pt-32 text-white">Carregando...</div>
 {:else if authUser}
     <div class="mt-27">
+            
+        
         <!-- Passa o id convertido para número -->
         <Profile id={authUser.id} />
     </div>

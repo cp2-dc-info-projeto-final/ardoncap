@@ -241,7 +241,6 @@
                 {error}
             </div>
         {/if}
-
         <!-- FILTROS -->
         <div class="flex flex-wrap gap-2">
 
@@ -255,10 +254,10 @@
 
                 <button
                     onclick={() => filtro = opcao.valor as Filtro}
-                    class={`px-4 py-2 rounded-lg text-sm border transition
+                    class={`rounded-none border px-4 py-2 font-special text-xs tracking-[0.15em] transition-colors
                         ${filtro === opcao.valor
-                            ? 'bg-white text-black border-white'
-                            : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:bg-neutral-800 hover:text-white'
+                            ? 'border-white bg-white text-black'
+                            : 'border-neutral-700 bg-neutral-950 text-neutral-400 hover:border-white hover:bg-neutral-900 hover:text-white'
                         }`}
                 >
                     {opcao.label}

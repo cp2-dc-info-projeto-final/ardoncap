@@ -81,7 +81,7 @@
 }
 </script>
 
-<Card class="w-full p-6 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-col gap-5">
+<Card class="w-full max-w-full min-w-0 box-border p-4 sm:p-5 md:p-6 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-col gap-4 md:gap-5">
 	<span class="font-special text-xs text-neutral-500 tracking-widest uppercase flex items-center gap-1.5">
 		<CirclePlusOutline class="h-4 w-4" /> Novo Endereço
 	</span>

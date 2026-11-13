@@ -90,9 +90,9 @@
 			Você ainda não possui nenhum endereço cadastrado.
 		</div>
 	{:else}
-		<div class="flex flex-col gap-4">
+		<div class="md:col-span-3 w-full min-w-0 max-w-full box-border">
 			{#each enderecos as item (item.id)}
-				<Card class="w-full p-5 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-row items-center justify-between gap-4">
+			<Card class="w-full max-w-full min-w-0 box-border p-4 sm:p-5 bg-neutral-950 border border-neutral-900 rounded-2xl flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4">
 					<div class="flex flex-col gap-1 min-w-0">
 						<div class="font-special text-sm text-gray-200 uppercase tracking-wide truncate">
 							{item.rua}, Nº {item.numero}

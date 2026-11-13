@@ -7,6 +7,8 @@
 	import { goto } from '$app/navigation'; // navegação
 	import { ArrowLeftOutline, FloppyDiskAltOutline } from 'flowbite-svelte-icons'; // ícones
 	import type { User, UserFormData } from '$lib/models/User';
+	import { login as authLogin, getCurrentUser } from '$lib/auth';
+	import { cart } from '$lib/cart';
 
 	export let id: number | null = null; // id do usuário
 
@@ -41,69 +43,110 @@
 	});
 
 	// Submissão do formulário
-	async function handleSubmit() {
-		fieldErrors = [];
+	
+async function handleSubmit() {
+    fieldErrors = [];
+    error = '';
 
-		// Validação de senha
-		if (id === null && (!user.senha || user.senha.length < 6)) {
-			fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
-			error = 'Senha deve ter pelo menos 6 caracteres.';
-			return;
-		}
+    // Validação de senha no cadastro
+    if (id === null && (!user.senha || user.senha.length < 6)) {
+        fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
+        error = 'Senha deve ter pelo menos 6 caracteres.';
+        return;
+    }
 
-		if (id !== null && user.senha && user.senha.length < 6) {
-			fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
-			error = 'Senha deve ter pelo menos 6 caracteres.';
-			return;
-		}
+    // Validação de senha na edição
+    if (id !== null && user.senha && user.senha.length < 6) {
+        fieldErrors = [{ field: 'senha', message: 'Senha deve ter pelo menos 6 caracteres.' }];
+        error = 'Senha deve ter pelo menos 6 caracteres.';
+        return;
+    }
 
-		if (id === null && user.senha !== confirmarSenha) {
-			fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
-			error = 'As senhas não coincidem.';
-			return;
-		}
+    // Confirmação de senha
+    if (id === null && user.senha !== confirmarSenha) {
+        fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
+        error = 'As senhas não coincidem.';
+        return;
+    }
 
-		if (id !== null && user.senha && user.senha !== confirmarSenha) {
-			fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
-			error = 'As senhas não coincidem.';
-			return;
-		}
+    if (id !== null && user.senha && user.senha !== confirmarSenha) {
+        fieldErrors = [{ field: 'confirmarSenha', message: 'As senhas não coincidem.' }];
+        error = 'As senhas não coincidem.';
+        return;
+    }
 
-		loading = true;
-		error = '';
-		try {
-			const userData = { ...user };
-			// Remove senha vazia na edição para não sobrescrever indevidamente
-			if (id !== null && !userData.senha) {
-				delete userData.senha;
-			}
+    loading = true;
 
-			if (id === null) {
-				const res = await api.post('users/register', userData);
-				const body = res.data as ApiResponse<User>;
-				if (!body.success) {
-					error = body.message;
-					fieldErrors = body.errors;
-					return;
-				}
-			} else {
-				const res = await api.put(`/users/editar/${id}`, userData);
-				const body = res.data as ApiResponse<User>;
-				if (!body.success) {
-					error = body.message;
-					fieldErrors = body.errors;
-					return;
-				}
-			}
-			goto('/profile');
-		} catch (e: any) {
-			const body = e.response?.data as ApiResponse<User> | undefined;
-			error = body?.message || 'Erro ao salvar usuário.';
-			fieldErrors = body?.errors || [];
-		} finally {
-			loading = false;
-		}
-	}
+    try {
+        const userData = { ...user };
+
+        // Não envia senha vazia na edição
+        if (id !== null && !userData.senha) {
+            delete userData.senha;
+        }
+
+        if (id === null) {
+            // CADASTRO
+            const res = await api.post('users/register', userData);
+            const body = res.data as ApiResponse<User>;
+
+            if (!body.success) {
+                error = body.message;
+                fieldErrors = body.errors || [];
+                return;
+            }
+
+            // LOGIN AUTOMÁTICO APÓS CADASTRO
+            const result = await authLogin({
+                login: user.login,
+                password: user.senha
+            });
+
+            if (!result.success) {
+                error = result.message || 'Cadastro realizado, mas não foi possível fazer login automaticamente.';
+                return;
+            }
+
+            // Recupera os dados do usuário autenticado
+            const usuario = await getCurrentUser();
+
+            if (!usuario) {
+                error = 'Cadastro realizado, mas não foi possível recuperar os dados do usuário.';
+                return;
+            }
+
+            // Define o usuário no carrinho
+            cart.definirUsuario(usuario.id);
+
+            // Redireciona para a página inicial
+            await goto('/');
+
+        } else {
+            // EDIÇÃO
+            const res = await api.put(`/users/editar/${id}`, userData);
+            const body = res.data as ApiResponse<User>;
+
+            if (!body.success) {
+                error = body.message;
+                fieldErrors = body.errors || [];
+                return;
+            }
+
+            // Retorna ao perfil sem realizar novo login
+            await goto('/profile');
+        }
+
+    } catch (e: any) {
+        const body = e.response?.data as ApiResponse<User> | undefined;
+
+        error = body?.message || 'Erro ao salvar usuário.';
+        fieldErrors = body?.errors || [];
+
+    } finally {
+        loading = false;
+    }
+}
+
 
 	function handleCancel() {
 		goto('/profile');

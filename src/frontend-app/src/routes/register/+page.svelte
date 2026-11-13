@@ -13,4 +13,3 @@
 	</div>
 	<UserFormPublic />
 </div>
-
