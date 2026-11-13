@@ -2,7 +2,7 @@ export interface Endereco {
   id: number;
   cep: number;
   rua: string;
-  numero: number;
+  numero: number | null;
   cidade: string;
   estado: string;
   complemento: string | null;
@@ -13,7 +13,7 @@ export interface EnderecoFormData {
   id: number;
   cep: number;
   rua: string;
-  numero: number;
+  numero: number | null;
   cidade: string;
   estado: string;
   complemento: string | null;

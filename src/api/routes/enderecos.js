@@ -1,3 +1,4 @@
+
 var express = require('express');
 var router = express.Router();
 const pool = require('../db/config');
@@ -18,51 +19,102 @@ function sendError(res, status, message, errors = []) {
   });
 }
 
+// CADASTRAR ENDEREÇO
 router.post('/', verifyToken, async function(req, res) {
-    try {
-      const { cep, rua, numero, cidade, estado, complemento } = req.body;
-      const id_usuario = req.user?.id; // Capturado automaticamente pelo middleware verifyToken
+  try {
+    const { cep, rua, numero, cidade, estado, complemento } = req.body;
+    const id_usuario = req.user?.id;
 
-      // Validação básica de campos obrigatórios
-      if (!cep || !rua || !numero || !cidade || !estado) {
-        return res.status(400).json({
-          success: false,
-          message: 'Todos os campos obrigatórios devem ser preenchidos.',
-          errors: [{ field: 'geral', message: 'Campos obrigatórios em falta', code: 'REQUIRED' }]
-        });
-      }
+    // Validação dos campos obrigatórios
+    if (!cep || !rua || !cidade || !estado) {
+      return res.status(400).json({
+        success: false,
+        message: 'Todos os campos obrigatórios devem ser preenchidos.',
+        errors: [{
+          field: 'geral',
+          message: 'Campos obrigatórios em falta',
+          code: 'REQUIRED'
+        }]
+      });
+    }
 
-      const result = await pool.query(
-        'INSERT INTO endereco (CEP, rua, numero, cidade, estado, complemento, id_usuario) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [cep, rua, numero, cidade, estado, complemento || null, id_usuario]
-      );
+    // Converte UF para caixa alta
+    const estadoUpper = estado.toUpperCase();
 
-      return sendSuccess(res, 201, 'Endereço cadastrado com sucesso', result.rows[0]);
+    const result = await pool.query(
+      `INSERT INTO endereco
+       (CEP, rua, numero, cidade, estado, complemento, id_usuario)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, CEP AS cep, rua, numero, cidade, estado, complemento, id_usuario`,
+      [
+        cep,
+        rua,
+        numero || null,
+        cidade,
+        estadoUpper,
+        complemento || null,
+        id_usuario
+      ]
+    );
+
+    return sendSuccess(
+      res,
+      201,
+      'Endereço cadastrado com sucesso',
+      result.rows[0]
+    );
+
   } catch (error) {
     console.error('Erro ao criar endereço:', error);
+
     if (error.code === '23514') {
-      return res.status(400).json({ success: false, message: 'Dados inválidos. Verifique os campos e tente novamente.' });
+      return res.status(400).json({
+        success: false,
+        message: 'Dados inválidos. Verifique os campos e tente novamente.'
+      });
     }
-    return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+
+    return res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor'
+    });
   }
 });
 
+// LISTAR ENDEREÇOS DO USUÁRIO
 router.get('/', verifyToken, async function(req, res) {
   try {
     const id_usuario = req.user?.id;
 
     const result = await pool.query(
-      'SELECT id, CEP, rua, numero, cidade, estado, complemento FROM endereco WHERE id_usuario = $1 ORDER BY id DESC',
+      `SELECT
+        id,
+        CEP AS cep,
+        rua,
+        numero,
+        cidade,
+        UPPER(estado) AS estado,
+        complemento
+       FROM endereco
+       WHERE id_usuario = $1
+       ORDER BY id DESC`,
       [id_usuario]
     );
 
-    return sendSuccess(res, 200, 'Endereços listados com sucesso', result.rows);
+    return sendSuccess(
+      res,
+      200,
+      'Endereços listados com sucesso',
+      result.rows
+    );
+
   } catch (error) {
     console.error('Erro ao buscar endereços:', error);
     return sendError(res, 500, 'Erro interno do servidor');
   }
 });
 
+// BUSCAR ENDEREÇO POR ID
 router.get('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
@@ -72,72 +124,151 @@ router.get('/:id', verifyToken, async function(req, res) {
       return sendError(res, 400, 'ID inválido fornecido');
     }
 
-    const result = await pool.query('SELECT * FROM endereco WHERE id = $1 AND id_usuario = $2', [id, id_usuario]);
-    
+    const result = await pool.query(
+      `SELECT
+        id,
+        CEP AS cep,
+        rua,
+        numero,
+        cidade,
+        UPPER(estado) AS estado,
+        complemento,
+        id_usuario
+       FROM endereco
+       WHERE id = $1 AND id_usuario = $2`,
+      [id, id_usuario]
+    );
+
     if (result.rows.length === 0) {
       return sendError(res, 404, 'Endereço não encontrado', [
-        { field: 'id', message: 'Endereço não existe ou permissão negada', code: 'NOT_FOUND' }
+        {
+          field: 'id',
+          message: 'Endereço não existe ou permissão negada',
+          code: 'NOT_FOUND'
+        }
       ]);
     }
 
-    return sendSuccess(res, 200, 'Endereço encontrado', result.rows[0]);
+    return sendSuccess(
+      res,
+      200,
+      'Endereço encontrado',
+      result.rows[0]
+    );
+
   } catch (error) {
     console.error('Erro ao buscar endereço:', error);
     return sendError(res, 500, 'Erro interno do servidor');
   }
 });
 
+// ATUALIZAR ENDEREÇO
 router.put('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
     const id_usuario = req.user?.id;
     const { cep, rua, numero, cidade, estado, complemento } = req.body;
 
-    if (!cep || !rua || !numero || !cidade || !estado) {
+    if (!cep || !rua || !cidade || !estado) {
       return res.status(400).json({
         success: false,
         message: 'Todos os campos obrigatórios devem ser preenchidos.',
-        errors: [{ field: 'geral', message: 'Campos obrigatórios em falta', code: 'REQUIRED' }]
+        errors: [{
+          field: 'geral',
+          message: 'Campos obrigatórios em falta',
+          code: 'REQUIRED'
+        }]
       });
     }
 
-    const addressExists = await pool.query('SELECT id FROM endereco WHERE id = $1 AND id_usuario = $2', [id, id_usuario]);
+    // Converte UF para caixa alta
+    const estadoUpper = estado.toUpperCase();
+
+    const addressExists = await pool.query(
+      'SELECT id FROM endereco WHERE id = $1 AND id_usuario = $2',
+      [id, id_usuario]
+    );
+
     if (addressExists.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Endereço não encontrado',
-        errors: [{ field: 'id', message: 'Endereço não existe ou permissão negada', code: 'NOT_FOUND' }]
+        errors: [{
+          field: 'id',
+          message: 'Endereço não existe ou permissão negada',
+          code: 'NOT_FOUND'
+        }]
       });
     }
 
     const result = await pool.query(
-      'UPDATE endereco SET CEP = $1, rua = $2, numero = $3, cidade = $4, estado = $5, complemento = $6 WHERE id = $7 AND id_usuario = $8 RETURNING *',
-      [cep, rua, numero, cidade, estado, complemento || null, id, id_usuario]
+      `UPDATE endereco
+       SET CEP = $1,
+           rua = $2,
+           numero = $3,
+           cidade = $4,
+           estado = $5,
+           complemento = $6
+       WHERE id = $7 AND id_usuario = $8
+       RETURNING id, CEP AS cep, rua, numero, cidade, estado, complemento, id_usuario`,
+      [
+        cep,
+        rua,
+        numero || null,
+        cidade,
+        estadoUpper,
+        complemento || null,
+        id,
+        id_usuario
+      ]
     );
 
-    return sendSuccess(res, 200, 'Endereço atualizado com sucesso', result.rows[0]);
+    return sendSuccess(
+      res,
+      200,
+      'Endereço atualizado com sucesso',
+      result.rows[0]
+    );
+
   } catch (error) {
     console.error('Erro ao atualizar endereço:', error);
+
     if (error.code === '23514') {
-      return res.status(400).json({ success: false, message: 'Dados inválidos. Verifique os campos e tente novamente.' });
+      return res.status(400).json({
+        success: false,
+        message: 'Dados inválidos. Verifique os campos e tente novamente.'
+      });
     }
-    return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+
+    return res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor'
+    });
   }
 });
 
+// DELETAR ENDEREÇO
 router.delete('/:id', verifyToken, async function(req, res) {
   try {
     const { id } = req.params;
     const id_usuario = req.user?.id;
-    
-    const addressExists = await pool.query('SELECT id FROM endereco WHERE id = $1 AND id_usuario = $2', [id, id_usuario]);
+
+    const addressExists = await pool.query(
+      'SELECT id FROM endereco WHERE id = $1 AND id_usuario = $2',
+      [id, id_usuario]
+    );
+
     if (addressExists.rows.length === 0) {
       return sendError(res, 404, 'Endereço não encontrado');
     }
-    
-    await pool.query('DELETE FROM endereco WHERE id = $1 AND id_usuario = $2', [id, id_usuario]);
-    
+
+    await pool.query(
+      'DELETE FROM endereco WHERE id = $1 AND id_usuario = $2',
+      [id, id_usuario]
+    );
+
     return sendSuccess(res, 200, 'Endereço deletado com sucesso');
+
   } catch (error) {
     console.error('Erro ao deletar endereço:', error);
     return sendError(res, 500, 'Erro interno do servidor');

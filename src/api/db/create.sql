@@ -47,9 +47,9 @@ CREATE TABLE produto (
 
 CREATE TABLE endereco (
     id bigint GENERATED ALWAYS AS IDENTITY,
-    CEP int NOT NULL,
+    CEP varchar(8) NOT NULL,
     rua text NOT NULL,
-    numero int NOT NULL,
+    numero int NULL,
     cidade text NOT NULL,
     estado text NOT NULL,
     complemento text NULL,
