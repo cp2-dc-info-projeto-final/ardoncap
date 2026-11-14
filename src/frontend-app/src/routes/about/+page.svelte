@@ -18,7 +18,7 @@
     </P>
     <P class="text-base leading-relaxed text-white dark:text-gray-300 mb-4 text-justify font-poppins">
       A nossa equipe é formada por 4 estudantes da turma Desenvolvimento de Sistemas do Colégio Pedro II Campus Caxias, de 2026.
-      Nossos nomes são: <b>Artur, Caio Henrique, Domingos e Pedro Henrique </b>
+      Nossos nomes são: <b>Domingos, Pedro Lyra, Caio e Artur </b>
     </P>
   </div>
   <div class="w-full flex justify-center px-4 pb-16">
