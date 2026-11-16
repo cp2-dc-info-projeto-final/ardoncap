@@ -9,4 +9,6 @@
 </script>
 
 <!-- Utiliza o componente UserForm passando id -->
-<UserForm id={Number(id)} />
+<div class="mt-10">
+  <UserForm id={Number(id)} />
+</div>

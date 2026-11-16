@@ -90,38 +90,91 @@
   }
 </script>
 
-<!-- Card do formulário -->
-<Card class="max-w-md mx-auto mt-10 p-0 overflow-hidden shadow-lg border border-gray-200 rounded-lg">
-    <!-- Formulário principal -->
-    <form class="flex flex-col gap-6 p-6" on:submit|preventDefault={handleSubmit}>
-      <!-- Título -->
-      <Heading tag="h3" class="mb-2 text-center font-special">
-        {id === null ? 'Cadastrar Categoria' : 'Editar Categoria'}
-      </Heading>
-      <!-- Mensagem de erro -->
-      {#if error}
-        <div class="text-red-500 text-center">{error}</div>
-      {/if}
-      <!-- Campo nome -->
-      <div>
-        <Label for="nome" class="font-special">Nome da Categoria</Label>
-        <Input id="nome" bind:value={categoria.nome} placeholder="Digite o nome da categoria" required class="mt-1 font-poppins" />
-        {#if errorOf('nome')}
-          <div class="mt-1 text-sm text-red-500">{errorOf('nome')}</div>
-        {/if}
-      </div>
-  
-      <!-- Botões de ação -->
-      <div class="flex gap-4 justify-between mt-4">
-        <Button color="light" type="button" onclick={handleCancel} disabled={loading} class="font-special">
-          <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins" />
-          {id === null ? 'Voltar' : 'Cancelar'}
-        </Button>
-        <!-- Botão salvar -->
-        <Button type="submit" color="dark" disabled={loading} class="font-special">
-          <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom font-poppins"/>
-          {id === null ? 'Cadastrar' : 'Salvar'}
-        </Button>
-      </div>
-    </form>
-</Card>
+
+<!-- Área administrativa -->
+<div class="w-full max-w-3xl px-4 md:px-8">
+  <div class="flex min-h-screen flex-col items-center justify-center bg-black p-4">
+    <div class="w-full max-w-md">
+      <!-- Card do formulário -->
+      <Card class="w-full border-0 bg-black p-0">
+
+        <form
+          class="flex flex-col gap-6 p-6"
+          on:submit|preventDefault={handleSubmit}
+        >
+
+          <!-- Título -->
+          <div class="mb-3">
+            <Heading
+              tag="h3"
+              class="mb-2 text-center font-light font-instrument text-3xl text-white"
+            >
+              {id === null ? 'CADASTRAR CATEGORIA' : 'EDITAR CATEGORIA'}
+            </Heading>
+
+            <p class="text-center font-poppins text-xs tracking-wider text-gray-500">
+              GERENCIAMENTO DE CATEGORIAS
+            </p>
+          </div>
+
+          <!-- Mensagem de erro -->
+          {#if error}
+            <div class="text-center font-poppins text-sm text-red-500">
+              {error}
+            </div>
+          {/if}
+
+          <!-- Campo nome -->
+          <div>
+            <Label for="nome" class="mb-1 font-special text-white">
+              NOME DA CATEGORIA:
+            </Label>
+
+            <Input
+              id="nome"
+              bind:value={categoria.nome}
+              placeholder="Digite o nome da categoria"
+              required
+              class="mt-0 mb-2 rounded-2xl font-poppins text-xs focus:border-gray-200"
+            />
+
+            {#if errorOf('nome')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('nome')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Separador -->
+          <div class="mt-2 h-px w-full bg-gray-800"></div>
+
+          <!-- Botões de ação -->
+          <div class="mt-2 flex justify-end gap-4">
+
+            <!-- Botão cancelar -->
+            <Button
+              type="button"
+              onclick={handleCancel}
+              disabled={loading}
+              class="font-special !flex !items-center !justify-center rounded-xl bg-transparent text-base text-white hover:bg-gray-800"
+            >
+              <ArrowLeftOutline class="mr-2 inline h-5 w-5" />
+              {id === null ? 'VOLTAR' : 'CANCELAR'}
+            </Button>
+
+            <!-- Botão salvar -->
+            <Button
+              type="submit"
+              disabled={loading}
+              class="font-special !flex !items-center !justify-center rounded-xl bg-white text-base text-black hover:bg-gray-300"
+            >
+              {id === null ? 'CADASTRAR' : 'SALVAR'}
+            </Button>
+
+          </div>
+        </form>
+      </Card>
+
+    </div>
+  </div>
+</div>

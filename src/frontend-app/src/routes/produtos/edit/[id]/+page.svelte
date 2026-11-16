@@ -9,4 +9,5 @@
   </script>
   
   <!-- Utiliza o componente ProdutoForm passando id -->
-  <ProdutoForm id={Number(id)} />
+    <div class="mt-10"><ProdutoForm id={Number(id)} /></div>
+  

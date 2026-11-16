@@ -198,154 +198,226 @@
   }
 </script>
 
-<Card class="max-w-md mx-auto mt-10 p-0 overflow-hidden shadow-lg border border-gray-200 rounded-lg">
-  <form
-    class="flex flex-col gap-5 p-6"
-    on:submit|preventDefault={handleSubmit}
-  >
-    <Heading tag="h3" class="mb-2 text-center font-special">
-      {id === null ? 'Cadastrar Produto' : 'Editar Produto'}
-    </Heading>
 
-    {#if error}
-      <div class="text-red-500 text-center">
-        {error}
-      </div>
-    {/if}
+<!-- Área administrativa -->
+<div class="w-full max-w-3xl px-4 md:px-8">
+  <div class="flex min-h-screen flex-col items-center justify-center bg-black p-4 py-10">
+    <div class="w-full max-w-md">
 
-    <!-- Miniatura reativa -->
-    {#if imagemPreviewUrl}
-      <div class="mt-3 text-center">
-        <p class="text-xs text-gray-500 mb-1 font-special">Pré-visualização:</p>
-        <img 
-          src={imagemPreviewUrl} 
-          alt="Preview do produto" 
-          class="mx-auto max-h-32 object-contain rounded border border-gray-200 shadow-sm p-1" 
-        />
-      </div>
-    {/if}
-    <br>
+      <!-- Card do formulário -->
+      <Card class="w-full border-0 bg-black p-0">
 
-    <!-- Nome -->
-    <div>
-      <Label for="nome" class="font-special">Nome do Produto</Label>
-      <Input
-        id="nome"
-        bind:value={produto.nome}
-        placeholder="Digite o nome do produto"
-        required
-        class="mt-1 font-poppins"
-      />
-      {#if errorOf('nome')}
-        <div class="mt-1 text-sm text-red-500">
-          {errorOf('nome')}
-        </div>
-      {/if}
-    </div>
+        <form
+          class="flex flex-col gap-6 p-6"
+          on:submit|preventDefault={handleSubmit}
+        >
 
-    <!-- Descrição -->
-    <div>
-      <Label for="descricao" class="font-special">Descrição</Label>
-      <Textarea
-        id="descricao"
-        bind:value={produto.descricao}
-        placeholder="Digite a descrição do produto"
-        rows={3}
-        required
-        class="mt-1 font-poppins"
-      />
-      {#if errorOf('descricao')}
-        <div class="mt-1 text-sm text-red-500">
-          {errorOf('descricao')}
-        </div>
-      {/if}
-    </div>
+          <!-- Título -->
+          <div class="mb-2">
+            <Heading
+              tag="h3"
+              class="mb-2 text-center font-instrument text-3xl text-white"
+            >
+              {id === null ? 'CADASTRAR PRODUTO' : 'EDITAR PRODUTO'}
+            </Heading>
 
-    <!-- Quantidade -->
-    <div>
-      <Label for="quantidade_disponivel" class="font-special">
-        Quantidade disponível
-      </Label>
-      <Input
-        id="quantidade_disponivel"
-        type="number"
-        min="0"
-        bind:value={produto.quantidade_disponivel}
-        required
-        class="mt-1 font-poppins"
-      />
-      {#if errorOf('quantidade_disponivel')}
-        <div class="mt-1 text-sm text-red-500">
-          {errorOf('quantidade_disponivel')}
-        </div>
-      {/if}
-    </div>
+            <p class="text-center font-poppins text-xs tracking-wider text-gray-500">
+              GERENCIAMENTO DE PRODUTOS
+            </p>
+          </div>
 
-    <!-- Preço -->
-    <div>
-      <Label for="preco" class="font-special">Preço</Label>
-      <Input
-        id="preco"
-        type="number"
-        min="0"
-        step="0.01"
-        bind:value={produto.preco}
-        placeholder="0.00"
-        required
-        class="mt-1 font-poppins"
-      />
-      {#if errorOf('preco')}
-        <div class="mt-1 text-sm text-red-500">
-          {errorOf('preco')}
-        </div>
-      {/if}
-    </div>
-
-    <!-- Categoria -->
-    <div>
-      <Label for="id_categoria" class="font-special">Categoria</Label>
-      <Select
-        id="id_categoria"
-        bind:value={produto.id_categoria}
-        class="mt-1 font-poppins"
-        required
-      >
-        <option value={0}>Selecione uma categoria</option>
-        {#each categorias as categoria}
-          <option value={categoria.value}>
-            {categoria.name}
-          </option>
-        {/each}
-      </Select>
-    </div>
-
-        <div>
-          <Label for="imagem" class="font-special mb-2 block">Imagem do Produto</Label>
-          <Fileupload 
-            id="imagem" 
-            accept="image/*" 
-            class="font-poppins" 
-            bind:files={arquivosSelecionados} 
-          />
-          
-          {#if errorOf('imagem_base64')}
-            <div class="mt-1 text-sm text-red-500">
-              {errorOf('imagem_base64')}
+          <!-- Mensagem de erro -->
+          {#if error}
+            <div class="text-center font-poppins text-sm text-red-500">
+              {error}
             </div>
           {/if}
-        </div>    
 
-    <!-- Botões de ação -->
-    <div class="flex gap-4 justify-between mt-4">
-      <Button color="light" type="button" onclick={handleCancel} disabled={loading} class="font-special">
-        <ArrowLeftOutline class="inline w-5 h-5 mr-2 align-text-bottom font-special" />
-        {id === null ? 'Voltar' : 'Cancelar'}
-      </Button>
-      <!-- Botão salvar -->
-      <Button type="submit" color="dark" disabled={loading} class="font-special">
-        <FloppyDiskAltOutline class="inline w-5 h-5 mr-2 align-text-bottom" />
-        {id === null ? 'Cadastrar' : 'Salvar'}
-      </Button>
+          <!-- Pré-visualização da imagem -->
+          {#if imagemPreviewUrl}
+            <div class="flex flex-col items-center gap-3 rounded-2xl border border-gray-800 bg-[#111111] p-4">
+              <p class="font-special text-xs tracking-widest text-gray-400">
+                PRÉ-VISUALIZAÇÃO DO PRODUTO
+              </p>
+
+              <img
+                src={imagemPreviewUrl}
+                alt="Preview do produto"
+                class="max-h-40 max-w-full rounded-xl object-contain"
+              />
+            </div>
+          {/if}
+
+          <!-- Nome -->
+          <div>
+            <Label for="nome" class="mb-1 font-special text-white">
+              NOME DO PRODUTO:
+            </Label>
+
+            <Input
+              id="nome"
+              bind:value={produto.nome}
+              placeholder="Digite o nome do produto"
+              required
+              class="mt-0 mb-2 rounded-2xl font-poppins text-xs focus:border-gray-200"
+            />
+
+            {#if errorOf('nome')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('nome')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Descrição -->
+          <div>
+            <Label for="descricao" class="mb-1 font-special text-white">
+              DESCRIÇÃO:
+            </Label>
+
+            <Textarea
+              id="descricao"
+              bind:value={produto.descricao}
+              placeholder="Digite a descrição do produto"
+              rows={3}
+              required
+              class="mt-0 mb-2 rounded-2xl font-poppins text-xs focus:border-gray-200"
+            />
+
+            {#if errorOf('descricao')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('descricao')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Quantidade -->
+          <div>
+            <Label
+              for="quantidade_disponivel"
+              class="mb-1 font-special text-white"
+            >
+              QUANTIDADE DISPONÍVEL:
+            </Label>
+
+            <Input
+              id="quantidade_disponivel"
+              type="number"
+              min="0"
+              bind:value={produto.quantidade_disponivel}
+              required
+              class="mt-0 mb-2 rounded-2xl font-poppins text-xs focus:border-gray-200"
+            />
+
+            {#if errorOf('quantidade_disponivel')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('quantidade_disponivel')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Preço -->
+          <div>
+            <Label for="preco" class="mb-1 font-special text-white">
+              PREÇO:
+            </Label>
+
+            <Input
+              id="preco"
+              type="number"
+              min="0"
+              step="0.01"
+              bind:value={produto.preco}
+              placeholder="0.00"
+              required
+              class="mt-0 mb-2 rounded-2xl font-poppins text-xs focus:border-gray-200"
+            />
+
+            {#if errorOf('preco')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('preco')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Categoria -->
+          <div>
+            <Label for="id_categoria" class="mb-1 font-special text-white">
+              CATEGORIA:
+            </Label>
+
+            <Select
+              id="id_categoria"
+              bind:value={produto.id_categoria}
+              class="mt-0 mb-2 font-poppins text-xs"
+              required
+            >
+              <option value={0}>Selecione uma categoria</option>
+
+              {#each categorias as categoria}
+                <option value={categoria.value}>
+                  {categoria.name}
+                </option>
+              {/each}
+            </Select>
+          </div>
+
+          <!-- Upload da imagem -->
+          <div>
+            <Label
+              for="imagem"
+              class="mb-2 block font-special text-white"
+            >
+              IMAGEM DO PRODUTO:
+            </Label>
+
+            <div class="rounded-2xl border border-gray-800 bg-[#111111] p-3">
+              <Fileupload
+                id="imagem"
+                accept="image/*"
+                class="font-poppins text-xs"
+                bind:files={arquivosSelecionados}
+              />
+            </div>
+
+            {#if errorOf('imagem_base64')}
+              <div class="mt-1 text-sm text-red-500">
+                {errorOf('imagem_base64')}
+              </div>
+            {/if}
+          </div>
+
+          <!-- Separador -->
+          <div class="mt-2 h-px w-full bg-gray-800"></div>
+
+          <!-- Botões de ação -->
+          <div class="mt-2 flex justify-end gap-4">
+
+            <!-- Cancelar -->
+            <Button
+              type="button"
+              onclick={handleCancel}
+              disabled={loading}
+              class="font-special !flex !items-center !justify-center rounded-xl bg-transparent text-base text-white hover:bg-gray-800"
+            >
+              <ArrowLeftOutline class="mr-2 inline h-5 w-5" />
+              {id === null ? 'VOLTAR' : 'CANCELAR'}
+            </Button>
+
+            <!-- Salvar -->
+            <Button
+              type="submit"
+              disabled={loading}
+              class="font-special !flex !items-center !justify-center rounded-xl bg-white text-base text-black hover:bg-gray-300"
+            >
+              {id === null ? 'CADASTRAR' : 'SALVAR'}
+            </Button>
+
+          </div>
+
+        </form>
+      </Card>
+
     </div>
-  </form>
-</Card>
+  </div>
+</div>

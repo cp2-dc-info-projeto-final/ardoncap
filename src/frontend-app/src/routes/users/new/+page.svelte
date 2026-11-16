@@ -1,5 +1,6 @@
 <script lang="ts">
   import UserForm from '../../../components/UserForm.svelte';
 </script>
-
-<UserForm />
+<div class="mt-10">
+  <UserForm />
+</div>

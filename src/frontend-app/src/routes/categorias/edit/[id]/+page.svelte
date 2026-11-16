@@ -9,4 +9,7 @@
   </script>
   
   <!-- Utiliza o componente CategoriaForm passando id -->
-  <CategoriaForm id={Number(id)} />
+<div class="mt-10">
+    <CategoriaForm id={Number(id)} />
+</div>
+  
